@@ -1,111 +1,70 @@
 <div align="center">
-    <img width="75" src="/FCL/src/main/res/drawable/img_app.png"></img>
+    <img width="96" src="/FCL/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png"></img>
 </div>
 
-<h1 align="center">Fold Craft Launcher</h1>
+<h1 align="center">KCL（Android 手机版）</h1>
 
 <div align="center">
 
-[![Android CI](https://github.com/FCL-Team/FoldCraftLauncher/actions/workflows/build.yml/badge.svg)](https://github.com/FCL-Team/FoldCraftLauncher/actions/workflows/build.yml)
-![Downloads](https://img.shields.io/github/downloads/FCL-Team/FoldCraftLauncher/total?style=flat-square&color=f18cb9)
-![Release](https://img.shields.io/github/v/release/FCL-Team/FoldCraftLauncher?style=flat-square&color=f18cb9)
-
-[![Discord](https://img.shields.io/badge/Discord-red?logo=discord&logoColor=white)](https://discord.gg/ffhvuXTwyV)
-[![QQ](https://img.shields.io/badge/QQ-green)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=LwxydGEvBZJnn09sXOjkQo9tuuLcYwx5&authKey=seyY5pPUCIHMWS5FqVryq926T0G2GarSXetpxxV9DJxBVt%2FPcg1vxN%2F%2FXpsCowyk&noverify=0&group_code=762054349)
-[![Sponsor](https://img.shields.io/badge/sponsor-blue?logo=GitHub-Sponsors)](https://afdian.com/@tungs)
+[![Android CI](https://github.com/ETQWFD/KCL-Mobile/actions/workflows/continuous.yml/badge.svg)](https://github.com/ETQWFD/KCL-Mobile/actions/workflows/continuous.yml)
+[![Release](https://img.shields.io/github/v/release/ETQWFD/KCL-Mobile?style=flat-square&color=0b7a46)](https://github.com/ETQWFD/KCL-Mobile/releases)
+[![License](https://img.shields.io/badge/license-GPL--3.0-0b7a46?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.html)
 
 </div>
 
-🌍 **语言**  
-简体中文 | [English](./README_EN.md) | [Русский язык](./README_RU.md)
+简体中文 | [English](./README_EN.md)
 
-> 你说得对，但是[「FoldCraft Launcher」](https://github.com/FCL-Team/FoldCraftLauncher)是由[FCL-Team](https://github.com/FCL-Team)基于[HMCL](https://github.com/HMCL-dev/HMCL)的核心功能，使用[PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)后端开发的[Minecraft](https://www.minecraft.net/) [Java](https://baike.baidu.com/item/Java%E5%B9%B3%E5%8F%B0/3793459)版启动器。启动器运行在一个被称作[「安卓」](https://baike.baidu.com/item/android/60243)的系统，在这里，被系统选中的人将被授予「JVM」，导引[Java](https://baike.baidu.com/item/Java%E5%B9%B3%E5%8F%B0/3793459)之力。你将扮演一位名为「小白」的神秘用户，在自由的使用中安装不同版本、各有千秋独特的[模组](https://baike.baidu.com/item/%E6%A8%A1%E7%BB%84/58377440)，和它们一起运行，找出崩溃闪退的原因，同时逐步发掘「xxException:」的真相。
+当常见启动器因为网络、维护或外部压力暂时不可用时，玩家仍需要一个能进入本地游戏的备选入口。**KCL** 在这种情况下延续版本下载、正版登录和本地实例管理能力，这是 KCL 系列的 Android 手机版本。
 
-> ✨ **项目简介**  
-> 「Fold Craft Launcher」是由FCL团队开发的Android平台Minecraft: Java Edition启动器。基于[HMCL](https://github.com/HMCL-dev/HMCL)的核心功能，使用[Amethyst-Android](https://github.com/AngelAuraMC/Amethyst-Android)后端，让您能在移动设备上畅玩Java版MC，支持模组加载与全版本运行。
+KCL（Android）基于 [Fold Craft Launcher（FCL）](https://github.com/FCL-Team/FoldCraftLauncher) 再发行。FCL 由 [FCL-Team](https://github.com/FCL-Team) 基于 [HMCL](https://github.com/HMCL-dev/HMCL) 的核心功能、使用 [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher) 后端开发。KCL 是独立的第三方修改版，由 **龙腾OS / ETC Team** 修改并维护；本仓的更新检查与启动公告均指向 ETQWFD 自有仓库，与上游 FCL-Team 无运营关联。
 
 ---
 
-## 🚀 核心特性
+## 下载
 
-✅ **全版本支持**  
-- 原生支持 Minecraft 全版本（包括最新快照）
-- 模组加载器支持：Forge/NeoForge/LiteLoader/OptiFine/Fabric/Quilt/Cleanroom...
-
-⚙️ **功能亮点**  
-- 内置多版本 Java 运行时（Java 8/17/21/25）同时支持导入Java
-- 虚拟鼠标与自定义按键映射
-- 支持 FCL/ZalithLauncher2 控制布局互转，导入 ZL2 布局自动转换
-- 光影支持（需VirGL/Zink/MG渲染器）
-- 动态资源管理（模组/整合包/材质/光影/存档）
-- 个性化主题定制（背景/颜色方案）
-- 支持[渲染器插件化](https://github.com/ShirosakiMio/FCLRendererPlugin)
+- 官网下载页（与桌面版 KCL2 / KCL CE 同一站点）：https://etqwfd.github.io/KCL2/
+- APK（全架构通用，可直接安装）：https://github.com/ETQWFD/KCL-Mobile/releases
+- 要求 Android 8.0 及以上（minSdk 26），安装后首次运行会按需补全 Java 运行时。
 
 ---
 
-## 🎮 使用截图
+## 核心特性
 
-<div align="center">
-  <img src="/.github/images/ui_main_light.jpg" width="30%" alt="浅色界面">
-  <img src="/.github/images/ui_main_dark.jpg" width="30%" alt="深色界面">
-  <img src="/.github/images/game.jpg" width="30%" alt="游戏画面">
-</div>
-
----
-
-## 📜 开源协议
-
-本项目采用 **[GPL-3.0 License](https://www.gnu.org/licenses/gpl-3.0.html)** 授权
+- 原生支持 Minecraft: Java Edition 全版本（含最新快照），支持版本隔离、整合包导入。
+- 模组加载器：Forge / NeoForge / Fabric / Quilt / OptiFine / LiteLoader 等。
+- 内置多版本 Java 运行时（Java 8 / 17 / 21 / 25），也支持自行导入。
+- 虚拟鼠标、自定义按键映射与控制布局；光影（需 VirGL / Zink 等渲染器）。
+- 动态资源管理（模组 / 整合包 / 材质 / 光影 / 存档）与主题定制。
+- 更新检查与启动公告读取本团队仓库：
+  - 更新源 `ETQWFD/KCL-Mobile` 的 `version_map.json`
+  - 公告源 KCL2 官网 `announcement-mobile.json`
 
 ---
 
-## 🌍 翻译
+## 与桌面版的关系
 
-欢迎参与翻译！本项目通过 [Weblate](https://hosted.weblate.org/projects/foldcraftlauncher/) 管理本地化，无需安装任何工具，直接在网页上贡献翻译即可。
+KCL 系列共用同一官网、同一反馈渠道与同一责任声明：
+
+- KCL2：Windows 桌面主力版（基于 Plain Craft Launcher 2，MIT）。
+- KCL CE：Windows 桌面社区版（MIT）。
+- KCL（本仓）：Android 手机版（基于 FCL，GPL-v3）。
 
 ---
 
-## 🤝 贡献与致谢
-### 贡献者墙
-<a href="https://github.com/FCL-Team/FoldCraftLauncher/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=FCL-Team/FoldCraftLauncher" />
-</a>
+## 反馈与交流
 
-### 相关项目
-- [HMCL](https://github.com/HMCL-dev/HMCL)：核心功能来源（fclcore 移植自 `org.jackhuang.hmcl`）
-- [Boat 及其相关项目](https://github.com/AOF-Dev/Boat)
-- [Amethyst-Android](https://github.com/AngelAuraMC/Amethyst-Android)（PojavLauncher Android fork）：JVM 启动与渲染后端
-- [authlib-injector](https://github.com/yushijinhun/authlib-injector)
-- [EasyTier](https://github.com/EasyTier/EasyTier)：局域网联机组网底层
-- [Terracotta](https://github.com/burningtnt/Terracotta)：基于 EasyTier 的联机方案（Terracotta 模块 JNI 封装）
-- [TouchController](https://github.com/TouchController/TouchController)：触摸控制器依赖
-- [NG-GL4ES](https://github.com/ShirosakiMio/NG-GL4ES)：gl4es fork 渲染器（构建产物以 aar 随 FCL 发布）
-- [FCLRendererPlugin](https://github.com/ShirosakiMio/FCLRendererPlugin)：渲染器插件扩展
-- [FCLDriverPlugin](https://github.com/FCL-Team/FCLDriverPlugin)：驱动（Turnip 等）插件扩展
+- 问题反馈：https://github.com/ETQWFD/KCL-Mobile/issues
+- 邮件：2416444244@qq.com
+- QQ 群：1121514619
 
-### 依赖
+---
 
-- [Amethyst-Android](https://github.com/AngelAuraMC/Amethyst-Android)（PojavLauncher Android fork）: [GPL-3.0]
-- Android Support
-  Libraries: [Apache License 2.0](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt)
-- [GL4ES](https://github.com/ptitSeb/gl4es): [MIT License](https://github.com/ptitSeb/gl4es/blob/master/LICENSE)
-- [NG-GL4ES](https://github.com/ShirosakiMio/NG-GL4ES)（gl4es fork，Krypton Wrapper 衍生，FCL 以 aar 形式使用预构建产物）
-- [ANGLE](https://chromium.googlesource.com/angle/angle): [BSD-3 License](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/LICENSE)
-- [OpenJDK](https://github.com/AngelAuraMC/openjdk-multiarch-jdk8u): [GNU GPLv2 License](https://openjdk.java.net/legal/gplv2+ce.html)（运行时由 FCL-Team 自建并随版本发布）
-- [LWJGL3](https://github.com/LWJGL/lwjgl3)（官方 jar + Android 源码补丁）: [BSD-3 License](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md)
-- [LWJGLX](https://github.com/AngelAuraMC/lwjglx) (LWJGL2 API compatibility layer for LWJGL3):
-  unknown license
-- [Mesa 3D Graphics Library](https://gitlab.freedesktop.org/mesa/mesa): [MIT License](https://docs.mesa3d.org/license.html)
-- [SPIRV-Cross](https://github.com/KhronosGroup/SPIRV-Cross)（SPIR-V 反射/转换，natives 以 aar 打包）: [Apache License 2.0](https://github.com/KhronosGroup/SPIRV-Cross/blob/master/LICENSE)
-- [bhook](https://github.com/bytedance/bhook) (Used for exit code
-  trapping): [MIT license](https://github.com/bytedance/bhook/blob/main/LICENSE).
-- [libepoxy](https://github.com/anholt/libepoxy): [MIT License](https://github.com/anholt/libepoxy/blob/master/COPYING).
-- [virglrenderer](https://github.com/AngelAuraMC/virglrenderer): [MIT License](https://gitlab.freedesktop.org/virgl/virglrenderer/-/blob/master/COPYING).
-- [OpenAL-Soft](https://github.com/kcat/openal-soft): [GNU LGPLv2.1](https://github.com/kcat/openal-soft/blob/master/COPYING)
-    - [oboe](https://github.com/google/oboe): [Apache License 2.0](https://github.com/google/oboe/blob/main/LICENSE).
-    - [pfffft](https://bitbucket.org/jpommier/pffft/src/master/): [ARR]
-- [EasyTier](https://github.com/EasyTier/EasyTier)（Terracotta 模块内嵌组网底层）: [LGPL-3.0](https://github.com/EasyTier/EasyTier/blob/main/LICENSE)
-- [Terracotta](https://github.com/burningtnt/Terracotta)（`net.burningtnt.terracotta` JNI 封装）: [AGPL-3.0](https://github.com/burningtnt/Terracotta/blob/main/LICENSE)
-- [TouchController](https://github.com/TouchController/TouchController)（触摸控制器）: [LGPL-3.0](https://github.com/TouchController/TouchController/blob/main/LICENSE)
-- [discord-rpc](https://github.com/discord/discord-rpc)（libdiscord-rpc.so）: [MIT License](https://github.com/discord/discord-rpc/blob/master/LICENSE)
-- [control-converter](https://github.com/NingZeStudio/control-converter)（FCL↔ZL2 控制布局转换，以 cc.py 为语义基准的内置纯 Kotlin 实现，不再打包 `libcc.so`）: [MIT License](https://opensource.org/licenses/MIT)
+## 责任声明
+
+KCL 不运营 Minecraft，也不运营任何多人服务器。未成年人充值、服务器封禁、道具纠纷、支付退款或服务器管理规则，请联系对应服主、服务器管理组、支付渠道或 Microsoft / Mojang 官方支持，这些不属于启动器可处理范围。本项目按“现状”提供、不附带担保。
+
+---
+
+## 开源协议与署名
+
+本项目遵循 **[GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)**。应用借鉴和引用了 PojavLauncher 与 Boat 的部分源码，分发时须遵守 GPL-v3。上游 FCL-Team、HMCL 等原作者署名全部保留；KCL 的改名与改动归龙腾OS / ETC Team。Minecraft 及相关标识归 Microsoft / Mojang 所有。

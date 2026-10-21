@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name_import">MODパックをインストール</string>
-    <string name="splash_agreement">FCLは、ゲームファイルの管理および読み取りのためにストレージ権限を必要とします。\nFCLはGitHubで完全にオープンソース化されておりますので、データのセキュリティについてはご安心ください。\nこの権限はゲームを正常に動作させるためだけのものであり、セキュリティ上のリスクは一切ございません。</string>
+    <string name="splash_agreement">KCLは、ゲームファイルの管理および読み取りのためにストレージ権限を必要とします。\nKCLはGitHubで完全にオープンソース化されておりますので、データのセキュリティについてはご安心ください。\nこの権限はゲームを正常に動作させるためだけのものであり、セキュリティ上のリスクは一切ございません。</string>
     <string name="splash_permission_msg">ストレージのアクセスが許可されていません。\nKCLに権限を付与してください。</string>
     <string name="splash_permission_grant">有効します</string>
     <string name="splash_permission_title">ストレージ権限が必要です</string>
@@ -20,7 +20,7 @@
     <string name="edit_direction_event_lock_threshold">ロックしきい値</string>
     <string name="menu_settings_controls_opacity">コントロールの不透明度</string>
     <string name="splash_permission_settings_msg">「許可しない」と選択されています。設定からファイルへのアクセスを設定してください。</string>
-    <string name="notification_permission">通常のインストールや起動時に問題が発生しないように、FCLは通知を掲載する許可を必要とします。</string>
+    <string name="notification_permission">通常のインストールや起動時に問題が発生しないように、KCLは通知を掲載する許可を必要とします。</string>
     <string name="splash_title">「KCL」へようこそ</string>
     <string name="splash_eula_error">EULAにアクセスすることができません、ネットワークを確認してください。</string>
     <string name="splash_eula_next">同意して続く</string>

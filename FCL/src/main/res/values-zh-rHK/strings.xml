@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="splash_agreement">FCL需要儲存權限以管理/讀取遊戲文件，FCL喺GitHub上完全開源，請唔使擔心你嘅數據安全。權限只係用於正常運行遊戲，冇任何安全問題。</string>
+    <string name="splash_agreement">KCL需要儲存權限以管理/讀取遊戲文件，KCL喺GitHub上完全開源，請唔使擔心你嘅數據安全。權限只係用於正常運行遊戲，冇任何安全問題。</string>
     <string name="splash_permission_msg">冇儲存權限，請授予 KCL 權限。</string>
     <string name="splash_permission_grant">授予</string>
     <string name="splash_permission_title">需要儲存權限</string>
     <string name="splash_permission_close">關閉應用</string>
     <string name="splash_permission_settings">去設定</string>
     <string name="splash_permission_settings_msg">你已選擇永不授權，請喺設定中手動授予儲存權限。</string>
-    <string name="notification_permission">FCL需要發佈通知嘅權限，防止無法正常安裝/啟動遊戲。</string>
+    <string name="notification_permission">KCL需要發佈通知嘅權限，防止無法正常安裝/啟動遊戲。</string>
     <string name="splash_title">歡迎使用 KCL</string>
     <string name="splash_eula_error">無法獲取用戶協議，請檢查網絡。</string>
     <string name="splash_eula_next">同意並繼續</string>
@@ -40,7 +40,7 @@
     <string name="plugin_env_config">配置</string>
     <string name="about_sponsor">贊助</string>
     <string name="about_source">開源</string>
-    <string name="about_desc">KCL 係一個 Android Minecraft 啟動器，讓用戶能夠喺 Android 設備上啟動 Minecraft: Java Edition。\n\nKCL 由 FCL-Team 開發。\n\nKCL 嘅主要功能係基於 HMCLCore 修改而成。\n\n該應用借鑒和引用咗一啲 PojavLauncher 同 Boat 嘅源碼，所以如果你要傳播分發該軟件，請遵循 GPL-v3 協議。</string>
+    <string name="about_desc">KCL 係一個 Android Minecraft 啟動器，讓用戶能夠喺 Android 設備上啟動 Minecraft: Java Edition。\n\nKCL 由 FCL-Team 開發。\n\nKCL 嘅主要功能係基於 HMCLCore 修改而成。\n\n該應用借鑒和引用咗一啲 PojavLauncher 同 Boat 嘅源碼，所以如果你要傳播分發該軟件，請遵循 GPL-v3 協議。\n\nKCL 係由龍騰OS / ETC Team 修改維護嘅獨立第三方再發行版本，按「現狀」提供、唔附擔保；保留 FCL-Team 上游署名同 GPL-v3 協議。</string>
     <string name="account_add_server">添加認證伺服器</string>
     <string name="account_add_server_url">伺服器地址</string>
     <string name="account_add_server_name">伺服器名稱</string>
@@ -358,7 +358,7 @@
     <string name="folder_config">瀏覽配置文件夾</string>
     <string name="folder_game">瀏覽遊戲文件夾</string>
     <string name="folder_log">瀏覽日誌文件夾</string>
-    <string name="folder_fcl_log">瀏覽FCL日誌文件夾</string>
+    <string name="folder_fcl_log">瀏覽KCL日誌文件夾</string>
     <string name="folder_mod">瀏覽模組文件夾</string>
     <string name="folder_resourcepacks">瀏覽資源包文件夾</string>
     <string name="folder_saves">瀏覽存檔文件夾</string>
@@ -624,13 +624,13 @@
     <string name="modpack_type_curse_tolerable_error">但未能完成該整合包所需嘅依賴下載，你可以喺啟動該遊戲版本時繼續該整合包文件嘅下載。由於網絡問題，你可能需要重試多次。</string>
     <string name="modpack_type_curse_error">未能完成該整合包所需嘅依賴下載，請多次重試或設置代理。</string>
     <string name="modpack_type_curse_not_found">部分必需文件已經喺網絡中被刪除並且再也無法下載，請嘗試該整合包嘅最新版本或者安裝其他整合包。</string>
-    <string name="modpack_type_manual_warning">該整合包由發佈者手動打包，其中可能已經包含啟動器，建議嘗試解壓後使用其自帶嘅啟動器運行遊戲。\nFCL 可以嘗試導入該整合包，但唔保證可用性，是否繼續？</string>
+    <string name="modpack_type_manual_warning">該整合包由發佈者手動打包，其中可能已經包含啟動器，建議嘗試解壓後使用其自帶嘅啟動器運行遊戲。\nKCL 可以嘗試導入該整合包，但唔保證可用性，是否繼續？</string>
     <string name="modpack_type_mcbbs">我的世界中文論壇整合包標準</string>
     <string name="modpack_type_hmcl">HMCL 整合包</string>
-    <string name="modpack_type_mcbbs_export">可以被 FCL，HMCL 同 MultiMC 導入</string>
+    <string name="modpack_type_mcbbs_export">可以被 KCL，HMCL 同 MultiMC 導入</string>
     <string name="modpack_type_modrinth">Modrinth</string>
     <string name="modpack_type_multimc">MultiMC</string>
-    <string name="modpack_type_multimc_export">可以被 FCL，HMCL 同 MultiMC 導入</string>
+    <string name="modpack_type_multimc_export">可以被 KCL，HMCL 同 MultiMC 導入</string>
     <string name="modpack_type_server">伺服器自動更新整合包</string>
     <string name="modpack_type_server_export">允許伺服器管理員遠程更新遊戲客戶端</string>
     <string name="modpack_type_server_malformed">伺服器整合包配置格式錯誤，請聯繫伺服器管理員解決此問題</string>
@@ -1035,7 +1035,7 @@
     <string name="renderer_source">來源：</string>
     <string name="renderer_source_builtin">內置</string>
     <string name="message_check_renderer">當前渲染器 %s 唔支持該遊戲版本，繼續使用可能導致渲染錯誤或遊戲崩潰！是否繼續？</string>
-    <!-- 原 FCLLibrary 模块字符串（模块已并入 FCL） -->
+    <!-- 原 FCLLibrary 模块字符串（模块已并入 KCL） -->
     <string name="file_browser_title">檔案瀏覽器</string>
     <string name="file_browser_back">返回</string>
     <string name="file_browser_close">退出</string>

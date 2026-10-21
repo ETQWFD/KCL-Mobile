@@ -7,7 +7,6 @@ on:
     paths-ignore:
       - "**.md"
       - "version_map.json"
-      - "announcement_v2.txt"
   workflow_dispatch:
 
 permissions:
@@ -43,10 +42,11 @@ jobs:
           find FCL/build/outputs/apk -name "*.apk" -print
           cp $(find FCL/build/outputs/apk -name "*.apk" | head -n1) out/KCL-Mobile.apk
 
-      - name: Publish rolling release
+      - name: Publish latest release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: continuous
-          name: KCL Mobile (continuous)
-          prerelease: true
+          name: KCL Mobile
+          prerelease: false
+          make_latest: "true"
           files: out/KCL-Mobile.apk

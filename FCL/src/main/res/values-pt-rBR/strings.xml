@@ -586,13 +586,13 @@
     <string name="modpack_type_curse_tolerable_error">Não foi possível baixar as dependências. Você pode tentar continuar o download iniciando esta instância do jogo.</string>
     <string name="modpack_type_curse_error">Não foi possível baixar dependências do CurseForge, tente novamente ou use uma conexão proxy.</string>
     <string name="modpack_type_curse_not_found">Algumas dependências não estão mais disponíveis, tente instalar uma versão mais recente do modpack.</string>
-    <string name="modpack_type_manual_warning">O modpack é feito manualmente pelo autor, que já pode conter um inicializador. Recomenda-se tentar descompactar e rodar o jogo com seu próprio launcher. O FCL ainda pode importá-lo, sem garantia de sua usabilidade, ainda assim continuar?</string>
+    <string name="modpack_type_manual_warning">O modpack é feito manualmente pelo autor, que já pode conter um inicializador. Recomenda-se tentar descompactar e rodar o jogo com seu próprio launcher. O KCL ainda pode importá-lo, sem garantia de sua usabilidade, ainda assim continuar?</string>
     <string name="modpack_type_mcbbs">Tipo MCBBS</string>
     <string name="modpack_type_hmcl">Tipo HMCL</string>
-    <string name="modpack_type_mcbbs_export">Pode ser importado por FCL, HMCL e MultiMC</string>
+    <string name="modpack_type_mcbbs_export">Pode ser importado por KCL, HMCL e MultiMC</string>
     <string name="modpack_type_modrinth">Modrinth</string>
     <string name="modpack_type_multimc">MultiMC</string>
-    <string name="modpack_type_multimc_export">Pode ser importado por FCL, HMCL e MultiMC</string>
+    <string name="modpack_type_multimc_export">Pode ser importado por KCL, HMCL e MultiMC</string>
     <string name="modpack_type_server">Atualizar automaticamente o modpack do servidor</string>
     <string name="modpack_type_server_export">Permite que o proprietário do servidor atualize a instância do jogo remotamente</string>
     <string name="modpack_type_server_malformed">Manifesto do modpack inválido. Consulte o fabricante do modpack do servidor para corrigir este problema.</string>

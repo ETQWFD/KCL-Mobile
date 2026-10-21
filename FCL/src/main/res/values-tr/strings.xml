@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name_import">Modpack indir</string>
-    <string name="splash_agreement">FCL oyun dosyalarını okuması ve yönetmesi için depolama izni zorunludur. FCL github\'da tamamen açık kaynakdır, bu nedenle verilerinizin güvenliği konusunda endişelenmenize gerek yok. Bu izin yalnızca oyunun düzgün çalışması içindir ve herhangi bir güvenlik riski oluşturmaz.</string>
+    <string name="splash_agreement">KCL oyun dosyalarını okuması ve yönetmesi için depolama izni zorunludur. KCL github\'da tamamen açık kaynakdır, bu nedenle verilerinizin güvenliği konusunda endişelenmenize gerek yok. Bu izin yalnızca oyunun düzgün çalışması içindir ve herhangi bir güvenlik riski oluşturmaz.</string>
     <string name="splash_permission_msg">Depolama izni yok, lütfen KCL\'a depolama izni verin.</string>
     <string name="splash_permission_grant">İzin ver</string>
     <string name="splash_permission_title">Depolama izni gerekli</string>
     <string name="splash_permission_close">Uygulamayı kapat</string>
     <string name="splash_permission_settings">Ayarlar</string>
     <string name="splash_permission_settings_msg">Asla İzin Verme seçeneğini seçtiniz. Lütfen depolama izinlerini ayarlardan manuel olarak verin.</string>
-    <string name="notification_permission">FCL, oyunun normal kurulumu veya başlatılmasıyla ilgili sorunları önlemek için bildirim gönderme iznine ihtiyaç duyar.</string>
+    <string name="notification_permission">KCL, oyunun normal kurulumu veya başlatılmasıyla ilgili sorunları önlemek için bildirim gönderme iznine ihtiyaç duyar.</string>
     <string name="splash_title">KCL\'a hoş geldin</string>
     <string name="splash_eula_error">EULA alınamıyor, lütfen internet bağlantınızı kontrol edin.</string>
     <string name="splash_eula_next">Kabul et ve Devam et</string>

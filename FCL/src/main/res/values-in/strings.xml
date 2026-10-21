@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="splash_agreement">FCL memerlukan izin penyimpanan untuk mengelola dan membaca file game. FCL sepenuhnya bersumber terbuka di GitHub, jadi yakinlah dengan keamanan data Anda. Izin tersebut semata-mata agar game dapat beroperasi dengan baik dan tidak menimbulkan risiko keamanan.</string>
+    <string name="splash_agreement">KCL memerlukan izin penyimpanan untuk mengelola dan membaca file game. KCL sepenuhnya bersumber terbuka di GitHub, jadi yakinlah dengan keamanan data Anda. Izin tersebut semata-mata agar game dapat beroperasi dengan baik dan tidak menimbulkan risiko keamanan.</string>
     <string name="splash_permission_msg">Tidak ada izin penyimpanan, harap berikan izin kepada KCL.</string>
     <string name="splash_permission_grant">Memberikan</string>
     <string name="splash_permission_title">Izin untuk menyimpan diperlukan</string>
     <string name="splash_permission_close">Tutup aplikasi</string>
     <string name="splash_permission_settings">Pengaturan</string>
     <string name="splash_permission_settings_msg">Anda memilih untuk Tidak Pernah Mengizinkan. Harap berikan izin penyimpanan secara manual di setelan.</string>
-    <string name="notification_permission">FCL memerlukan izin untuk mengirimkan notifikasi guna mencegah masalah pada instalasi atau saat memulai game.</string>
+    <string name="notification_permission">KCL memerlukan izin untuk mengirimkan notifikasi guna mencegah masalah pada instalasi atau saat memulai game.</string>
     <string name="splash_title">Selamat Datang di KCL</string>
     <string name="splash_eula_error">Gagal mendapatkan EULA, silakan periksa koneksi internet Anda.</string>
     <string name="splash_eula_next">Setuju dan Lanjutkan</string>

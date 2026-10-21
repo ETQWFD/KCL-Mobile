@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name_import">安装整合包</string>
-    <string name="splash_agreement">FCL需要储存权限以管理/读取游戏文件，FCL在GitHub上完全开源，请不用担心您的数据安全。权限仅用于正常运行游戏，无任何安全问题。</string>
+    <string name="splash_agreement">KCL需要储存权限以管理/读取游戏文件，KCL在GitHub上完全开源，请不用担心您的数据安全。权限仅用于正常运行游戏，无任何安全问题。</string>
     <string name="splash_permission_msg">没有存储权限，请授予 KCL 权限。</string>
     <string name="splash_permission_grant">授予</string>
     <string name="splash_permission_title">需要存储权限</string>
     <string name="splash_permission_close">关闭应用</string>
     <string name="splash_permission_settings">去设置</string>
     <string name="splash_permission_settings_msg">您已选择永不授权，请在设置中手动授予存储权限。</string>
-    <string name="notification_permission">FCL需要发布通知的权限，防止无法正常安装/启动游戏 。</string>
+    <string name="notification_permission">KCL需要发布通知的权限，防止无法正常安装/启动游戏 。</string>
     <string name="splash_title">欢迎使用 KCL</string>
     <string name="splash_eula_error">无法获取用户协议，请检查网络。</string>
     <string name="splash_eula_next">同意并继续</string>
@@ -42,7 +42,7 @@
     <string name="plugin_env_config">配置</string>
     <string name="about_sponsor">赞助</string>
     <string name="about_source">开源</string>
-    <string name="about_desc">你说得对，但是「FCL」是由FCL-Team基于HMCL的核心功能，使用PojavLauncher后端开发的Minecraft Java版启动器。启动器运行在一个被称作「安卓」的系统，在这里，被系统选中的人将被授予「JVM」，导引Java之力。你将扮演一位名为「小白」的神秘用户，在自由的使用中安装不同版本、各有千秋独特的模组，和它们一起运行，找出崩溃闪退的原因，同时逐步发掘「xxException:」的真相。\n\n该应用借鉴和引用了一些 PojavLauncher 和 Boat 的源码，所以如果你要传播分发该软件，请遵循 GPL-v3 协议。</string>
+    <string name="about_desc">你说得对，但是「KCL」是由FCL-Team基于HMCL的核心功能，使用PojavLauncher后端开发的Minecraft Java版启动器。启动器运行在一个被称作「安卓」的系统，在这里，被系统选中的人将被授予「JVM」，导引Java之力。你将扮演一位名为「小白」的神秘用户，在自由的使用中安装不同版本、各有千秋独特的模组，和它们一起运行，找出崩溃闪退的原因，同时逐步发掘「xxException:」的真相。\n\n该应用借鉴和引用了一些 PojavLauncher 和 Boat 的源码，所以如果你要传播分发该软件，请遵循 GPL-v3 协议。\n\nKCL 是由龙腾OS / ETC Team 修改维护的独立第三方再发行版本，按“现状”提供、不附担保；保留 FCL-Team 上游署名与 GPL-v3 协议。</string>
     <string name="account_add_server">添加认证服务器</string>
     <string name="account_add_server_url">服务器地址</string>
     <string name="account_add_server_name">服务器名称</string>
@@ -327,7 +327,7 @@
     <string name="curse_sort_total_downloads">下载量</string>
     <string name="datapack_add">添加数据包</string>
     <string name="datapack_choose_datapack">选择一个数据包导入</string>
-    <string name="download_china">根据相关法律法规，FCL 在中国大陆地区暂不支持下载游戏相关内容。请前往我的世界官方网站下载我的世界中国版。</string>
+    <string name="download_china">根据相关法律法规，KCL 在中国大陆地区暂不支持下载游戏相关内容。请前往我的世界官方网站下载我的世界中国版。</string>
     <string name="download_china_official_site">前往我的世界官方网站</string>
     <string name="download_code_404">远程服务器不包含需要下载的文件: %s</string>
     <string name="download_failed">下载失败: %1$s，错误码：%2$d</string>
@@ -389,11 +389,11 @@
     <string name="folder_config">浏览配置文件夹</string>
     <string name="folder_game">浏览游戏文件夹</string>
     <string name="folder_log">浏览日志文件夹</string>
-    <string name="folder_fcl_log">浏览FCL日志文件夹</string>
+    <string name="folder_fcl_log">浏览KCL日志文件夹</string>
     <string name="upload_log">上传日志</string>
     <string name="log_not_found">未找到日志文件</string>
     <string name="log_too_large">日志文件过大</string>
-    <string name="upload_fcl_log">上传FCL日志</string>
+    <string name="upload_fcl_log">上传KCL日志</string>
     <string name="upload_game_log">上传游戏日志</string>
     <string name="upload_success">上传成功！URL已复制到剪贴板：%s</string>
     <string name="upload_failed">上传失败：%s</string>
@@ -705,17 +705,17 @@
     <string name="modpack_type_curse_tolerable_error">但未能完成该整合包所需的依赖下载，您可以在启动该游戏版本时继续该整合包文件的下载。由于网络问题，您可能需要重试多次。</string>
     <string name="modpack_type_curse_error">未能完成该整合包所需的依赖下载，请多次重试或设置代理。</string>
     <string name="modpack_type_curse_not_found">部分必需文件已经在网络中被删除并且再也无法下载，请尝试该整合包的最新版本或者安装其他整合包。</string>
-    <string name="modpack_type_manual_warning">该整合包由发布者手动打包，其中可能已经包含启动器，建议尝试解压后使用其自带的启动器运行游戏。\nFCL 可以尝试导入该整合包，但不保证可用性，是否继续？</string>
+    <string name="modpack_type_manual_warning">该整合包由发布者手动打包，其中可能已经包含启动器，建议尝试解压后使用其自带的启动器运行游戏。\nKCL 可以尝试导入该整合包，但不保证可用性，是否继续？</string>
     <string name="modpack_type_mcbbs">我的世界中文论坛整合包标准</string>
     <string name="modpack_type_hmcl">HMCL 整合包</string>
-    <string name="modpack_type_mcbbs_export">可以被 FCL，HMCL 和 MultiMC 导入</string>
+    <string name="modpack_type_mcbbs_export">可以被 KCL，HMCL 和 MultiMC 导入</string>
     <string name="modpack_type_modrinth">Modrinth</string>
     <string name="modpack_type_modrinth_export">可被 Modrinth App 与常见启动器导入</string>
     <string name="modpack_export_pack_curseforge">在整合包中附带 CurseForge 远程资源</string>
     <string name="modpack_type_curseforge">CurseForge</string>
     <string name="modpack_type_curseforge_export">可被 CurseForge 启动器与常见启动器导入</string>
     <string name="modpack_type_multimc">MultiMC</string>
-    <string name="modpack_type_multimc_export">可以被 FCL，HMCL 和 MultiMC 导入</string>
+    <string name="modpack_type_multimc_export">可以被 KCL，HMCL 和 MultiMC 导入</string>
     <string name="modpack_type_server">服务器自动更新整合包</string>
     <string name="modpack_type_server_export">允许服务器管理员远程更新游戏客户端</string>
     <string name="modpack_type_server_malformed">服务器整合包配置格式错误，请联系服务器管理员解决此问题</string>
@@ -1122,13 +1122,13 @@
     <string name="terracotta_export_log_share">分享联机核心日志</string>
     <string name="terracotta_export_log_share_null">未找到联机核心日志，请先在游戏内联机菜单导出日志</string>
     <string name="terracotta_status_uninitialized_desc">您承诺，在多人联机全过程中，您将严格遵守您所在国家或地区的全部法律法规。</string>
-    <string name="terracotta_china">根据相关法律法规，FCL 在中国大陆地区暂不提供陶瓦联机服务。</string>
+    <string name="terracotta_china">根据相关法律法规，KCL 在中国大陆地区暂不提供陶瓦联机服务。</string>
     <string name="terracotta_confirm">用户须知\n\n陶瓦联机是第三方开源自由软件，您在使用过程中所遇到的问题请通过相关渠道进行反馈。\n陶瓦联机使用 P2P 技术，联机成功后房间内用户之间将直接连接，不会使用第三方服务器对您的流量进行转发。最终联机体验和参与联机者的网络情况有较大关系。\n在多人联机全过程中，您必须严格遵守您所在国家与地区的全部法律法规。</string>
     <string name="terracotta_menu">联机菜单</string>
     <string name="terracotta_menu_open">打开</string>
     <string name="terracotta_notification_title">Terracotta | 陶瓦联机 正在运行</string>
     <string name="terracotta_notification_desc">身份：%s，状态：%s</string>
-    <string name="notification_title">FCL 进程服务正在运行！</string>
+    <string name="notification_title">KCL 进程服务正在运行！</string>
     <string name="terracotta_status_waiting_host_title">我想当房主</string>
     <string name="terracotta_status_waiting_host_desc">创建房间并生成邀请码，与好友一起畅玩</string>
     <string name="terracotta_status_waiting_guest_title">我想当房客</string>
@@ -1147,7 +1147,7 @@
     <string name="terracotta_status_host_ok_code">邀请码 (已自动复制到剪贴板)：</string>
     <string name="terracotta_status_host_ok_code_copy">复制邀请码</string>
     <string name="terracotta_status_host_ok_code_copy_toast">已将邀请码复制到剪贴板</string>
-    <string name="terracotta_status_host_ok_code_desc">请提醒您的朋友在 FCL 或 HMCL 或 PCL CE 多人联机功能中选择房客模式，并输入该邀请码。</string>
+    <string name="terracotta_status_host_ok_code_desc">请提醒您的朋友在 KCL 或 HMCL 或 PCL CE 多人联机功能中选择房客模式，并输入该邀请码。</string>
     <string name="terracotta_status_host_ok_back">这将同时彻底关闭房间，其他房客将退出并不再能重新加入该房间。</string>
     <string name="terracotta_status_guest_starting">正在加入房间</string>
     <string name="terracotta_status_guest_connecting">正在加入房间</string>
@@ -1173,9 +1173,9 @@
     <string name="terracotta_player_kind_local">你</string>
     <string name="terracotta_player_kind_guest">房客</string>
     <string name="terracotta_tutorial_host_btn">房主教程</string>
-    <string name="terracotta_tutorial_host">房主使用方法：\n\n - 在启动器多人联机主页阅读用户须知后启用联机功能\n - 启动游戏，在游戏内的 FCL 菜单中找到联机菜单并打开\n - 点击“我想当房主”，扫描游戏端口\n - 进入存档，在游戏暂停菜单中打开“对局域网开放”选项\n - 若弹出提示要求申请 VPN 权限，请授予，否则无法正常使用\n - 稍等片刻将自动复制邀请码，若没有自动复制，也可以前往联机菜单复制\n - 将邀请码发送给你的伙伴\n\n注意事项：\n\n - 该软件支持离线账户\n - 该软件支持与 HMCL 和 PCL CE 等支持 Scaffolding 协议的软件互联</string>
+    <string name="terracotta_tutorial_host">房主使用方法：\n\n - 在启动器多人联机主页阅读用户须知后启用联机功能\n - 启动游戏，在游戏内的 KCL 菜单中找到联机菜单并打开\n - 点击“我想当房主”，扫描游戏端口\n - 进入存档，在游戏暂停菜单中打开“对局域网开放”选项\n - 若弹出提示要求申请 VPN 权限，请授予，否则无法正常使用\n - 稍等片刻将自动复制邀请码，若没有自动复制，也可以前往联机菜单复制\n - 将邀请码发送给你的伙伴\n\n注意事项：\n\n - 该软件支持离线账户\n - 该软件支持与 HMCL 和 PCL CE 等支持 Scaffolding 协议的软件互联</string>
     <string name="terracotta_tutorial_guest_btn">房客教程</string>
-    <string name="terracotta_tutorial_guest">房客使用方法：\n\n - 在启动器多人联机主页阅读用户须知后启用联机功能\n - 启动游戏，在游戏内的 FCL 菜单中找到联机菜单并打开\n - 点击“我想当房客”，在输入框内输入房主提供的邀请码，并耐心等待\n - 若弹出提示要求申请 VPN 权限，请授予，否则无法正常使用\n - 显示已加入房间后，在游戏主界面选择多人游戏并刷新，双击进入陶瓦联机大厅\n\n注意事项：\n\n - 该软件支持离线账户\n - 该软件支持与 HMCL 和 PCL CE 等支持 Scaffolding 协议的软件互联\n - 使用备用服务器地址加入游戏时，不支持离线账户，自行解决</string>
+    <string name="terracotta_tutorial_guest">房客使用方法：\n\n - 在启动器多人联机主页阅读用户须知后启用联机功能\n - 启动游戏，在游戏内的 KCL 菜单中找到联机菜单并打开\n - 点击“我想当房客”，在输入框内输入房主提供的邀请码，并耐心等待\n - 若弹出提示要求申请 VPN 权限，请授予，否则无法正常使用\n - 显示已加入房间后，在游戏主界面选择多人游戏并刷新，双击进入陶瓦联机大厅\n\n注意事项：\n\n - 该软件支持离线账户\n - 该软件支持与 HMCL 和 PCL CE 等支持 Scaffolding 协议的软件互联\n - 使用备用服务器地址加入游戏时，不支持离线账户，自行解决</string>
     <string name="update">更新</string>
     <string name="update_netdisk">更新（网盘）</string>
     <string name="update_check">检查更新</string>
@@ -1370,7 +1370,7 @@
     <string name="mod_check_axiom">当前使用的Axiom模组（%s）未经修补，启动后将会崩溃。</string>
     <string name="mod_check_sodium">当前使用的GL4ES渲染器可能无法运行模组Sodium/Embeddium（%s），继续启动可能会导致游戏崩溃，建议下载并使用MobileGlues渲染器（https://github.com/MobileGL-Dev/MobileGlues-release/releases）。</string>
     <string name="mod_check_flashback">Flashback模组（%s）无法在安卓上运行。</string>
-    <string name="mod_check_ixeris">Ixeris模组（%s）无法在FCL上正常运行。</string>
+    <string name="mod_check_ixeris">Ixeris模组（%s）无法在KCL上正常运行。</string>
     <string name="internal">内置的</string>
     <string name="import_java">导入Java</string>
     <string name="import_java_wrong_file">仅支持导入tar.xz文件。</string>
@@ -1402,7 +1402,7 @@
     <string name="slide_selection">滑动选择</string>
     <string name="swap_hands">双击切换副手</string>
     <string name="jar_executor_warn">注意！该功能不是用于安装模组的，如果你正在安装模组，请使用启动器的下载功能或是在“管理模组”内添加。</string>
-    <!-- 原 FCLLibrary 模块字符串（模块已并入 FCL） -->
+    <!-- 原 FCLLibrary 模块字符串（模块已并入 KCL） -->
     <string name="file_browser_title">文件浏览器</string>
     <string name="file_browser_back">返回</string>
     <string name="file_browser_close">退出</string>
@@ -1482,8 +1482,8 @@
     <string name="animation_idle_variant_1">待机变体 1</string>
     <string name="animation_idle_variant_2">待机变体 2</string>
     <string name="animation_idle_variant_3">待机变体 3</string>
-    <string name="quark_promo_title">支持 FCL</string>
-    <string name="quark_promo_message">这是你第 %1$d 次启动游戏！\n\n如果 FCL 对你有帮助，欢迎动动手指打开夸克网盘，注册或登录后点击保存到网盘（不用下载），就是对我们最大的支持，十分感谢～</string>
+    <string name="quark_promo_title">支持 KCL</string>
+    <string name="quark_promo_message">这是你第 %1$d 次启动游戏！\n\n如果 KCL 对你有帮助，欢迎动动手指打开夸克网盘，注册或登录后点击保存到网盘（不用下载），就是对我们最大的支持，十分感谢～</string>
     <string name="quark_promo_open">打开夸克网盘</string>
     <string name="quark_promo_start">开始游戏</string>
 </resources>

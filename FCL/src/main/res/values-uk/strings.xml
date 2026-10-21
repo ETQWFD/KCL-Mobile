@@ -563,11 +563,11 @@
     <string name="modpack_type_curse_tolerable_error">Не вдалося завантажити залежності, ви можете спробувати продовжити завантаження, запустивши цей профіль гри.</string>
     <string name="modpack_type_curse_error">Не вдалося завантажити залежності з CurseForge. Повторіть спробу або використовуйте проксі-з’єднання.</string>
     <string name="modpack_type_curse_not_found">Деякі залежності більше не доступні, спробуйте встановити новішу версію модпака.</string>
-    <string name="modpack_type_manual_warning">Цей модпак зібрано вручну автором і може містити власний лаунчер. Рекомендується розпакувати архів і спробувати запустити гру за допомогою нього. FCL може імпортувати цей модпак, але коректна робота не гарантується. Продовжити?</string>
+    <string name="modpack_type_manual_warning">Цей модпак зібрано вручну автором і може містити власний лаунчер. Рекомендується розпакувати архів і спробувати запустити гру за допомогою нього. KCL може імпортувати цей модпак, але коректна робота не гарантується. Продовжити?</string>
     <string name="modpack_type_mcbbs">Тип MCBBS</string>
     <string name="modpack_type_hmcl">Тип HMCL</string>
-    <string name="modpack_type_mcbbs_export">Може бути імпортовано FCL, HMCL і MultiMC</string>
-    <string name="modpack_type_multimc_export">Може бути імпортовано FCL, HMCL і MultiMC</string>
+    <string name="modpack_type_mcbbs_export">Може бути імпортовано KCL, HMCL і MultiMC</string>
+    <string name="modpack_type_multimc_export">Може бути імпортовано KCL, HMCL і MultiMC</string>
     <string name="modpack_type_server">Автоматичне оновлення модпака з сервера</string>
     <string name="modpack_type_server_export">Дозволяє власнику сервера віддалено оновлювати профіль гри</string>
     <string name="modpack_type_server_malformed">Неправильний маніфест модпака. Зверніться до виробника модпак сервера, щоб виправити цю проблему.</string>
@@ -905,7 +905,7 @@
     <string name="tip_hide_menu_view">Меню приховано. Натисніть клавішу гучності, щоб відкрити меню.</string>
     <string name="modloader">Завантажувач модів</string>
     <string name="message_warn_renderer_global_setting">Вибрана вами версія має окремі налаштування для кожного профілю, тому вказаний тут рендерер не може бути застосований до поточної версії. Рекомендується тривале натискання кнопки Запуск для вибору рендерера.</string>
-    <!-- 原 FCLLibrary 模块字符串（模块已并入 FCL） -->
+    <!-- 原 FCLLibrary 模块字符串（模块已并入 KCL） -->
     <string name="file_browser_title">Файловий менеджер</string>
     <string name="file_browser_back">Назад</string>
     <string name="file_browser_close">Вийти</string>

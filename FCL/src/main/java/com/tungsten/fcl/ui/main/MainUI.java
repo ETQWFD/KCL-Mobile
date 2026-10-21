@@ -34,8 +34,8 @@ import java.util.logging.Level;
 
 public class MainUI extends FCLCommonUI implements View.OnClickListener {
 
-    public static final String ANNOUNCEMENT_URL = "https://raw.githubusercontent.com/ETQWFD/KCL-Mobile/main/announcement_v2.txt";
-    public static final String ANNOUNCEMENT_URL_CN = "https://raw.githubusercontent.com/ETQWFD/KCL-Mobile/main/announcement_v2.txt";
+    public static final String ANNOUNCEMENT_URL = "https://etqwfd.github.io/KCL2/announcement-mobile.json";
+    public static final String ANNOUNCEMENT_URL_CN = "https://etqwfd.github.io/KCL2/announcement-mobile.json";
 
     private LinearLayoutCompat announcementContainer;
     private LinearLayoutCompat announcementLayout;

@@ -1,109 +1,68 @@
 <div align="center">
-    <img width="75" src="/FCL/src/main/res/drawable/img_app.png"></img>
+    <img width="96" src="/FCL/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png"></img>
 </div>
 
-<h1 align="center">Fold Craft Launcher</h1>
+<h1 align="center">KCL (Android)</h1>
 
 <div align="center">
 
-[![Android CI](https://github.com/FCL-Team/FoldCraftLauncher/actions/workflows/build.yml/badge.svg)](https://github.com/FCL-Team/FoldCraftLauncher/actions/workflows/build.yml)
-![Downloads](https://img.shields.io/github/downloads/FCL-Team/FoldCraftLauncher/total?style=flat-square&color=f18cb9)
-![Release](https://img.shields.io/github/v/release/FCL-Team/FoldCraftLauncher?style=flat-square&color=f18cb9)
-
-[![Discord](https://img.shields.io/badge/Discord-red?logo=discord&logoColor=white)](https://discord.gg/ffhvuXTwyV)
-[![QQ](https://img.shields.io/badge/QQ-green)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=LwxydGEvBZJnn09sXOjkQo9tuuLcYwx5&authKey=seyY5pPUCIHMWS5FqVryq926T0G2GarSXetpxxV9DJxBVt%2FPcg1vxN%2F%2FXpsCowyk&noverify=0&group_code=762054349)
-[![Sponsor](https://img.shields.io/badge/sponsor-blue?logo=GitHub-Sponsors)](https://afdian.com/@tungs)
+[![Android CI](https://github.com/ETQWFD/KCL-Mobile/actions/workflows/continuous.yml/badge.svg)](https://github.com/ETQWFD/KCL-Mobile/actions/workflows/continuous.yml)
+[![Release](https://img.shields.io/github/v/release/ETQWFD/KCL-Mobile?style=flat-square&color=0b7a46)](https://github.com/ETQWFD/KCL-Mobile/releases)
+[![License](https://img.shields.io/badge/license-GPL--3.0-0b7a46?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.html)
 
 </div>
 
-🌍 **Language**  
-[简体中文](./README.md) | English | [Русский язык](./README_RU.md)
+[简体中文](./README.md) | English
 
-> ✨ **Project Introduction**  
-> 「Fold Craft Launcher」 is a Minecraft: Java Edition launcher for Android platforms developed by the FCL Team. Built upon the core functionalities of [HMCL](https://github.com/HMCL-dev/HMCL) and using the [Amethyst-Android](https://github.com/AngelAuraMC/Amethyst-Android) backend, it enables users to enjoy Java Edition MC on mobile devices, supporting mod loading and operation across all versions.
+When the usual launchers become temporarily unavailable because of network, maintenance, or outside pressure, players still need a fallback entry point to their local game. **KCL** keeps version downloading, legitimate login, and local instance management available in that situation; this is the Android edition of the KCL family.
 
----
-
-## 🚀 Core Features
-
-✅ **Full Version Support**  
-- Native support for all Minecraft versions (including latest snapshots)
-- Mod loader support: Forge/NeoForge/LiteLoader/OptiFine/Fabric/Quilt/Cleanroom...
-
-⚙️ **Key Highlights**  
-- Built-in multi-version Java runtimes (Java 8/17/21/25) with custom Java import support
-- Virtual mouse and customizable key mapping
-- FCL↔ZalithLauncher2 control layout conversion, importing a ZL2 layout converts it automatically
-- Shaders support (requires VirGL/Zink/MG renderers)
-- Dynamic resource management (mods/modpacks/textures/shaders/saves)
-- Personalized theme customization (background/color schemes)
-- Supports [renderer pluginization](https://github.com/ShirosakiMio/FCLRendererPlugin)
+KCL (Android) is a redistribution of [Fold Craft Launcher (FCL)](https://github.com/FCL-Team/FoldCraftLauncher). FCL was built by [FCL-Team](https://github.com/FCL-Team) on top of [HMCL](https://github.com/HMCL-dev/HMCL) core functionality with a [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher) backend. KCL is an independent third-party modification maintained by 龙腾OS / ETC Team; update checks and the in-launch announcement point to the ETQWFD repositories, not to upstream FCL-Team.
 
 ---
 
-## 🎮 Screenshots
+## Download
 
-<div align="center">
-  <img src="/.github/images/ui_main_light.jpg" width="30%" alt="Light Theme">
-  <img src="/.github/images/ui_main_dark.jpg" width="30%" alt="Dark Theme">
-  <img src="/.github/images/game.jpg" width="30%" alt="Gameplay Preview">
-</div>
+- Project site (shared with the desktop KCL2 / KCL CE builds): https://etqwfd.github.io/KCL2/
+- Universal APK (all architectures, directly installable): https://github.com/ETQWFD/KCL-Mobile/releases
+- Requires Android 8.0+ (minSdk 26); the Java runtime is fetched on first run as needed.
 
 ---
 
-## 📜 License
+## Features
 
-This project is licensed under **[GPL-3.0 License](https://www.gnu.org/licenses/gpl-3.0.html)**
+- Full Minecraft: Java Edition support (including the latest snapshots), version isolation and modpack import.
+- Mod loaders: Forge / NeoForge / Fabric / Quilt / OptiFine / LiteLoader, etc.
+- Built-in Java runtimes (8 / 17 / 21 / 25) plus custom runtime import.
+- Virtual mouse, custom key mapping and control layouts; shaders (VirGL / Zink renderers).
+- Dynamic asset management (mods / modpacks / resource packs / shaders / worlds) and theming.
+- Update and announcement sources hosted by our team:
+  - Update: `version_map.json` in `ETQWFD/KCL-Mobile`
+  - Announcement: `announcement-mobile.json` on the KCL2 site
 
 ---
 
-## 🌍 Translation
+## Family
 
-We'd love your help with translations! The project's localization is managed on [Weblate](https://hosted.weblate.org/projects/foldcraftlauncher/) — no tools needed, just translate in your browser.
+- KCL2 — Windows desktop main build (based on Plain Craft Launcher 2, MIT).
+- KCL CE — Windows desktop community build (MIT).
+- KCL (this repo) — Android build (based on FCL, GPL-v3).
 
 ---
 
-## 🤝 Contributions & Acknowledgements
-### Contributors Wall
-<a href="https://github.com/FCL-Team/FoldCraftLauncher/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=FCL-Team/FoldCraftLauncher" />
-</a>
+## Feedback
 
-### Related Projects
-- [HMCL](https://github.com/HMCL-dev/HMCL): source of core functionality (fclcore ported from `org.jackhuang.hmcl`)
-- [Boat and related projects](https://github.com/AOF-Dev/Boat)
-- [Amethyst-Android](https://github.com/AngelAuraMC/Amethyst-Android) (PojavLauncher's Android fork): JVM launching and rendering backend
-- [authlib-injector](https://github.com/yushijinhun/authlib-injector)
-- [EasyTier](https://github.com/EasyTier/EasyTier): underlying mesh networking for LAN play
-- [Terracotta](https://github.com/burningtnt/Terracotta): LAN play solution based on EasyTier (Terracotta module JNI wrapper)
-- [TouchController](https://github.com/TouchController/TouchController): touch controller dependency
-- [NG-GL4ES](https://github.com/ShirosakiMio/NG-GL4ES): gl4es fork renderer (prebuilt aar shipped with FCL)
-- [FCLRendererPlugin](https://github.com/ShirosakiMio/FCLRendererPlugin): renderer plugin extension
-- [FCLDriverPlugin](https://github.com/FCL-Team/FCLDriverPlugin): driver (Turnip etc.) plugin extension
+- Issues: https://github.com/ETQWFD/KCL-Mobile/issues
+- Email: 2416444244@qq.com
+- QQ group: 1121514619
 
-### Dependencies
+---
 
-- [Amethyst-Android](https://github.com/AngelAuraMC/Amethyst-Android) (PojavLauncher's Android fork): [GPL-3.0]
-- Android Support
-  Libraries: [Apache License 2.0](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt)
-- [GL4ES](https://github.com/ptitSeb/gl4es): [MIT License](https://github.com/ptitSeb/gl4es/blob/master/LICENSE)
-- [NG-GL4ES](https://github.com/ShirosakiMio/NG-GL4ES) (gl4es fork derived from Krypton Wrapper, used as a prebuilt aar)
-- [ANGLE](https://chromium.googlesource.com/angle/angle): [BSD-3 License](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/LICENSE)
-- [OpenJDK](https://github.com/AngelAuraMC/openjdk-multiarch-jdk8u): [GNU GPLv2 License](https://openjdk.java.net/legal/gplv2+ce.html) (runtimes built and released by FCL-Team)
-- [LWJGL3](https://github.com/LWJGL/lwjgl3) (official jars + Android source patches): [BSD-3 License](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md)
-- [LWJGLX](https://github.com/AngelAuraMC/lwjglx) (LWJGL2 API compatibility layer for LWJGL3):
-  unknown license
-- [Mesa 3D Graphics Library](https://gitlab.freedesktop.org/mesa/mesa): [MIT License](https://docs.mesa3d.org/license.html)
-- [SPIRV-Cross](https://github.com/KhronosGroup/SPIRV-Cross) (SPIR-V reflection/translation, natives packaged as aar): [Apache License 2.0](https://github.com/KhronosGroup/SPIRV-Cross/blob/master/LICENSE)
-- [bhook](https://github.com/bytedance/bhook) (Used for exit code
-  trapping): [MIT license](https://github.com/bytedance/bhook/blob/main/LICENSE).
-- [libepoxy](https://github.com/anholt/libepoxy): [MIT License](https://github.com/anholt/libepoxy/blob/master/COPYING).
-- [virglrenderer](https://github.com/AngelAuraMC/virglrenderer): [MIT License](https://gitlab.freedesktop.org/virgl/virglrenderer/-/blob/master/COPYING).
-- [OpenAL-Soft](https://github.com/kcat/openal-soft): [GNU LGPLv2.1](https://github.com/kcat/openal-soft/blob/master/COPYING)
-    - [oboe](https://github.com/google/oboe): [Apache License 2.0](https://github.com/google/oboe/blob/main/LICENSE).
-    - [pfffft](https://bitbucket.org/jpommier/pffft/src/master/): [ARR]
-- [EasyTier](https://github.com/EasyTier/EasyTier) (embedded networking layer in the Terracotta module): [LGPL-3.0](https://github.com/EasyTier/EasyTier/blob/main/LICENSE)
-- [Terracotta](https://github.com/burningtnt/Terracotta) (`net.burningtnt.terracotta` JNI wrapper): [AGPL-3.0](https://github.com/burningtnt/Terracotta/blob/main/LICENSE)
-- [TouchController](https://github.com/TouchController/TouchController) (touch controller): [LGPL-3.0](https://github.com/TouchController/TouchController/blob/main/LICENSE)
-- [discord-rpc](https://github.com/discord/discord-rpc) (libdiscord-rpc.so): [MIT License](https://github.com/discord/discord-rpc/blob/master/LICENSE)
-- [control-converter](https://github.com/NingZeStudio/control-converter) (FCL↔ZL2 control layout converter, pure Kotlin implementation in-tree based on cc.py semantics, no longer packaged as `libcc.so`): [MIT License](https://opensource.org/licenses/MIT)
+## Liability
+
+KCL does not operate Minecraft or any multiplayer server. For underage charges, server bans, item disputes, refunds, or server rules, contact the server owner, the server administration team, the payment channel, or official Microsoft / Mojang support; these are outside a launcher's scope. This project is provided as-is without warranty.
+
+---
+
+## License and credits
+
+Licensed under **[GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)**. The app uses and quotes parts of PojavLauncher and Boat, so redistribution must follow GPL-v3. All upstream credits (FCL-Team, HMCL, and others) are retained; the KCL rename and changes belong to 龙腾OS / ETC Team. Minecraft and its marks belong to Microsoft / Mojang.
