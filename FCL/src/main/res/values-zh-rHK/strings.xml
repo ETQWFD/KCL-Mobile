@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="splash_agreement">FCL需要儲存權限以管理/讀取遊戲文件，FCL喺GitHub上完全開源，請唔使擔心你嘅數據安全。權限只係用於正常運行遊戲，冇任何安全問題。</string>
-    <string name="splash_permission_msg">冇儲存權限，請授予 Fold Craft Launcher 權限。</string>
+    <string name="splash_permission_msg">冇儲存權限，請授予 KCL 權限。</string>
     <string name="splash_permission_grant">授予</string>
     <string name="splash_permission_title">需要儲存權限</string>
     <string name="splash_permission_close">關閉應用</string>
     <string name="splash_permission_settings">去設定</string>
     <string name="splash_permission_settings_msg">你已選擇永不授權，請喺設定中手動授予儲存權限。</string>
     <string name="notification_permission">FCL需要發佈通知嘅權限，防止無法正常安裝/啟動遊戲。</string>
-    <string name="splash_title">歡迎使用 Fold Craft Launcher</string>
+    <string name="splash_title">歡迎使用 KCL</string>
     <string name="splash_eula_error">無法獲取用戶協議，請檢查網絡。</string>
     <string name="splash_eula_next">同意並繼續</string>
     <string name="splash_runtime_title">安裝或更新運行環境</string>
@@ -40,7 +40,7 @@
     <string name="plugin_env_config">配置</string>
     <string name="about_sponsor">贊助</string>
     <string name="about_source">開源</string>
-    <string name="about_desc">Fold Craft Launcher 係一個 Android Minecraft 啟動器，讓用戶能夠喺 Android 設備上啟動 Minecraft: Java Edition。\n\nFold Craft Launcher 由 FCL-Team 開發。\n\nFold Craft Launcher 嘅主要功能係基於 HMCLCore 修改而成。\n\n該應用借鑒和引用咗一啲 PojavLauncher 同 Boat 嘅源碼，所以如果你要傳播分發該軟件，請遵循 GPL-v3 協議。</string>
+    <string name="about_desc">KCL 係一個 Android Minecraft 啟動器，讓用戶能夠喺 Android 設備上啟動 Minecraft: Java Edition。\n\nKCL 由 FCL-Team 開發。\n\nKCL 嘅主要功能係基於 HMCLCore 修改而成。\n\n該應用借鑒和引用咗一啲 PojavLauncher 同 Boat 嘅源碼，所以如果你要傳播分發該軟件，請遵循 GPL-v3 協議。</string>
     <string name="account_add_server">添加認證伺服器</string>
     <string name="account_add_server_url">伺服器地址</string>
     <string name="account_add_server_name">伺服器名稱</string>
@@ -634,7 +634,7 @@
     <string name="modpack_type_server">伺服器自動更新整合包</string>
     <string name="modpack_type_server_export">允許伺服器管理員遠程更新遊戲客戶端</string>
     <string name="modpack_type_server_malformed">伺服器整合包配置格式錯誤，請聯繫伺服器管理員解決此問題</string>
-    <string name="modpack_unsupported">Fold Craft Launcher 唔支持該整合包格式</string>
+    <string name="modpack_unsupported">KCL 唔支持該整合包格式</string>
     <string name="modpack_update">正在升級整合包</string>
     <string name="modpack_wizard">導出整合包嚮導</string>
     <string name="modpack_wizard_step_1">基本設置</string>
@@ -1055,7 +1055,7 @@
     <string name="file_browser_share_title">分享檔案</string>
     <string name="file_browser_share_message">你確定要分享此檔案嗎？</string>
     <string name="crash_reporter_title">崩潰報告</string>
-    <string name="crash_reporter_hint">Fold Craft Launcher 遇到無法解決嘅錯誤，請向開發者或其他人求助。</string>
+    <string name="crash_reporter_hint">KCL 遇到無法解決嘅錯誤，請向開發者或其他人求助。</string>
     <string name="crash_reporter_restart">重新啟動軟件</string>
     <string name="crash_reporter_close">退出軟件</string>
     <string name="crash_reporter_copy">複製日誌</string>

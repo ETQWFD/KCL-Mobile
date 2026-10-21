@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="splash_agreement">FCL требуется разрешение на доступ к хранилищу для управления игровыми файлами и их чтения. FCL имеет полностью открытый исходный код на GitHub, поэтому вы можете быть уверены в безопасности ваших данных. Это разрешение необходимо исключительно для корректной работы игры и не представляет никаких угроз безопасности.</string>
-    <string name="splash_permission_msg">Нет доступа к хранилищу. Предоствьте разрешение Fold Craft Launcher в настройках.</string>
+    <string name="splash_permission_msg">Нет доступа к хранилищу. Предоствьте разрешение KCL в настройках.</string>
     <string name="splash_permission_grant">Разрешить</string>
     <string name="splash_permission_title">Необходимо разрешение на доступ к хранилищу</string>
     <string name="splash_permission_close">Закрыть лаунчер</string>
     <string name="splash_permission_settings">Настройки</string>
     <string name="splash_permission_settings_msg">Вы выбрали Запретить. Разрешите доступ к хранилищу в настройках вручную.</string>
     <string name="notification_permission">FCL требуется разрешение на отправку уведомлений, чтобы избежать проблем с установкой и запуском игры.</string>
-    <string name="splash_title">Добро пожаловать в Fold Craft Launcher</string>
+    <string name="splash_title">Добро пожаловать в KCL</string>
     <string name="splash_eula_error">Не удалось подтвердить наличие лицензии из-за проблем с соединением.</string>
     <string name="splash_eula_next">Принять и продолжить</string>
     <string name="splash_runtime_title">Установить среду выполнения лаунчера</string>
@@ -40,7 +40,7 @@
     <string name="plugin_env_config">Настроить</string>
     <string name="about_sponsor">Спонсоры</string>
     <string name="about_source">Исходный код</string>
-    <string name="about_desc">Fold Craft Launcher - это лаунчер который запускать Minecraft: Java Edition на Android устройствах.\n\nFold Craft Launcher разработан командой FCL-Team.\n\nБольшинство функций Fold Craft Launcher модифицированы на основе HMCLCore. Лаунчер использует и цитирует некоторые коды PojavLauncher и Boat, поэтому, если вы собираетесь распространять этот лаунчер, пожалуйста, следуйте лицензии GPL-v3.</string>
+    <string name="about_desc">KCL - это лаунчер который запускать Minecraft: Java Edition на Android устройствах.\n\nKCL разработан командой FCL-Team.\n\nБольшинство функций KCL модифицированы на основе HMCLCore. Лаунчер использует и цитирует некоторые коды PojavLauncher и Boat, поэтому, если вы собираетесь распространять этот лаунчер, пожалуйста, следуйте лицензии GPL-v3.</string>
     <string name="account_add_server">Сервер аутентификации</string>
     <string name="account_add_server_url">URL адрес сервера</string>
     <string name="account_add_server_name">Название сервера</string>
@@ -971,7 +971,7 @@
     <string name="file_browser_share_title">Поделиться файлом</string>
     <string name="file_browser_share_message">Вы уверены, что хотите поделиться этим файлом?</string>
     <string name="crash_reporter_title">Отчет об ошибке</string>
-    <string name="crash_reporter_hint">В Fold Craft Launcher произошла критическая ошибка. Обратитесь к разработчику или в сообщество за помощью.</string>
+    <string name="crash_reporter_hint">В KCL произошла критическая ошибка. Обратитесь к разработчику или в сообщество за помощью.</string>
     <string name="crash_reporter_restart">Перезапустить</string>
     <string name="crash_reporter_close">Выйти</string>
     <string name="crash_reporter_copy">Копировать</string>

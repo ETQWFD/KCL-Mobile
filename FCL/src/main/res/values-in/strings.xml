@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="splash_agreement">FCL memerlukan izin penyimpanan untuk mengelola dan membaca file game. FCL sepenuhnya bersumber terbuka di GitHub, jadi yakinlah dengan keamanan data Anda. Izin tersebut semata-mata agar game dapat beroperasi dengan baik dan tidak menimbulkan risiko keamanan.</string>
-    <string name="splash_permission_msg">Tidak ada izin penyimpanan, harap berikan izin kepada Fold Craft Launcher.</string>
+    <string name="splash_permission_msg">Tidak ada izin penyimpanan, harap berikan izin kepada KCL.</string>
     <string name="splash_permission_grant">Memberikan</string>
     <string name="splash_permission_title">Izin untuk menyimpan diperlukan</string>
     <string name="splash_permission_close">Tutup aplikasi</string>
     <string name="splash_permission_settings">Pengaturan</string>
     <string name="splash_permission_settings_msg">Anda memilih untuk Tidak Pernah Mengizinkan. Harap berikan izin penyimpanan secara manual di setelan.</string>
     <string name="notification_permission">FCL memerlukan izin untuk mengirimkan notifikasi guna mencegah masalah pada instalasi atau saat memulai game.</string>
-    <string name="splash_title">Selamat Datang di Fold Craft Launcher</string>
+    <string name="splash_title">Selamat Datang di KCL</string>
     <string name="splash_eula_error">Gagal mendapatkan EULA, silakan periksa koneksi internet Anda.</string>
     <string name="splash_eula_next">Setuju dan Lanjutkan</string>
     <string name="splash_runtime_title">Instal atau perbarui runtime aplikasi</string>
@@ -42,7 +42,7 @@
     <string name="plugin_env_config">Konfigurasi</string>
     <string name="about_sponsor">Sponsor</string>
     <string name="about_source">Sumber Terbuka</string>
-    <string name="about_desc">Fold Craft Launcher adalah Launcher Minecraft Android, memungkinkan pengguna untuk meluncurkan Minecraft: Java Edition di perangkat Android.\n\nFold Craft Launcher dikembangkan oleh FCL-Team.\n\nSebagian besar fitur Fold Craft Launcher dimodifikasi berdasarkan HMCLCore.\n\nAplikasi ini meminjam dan mengutip beberapa kode dari PojavLauncher dan Boat, jadi jika Anda akan mendistribusikan aplikasi ini, silakan ikuti Lisensi GPL-v3.</string>
+    <string name="about_desc">KCL adalah Launcher Minecraft Android, memungkinkan pengguna untuk meluncurkan Minecraft: Java Edition di perangkat Android.\n\nKCL dikembangkan oleh FCL-Team.\n\nSebagian besar fitur KCL dimodifikasi berdasarkan HMCLCore.\n\nAplikasi ini meminjam dan mengutip beberapa kode dari PojavLauncher dan Boat, jadi jika Anda akan mendistribusikan aplikasi ini, silakan ikuti Lisensi GPL-v3.</string>
     <string name="account_add_server">Tambahkan Server Otentikasi</string>
     <string name="account_add_server_url">URL Server</string>
     <string name="account_add_server_name">Nama Server</string>
