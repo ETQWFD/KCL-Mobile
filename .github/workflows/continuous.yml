@@ -1,0 +1,52 @@
+name: Continuous APK
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - "version_map.json"
+      - "announcement_v2.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build universal APK and publish rolling release
+    runs-on: ubuntu-latest
+    env:
+      FCL_KEYSTORE_PASSWORD: ${{ secrets.FCL_KEYSTORE_PASSWORD }}
+      CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
+      OAUTH_API_KEY: ${{ secrets.OAUTH_API_KEY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: 17
+          cache: "gradle"
+
+      - name: Build universal debug APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assemblefordebug -Darch=all --no-daemon
+
+      - name: Rename APK
+        run: |
+          mkdir -p out
+          find FCL/build/outputs/apk -name "*.apk" -print
+          cp $(find FCL/build/outputs/apk -name "*.apk" | head -n1) out/KCL-Mobile.apk
+
+      - name: Publish rolling release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: continuous
+          name: KCL Mobile (continuous)
+          prerelease: true
+          files: out/KCL-Mobile.apk
