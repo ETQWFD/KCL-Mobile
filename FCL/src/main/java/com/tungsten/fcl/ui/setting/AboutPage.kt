@@ -126,8 +126,13 @@ class AboutPage(context: Context?, id: Int) : FCLPage(context, id, R.layout.page
         }
     }
 
-    /** 链接行：标题资源与跳转链接（null 表示跳转 QQ 群），document 非空时改为查看协议文档；条目顺序即显示顺序 */
-    private data class LinkItem(val titleRes: Int, val link: String?, val document: LegalAgreement.Document? = null)
+    /** 链接行：标题资源、图标资源(0 为无)、跳转链接（document 非空时改为查看协议文档）；条目顺序即显示顺序 */
+    private data class LinkItem(
+        val titleRes: Int,
+        val link: String?,
+        val document: LegalAgreement.Document? = null,
+        val iconRes: Int = 0
+    )
 
     private class AboutAdapter(
         private val onLinkClick: (Int) -> Unit
@@ -170,7 +175,15 @@ class AboutPage(context: Context?, id: Int) : FCLPage(context, id, R.layout.page
                 holder.itemView.setOnClickListener {
                     onLinkClick(holder.bindingAdapterPosition - 1)
                 }
-                ItemAboutBinding.bind(holder.itemView).title.setText(LINKS[position - 1].titleRes)
+                val itemBinding = ItemAboutBinding.bind(holder.itemView)
+                val item = LINKS[position - 1]
+                itemBinding.title.setText(item.titleRes)
+                if (item.iconRes != 0) {
+                    itemBinding.icon.setImageResource(item.iconRes)
+                    itemBinding.icon.visibility = View.VISIBLE
+                } else {
+                    itemBinding.icon.visibility = View.GONE
+                }
             }
         }
 
@@ -187,12 +200,12 @@ class AboutPage(context: Context?, id: Int) : FCLPage(context, id, R.layout.page
         private const val QQ_GROUP_KEY = "9_Mnxe5x1l6L7giLuRYQyBh0iWBgCUbw"
 
         private val LINKS = listOf(
-            LinkItem(R.string.about_launcher, "https://fcl-team.github.io/"),
+            LinkItem(R.string.about_kcl_official, "https://etqwfd.github.io/KCL2/", iconRes = R.drawable.kcl_avatar),
+            LinkItem(R.string.about_sponsor, "https://b23.tv/o42pOXH"),
+            LinkItem(R.string.community_qq, "http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=b31JnHKqph3vMmCIhk2htihvcREH2F1t&authKey=U8JJu2GFgtaIvRnov%2FhH7%2Bcq08hv8JM6q5GBdGBzF1yZXYTSGSbQP9O%2FIh%2BVqby9&noverify=0&group_code=1121514619"),
             LinkItem(R.string.about_developer, "https://github.com/FCL-Team"),
             LinkItem(R.string.community_discord, "https://discord.gg/ffhvuXTwyV"),
-            LinkItem(R.string.community_qq, null),
-            LinkItem(R.string.about_sponsor, "https://afdian.com/@tungs"),
-            LinkItem(R.string.about_source, "https://github.com/FCL-Team/FoldCraftLauncher"),
+            LinkItem(R.string.about_source, "https://github.com/ETQWFD/KCL-Mobile"),
             LinkItem(R.string.legal_eula, null, LegalAgreement.Document.EULA),
             LinkItem(R.string.legal_privacy, null, LegalAgreement.Document.PRIVACY_POLICY)
         )

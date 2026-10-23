@@ -6,6 +6,15 @@
     android:orientation="horizontal"
     android:padding="15dp">
 
+    <com.tungsten.fcllibrary.component.view.FCLImageView
+        android:id="@+id/icon"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone"/>
+
     <com.tungsten.fcllibrary.component.view.FCLTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"

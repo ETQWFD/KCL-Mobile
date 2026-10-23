@@ -128,25 +128,9 @@ public final class RegionUtils {
      * 不需要查询时立即得到 false；结果在进程内缓存。
      */
     public static CompletableFuture<Boolean> chinaMainlandNetworkAsync() {
-        CompletableFuture<Boolean> future = chinaMainlandNetwork;
-        if (future != null)
-            return future;
-
-        synchronized (RegionUtils.class) {
-            future = chinaMainlandNetwork;
-            if (future == null) {
-                if (!shouldCheckNetwork()) {
-                    future = CompletableFuture.completedFuture(false);
-                } else if (!LegalAgreement.isAccepted(FCLApp.getAppContext())) {
-                    // 同意前不联网：按中国大陆处理且不缓存，同意后再真正检测
-                    return CompletableFuture.completedFuture(true);
-                } else {
-                    future = CompletableFuture.supplyAsync(RegionUtils::checkChinaMainlandNetwork, Schedulers.io());
-                }
-                chinaMainlandNetwork = future;
-            }
-            return future;
-        }
+        // KCL：不按网络地区限制游戏内容下载与陶瓦联机，恒视为“非受限”。
+        // 设备地区判定 isChinaMainlandMachine() 仍保留，仅用于国内镜像源与联机节点的速度偏好。
+        return CompletableFuture.completedFuture(false);
     }
 
     /**
