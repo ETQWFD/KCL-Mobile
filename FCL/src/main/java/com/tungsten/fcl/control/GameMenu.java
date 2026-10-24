@@ -965,6 +965,22 @@ public class GameMenu implements MenuCallback, FCLBridgeCallback {
 
     @Override
     public void onExit(int exitCode) {
+        // 图形渲染器兼容性守卫：游戏进程退出前记录崩溃/正常状态，供主进程下次启动自动回退渲染器
+        try {
+            String tail = null;
+            if (exitCode != 0 && fclBridge != null) {
+                File logFile = new File(fclBridge.getLogPath());
+                if (logFile.exists()) {
+                    byte[] all = java.nio.file.Files.readAllBytes(logFile.toPath());
+                    int max = 64 * 1024;
+                    int len = Math.min(all.length, max);
+                    tail = new String(all, all.length - len, len, java.nio.charset.StandardCharsets.UTF_8);
+                }
+            }
+            com.mio.manager.RendererGuard.onGameExit(exitCode, tail);
+        } catch (Throwable ignored) {
+            // 守卫失败不影响原有崩溃流程
+        }
         if (exitCode != 0 && fclBridge != null) {
             JVMCrashActivity.startCrashActivity(true, activity, exitCode, fclBridge.getLogPath());
             Logging.LOG.log(Level.INFO, "JVM crashed, start jvm crash activity to show errors now!");

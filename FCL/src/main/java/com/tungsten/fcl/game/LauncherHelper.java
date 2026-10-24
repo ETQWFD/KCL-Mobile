@@ -36,6 +36,7 @@ import com.google.gson.GsonBuilder;
 import com.mio.JavaManager;
 import com.mio.data.Renderer;
 import com.mio.manager.RendererManager;
+import com.mio.manager.RendererGuard;
 import com.mio.minecraft.ModCheckException;
 import com.mio.minecraft.ModChecker;
 import com.mio.plugin.NativeLibPlugin;
@@ -271,8 +272,21 @@ public final class LauncherHelper {
                             return Task.supplyAsync(launcher::launch);
                         }).thenComposeAsync(fclBridge -> checkPathValid(fclBridge, repository))
                         .thenComposeAsync(fclBridge -> {
-                            Renderer renderer = RendererManager.getRenderer(repository.getVersionSetting(selectedVersion).getRenderer());
+                            VersionSetting vs = repository.getVersionSetting(selectedVersion);
+                            final String fallback = RendererGuard.consumeRequestedFallback(vs.getRenderer());
+                            if (fallback != null) {
+                                vs.setRenderer(fallback);
+                            }
+                            Renderer renderer = RendererManager.getRenderer(vs.getRenderer());
+                            RendererGuard.recordLaunchRenderer(renderer.getId());
                             fclBridge.setRenderer(renderer.getName());
+                            if (fallback != null) {
+                                final String rendererName = renderer.getDes();
+                                Schedulers.androidUIThread().execute(() ->
+                                        android.widget.Toast.makeText(context,
+                                                "检测到上一次因图形渲染器不兼容而崩溃，已自动切换为「" + rendererName + "」并重新启动游戏",
+                                                android.widget.Toast.LENGTH_LONG).show());
+                            }
                             return checkRenderer(fclBridge, renderer, repository.getGameVersion(selectedVersion).orElse(""), scannedModsRef.get());
                         }).thenComposeAsync(fclBridge -> checkNativeLibPlugin(fclBridge, repository.getGameVersion(selectedVersion).orElse("")))
                         .thenComposeAsync(fclBridge -> {

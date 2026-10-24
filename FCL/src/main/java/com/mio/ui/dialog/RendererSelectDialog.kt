@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.WindowManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mio.manager.RendererManager
+import com.mio.manager.RendererGuard
 import com.mio.ui.adapter.RendererSelectItemAdapter
 import com.mio.ui.adapter.SpacingItemDecoration
 import com.mio.util.getScreenHeight
@@ -43,6 +44,8 @@ class RendererSelectDialog(
             val versionSetting =
                 if (isGlobal) Profiles.getSelectedProfile().globalVersionSetting else Profiles.getSelectedProfile().versionSetting
             versionSetting.renderer = renderer.id
+            // 玩家手动指定渲染器：清除上一轮自动回退请求与崩溃计数，从该渲染器重新开始兼容判定
+            RendererGuard.reset()
             dismiss()
             callback.accept(renderer.des)
         }
