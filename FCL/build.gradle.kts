@@ -41,8 +41,11 @@ android {
         file("${rootDir}/local.properties").inputStream().use { localProperty.load(it) }
     }
     val pwd = System.getenv("FCL_KEYSTORE_PASSWORD") ?: localProperty?.getProperty("pwd")
+    // KCL：环境变量/local.properties 未提供时，回退到内置公开密钥（取自原版启动器），保证成品无需配置即可微软登录与访问 CurseForge。
     val curseApiKey = System.getenv("CURSE_API_KEY") ?: localProperty?.getProperty("curse.api.key")
+        ?: "\$2a\$10\$6L8AkVsaGMcZR36i8XvCr.O4INa2zvDwMhooYdLZU0bb/E78AsT0m"
     val oauthApiKey = System.getenv("OAUTH_API_KEY") ?: localProperty?.getProperty("oauth.api.key")
+        ?: "d903cc0e-c3b4-4a3c-b347-06c2e6269be0"
     // 命令行 -Darch 优先；local.properties 仅在命令行未指定时生效
     if (System.getProperty("arch") == null && localProperty != null && localProperty.getProperty(
             "arch",
