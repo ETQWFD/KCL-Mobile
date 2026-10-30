@@ -162,6 +162,7 @@ import com.kcl.pcl.ui.toAndroidString
 import com.kcl.pcl.utils.network.downloadFile
 import com.kcl.pcl.utils.network.safeBodyAsJson
 import com.kcl.pcl.utils.logging.Logger
+import io.ktor.client.request.get
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.coroutines.CancellationException
@@ -3231,7 +3232,7 @@ private fun CommunityLobbyCard(joinRoom: (String) -> Unit) {
                 loadFailed -> {
                     PclText(
                         text = "拉取社区大厅失败（网络问题），可以点下方【刷新列表】重试。",
-                        color = p.red,
+                        color = p.redLight,
                         fontSize = 13,
                     )
                 }
