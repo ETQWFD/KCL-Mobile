@@ -1,4 +1,4 @@
-# Zalith Launcher 2
+# KCL Mobile
 ![Downloads](https://img.shields.io/github/downloads/ZalithLauncher/ZalithLauncher2/total)
 [![Sponsor](https://img.shields.io/badge/sponsor-30363D?logo=GitHub-Sponsors)](https://afdian.com/a/MovTery)
 
@@ -6,17 +6,17 @@
 
 
 > [!IMPORTANT]
-> This project is **completely separate** from [ZalithLauncher](https://github.com/ZalithLauncher/ZalithLauncher).  
+> This project is **completely separate** from [KCLMobile](https://github.com/KCLMobile/KCLMobile).  
 
-**Zalith Launcher 2** is a newly designed launcher for **Android devices** tailored for [Minecraft: Java Edition](https://www.minecraft.net/). The project uses [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher/tree/v3_openjdk/app_pojavlauncher/src/main/jni) as its core launching engine and features a modern UI built with **Jetpack Compose** and **Material Design 3**.  
-We are currently building our official website [zalithlauncher.cn](https://zalithlauncher.cn)  
-Additionally, we are aware that a third-party website has been set up using the name “Zalith Launcher”, appearing to be official. Please note: **this site was not created by us**. It exploits the name to display ads for profit. We **do not participate in, endorse, or trust** such content.  
+**KCL Mobile** is a newly designed launcher for **Android devices** tailored for [Minecraft: Java Edition](https://www.minecraft.net/). The project uses [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher/tree/v3_openjdk/app_pojavlauncher/src/main/jni) as its core launching engine and features a modern UI built with **Jetpack Compose** and **Material Design 3**.  
+We are currently building our official website [kcllauncher.cn](https://kcllauncher.cn)  
+Additionally, we are aware that a third-party website has been set up using the name “KCL Mobile”, appearing to be official. Please note: **this site was not created by us**. It exploits the name to display ads for profit. We **do not participate in, endorse, or trust** such content.  
 Please stay vigilant and **protect your personal privacy**!
 
 ## 🌐 Language and Translation Support
 
-We are using the Weblate platform to translate Zalith Launcher 2. You're welcome to join our [Weblate project](https://hosted.weblate.org/projects/zalithlauncher2) and contribute to the translations!  
-Thank you to every language contributor for helping make Zalith Launcher 2 more multilingual and global!
+We are using the Weblate platform to translate KCL Mobile. You're welcome to join our [Weblate project](https://hosted.weblate.org/projects/kcllauncher2) and contribute to the translations!  
+Thank you to every language contributor for helping make KCL Mobile more multilingual and global!
 
 ## 📦 Build Instructions (For Developers)
 
@@ -44,9 +44,9 @@ This project is licensed under the **[GPL-3.0 license](LICENSE)**.
 ### Additional Terms (Pursuant to Section 7 of the GPLv3 License)
 
 1. When distributing a modified version of this program, you must reasonably modify the program's name or version number to distinguish it from the original version. (According to [GPLv3, 7(c)](https://github.com/ZalithLauncher/ZalithLauncher2/blob/969827b/LICENSE#L372-L374))
-    - Modified versions **must not include the original program name "ZalithLauncher" or its abbreviation "ZL" in their name, nor use any name that is similar enough to cause confusion with the official name**.
+    - Modified versions **must not include the original program name "KCLMobile" or its abbreviation "ZL" in their name, nor use any name that is similar enough to cause confusion with the official name**.
     - All modified versions **must clearly indicate that they are “Unofficial Modified Versions” on the program’s startup screen or main interface**.
-    - The application name of the program can be modified in [gradle.properties](./ZalithLauncher/gradle.properties).
+    - The application name of the program can be modified in [gradle.properties](./KCLMobile/gradle.properties).
 
 2. You must not remove the copyright notices displayed by the program. (According to [GPLv3, 7(b)](https://github.com/ZalithLauncher/ZalithLauncher2/blob/969827b/LICENSE#L368-L370))
 

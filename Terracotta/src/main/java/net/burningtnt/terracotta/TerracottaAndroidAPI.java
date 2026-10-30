@@ -399,7 +399,10 @@ public final class TerracottaAndroidAPI {
     @SuppressWarnings("unused") // Native callback
     private static int onVpnServiceStateChanged(byte ip1, byte ip2, byte ip3, byte ip4, short network_length, String cidr) throws UnknownHostException {
         if (pendingRequest != null) {
-            throw new AssertionError("Should NOT be here.");
+            // 修复：上游在此处 throw AssertionError，同样会冒回 JNI 闪退。
+            // 并发/重复请求时拒绝新请求即可，不崩溃。
+            Log.w("TerracottaAndroidAPI", "Duplicate VPN request while one is pending, returning -1.");
+            return -1;
         }
 
         AtomicLong fd = new AtomicLong(FD_PENDING);
@@ -408,27 +411,36 @@ public final class TerracottaAndroidAPI {
         pendingRequest = new VpnServiceRequest() {
             @Override
             public ParcelFileDescriptor startVpnService(VpnService.Builder builder) {
-                builder.addAddress(address, network_length)
-                        .addDnsServer("223.5.5.5")
-                        .addDnsServer("114.114.114.114");
+                // 修复：整个隧道建立过程包住所有异常（低内存设备上 establish() 可能抛
+                // IllegalStateException、CIDR 解析失败等），统一走 reject 失败路径，
+                // 绝不让任何 Throwable 冒回 JNI 把启动器带崩。
+                try {
+                    builder.addAddress(address, network_length)
+                            .addDnsServer("223.5.5.5")
+                            .addDnsServer("114.114.114.114");
 
-                if (!cidr.isEmpty()) {
-                    for (String part : cidr.split("\0")) {
-                        String[] parts = part.split("/", 3);
-                        if (parts.length != 2) {
-                            throw new IllegalArgumentException("Illegal CIDR: " + Arrays.toString(parts));
+                    if (!cidr.isEmpty()) {
+                        for (String part : cidr.split("\0")) {
+                            String[] parts = part.split("/", 3);
+                            if (parts.length != 2) {
+                                throw new IllegalArgumentException("Illegal CIDR: " + Arrays.toString(parts));
+                            }
+                            builder.addRoute(parts[0], Integer.parseInt(parts[1]));
                         }
-                        builder.addRoute(parts[0], Integer.parseInt(parts[1]));
                     }
-                }
 
-                ParcelFileDescriptor connection = builder.establish();
-                if (connection == null) {
-                    throw new RuntimeException("Cannot establish a VPN connection.");
-                }
+                    ParcelFileDescriptor connection = builder.establish();
+                    if (connection == null) {
+                        throw new RuntimeException("Cannot establish a VPN connection.");
+                    }
 
-                fd.set(connection.getFd());
-                return connection;
+                    fd.set(connection.getFd());
+                    return connection;
+                } catch (Throwable t) {
+                    Log.e("TerracottaAndroidAPI", "Failed to establish VPN tunnel, rejecting request.", t);
+                    fd.set(FD_REJECT);
+                    return null;
+                }
             }
 
             @Override
@@ -457,8 +469,12 @@ public final class TerracottaAndroidAPI {
                 Thread.yield();
             } else if (value == FD_REJECT) {
                 pendingRequest = null;
-                Log.w("TerracottaAndroidAPI", "VpnService Request rejected by the application.");
-                throw new IllegalStateException();
+                // 修复：上游在此处直接 throw IllegalStateException，异常冒回 JNI 后会变成
+                // 「应用程序意外崩溃了」并把整个启动器杀掉（崩溃栈顶永远是 onVpnServiceStateChanged）。
+                // 低内存设备上用户拒绝 VPN 授权、系统未弹出授权框即自动拒绝时必崩。
+                // 现在与 30 秒超时分支一样走普通失败路径：本次联机失败，启动器不崩溃。
+                Log.w("TerracottaAndroidAPI", "VpnService Request rejected by the application, returning -1 (no crash).");
+                return -1;
             } else {
                 pendingRequest = null;
 

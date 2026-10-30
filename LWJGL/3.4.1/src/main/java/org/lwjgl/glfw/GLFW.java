@@ -14,7 +14,7 @@ import java.nio.*;
 
 
 import org.lwjgl.*;
-import com.zalith.pcl.CursorRegistry;
+import com.kcl.pcl.CursorRegistry;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.opengl.GL20.*;

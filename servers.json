@@ -1,0 +1,20 @@
+{
+  "updated_at": "2026-10-30T20:50:00+08:00",
+  "notice": "KCL 社区联机大厅：房间由社区房主通过陶瓦联机（Terracotta）开启，点击【加入】即可用对应大厅编号加入；没有房间时可以自己开一个大厅并把编号发到社区。",
+  "rooms": [
+    {
+      "name": "ETC 龙腾OS 官方大厅",
+      "desc": "KCL 官方社区房间，适合版本 1.20+",
+      "code": "KCL-ETC-001",
+      "players": 0,
+      "online": true
+    },
+    {
+      "name": "KCL 新手联机测试房",
+      "desc": "陶瓦联机演示房间，任何版本都可加入测试",
+      "code": "KCL-DEMO-88",
+      "players": 0,
+      "online": true
+    }
+  ]
+}

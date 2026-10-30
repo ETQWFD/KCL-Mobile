@@ -24,8 +24,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ZalithLauncher"
-include(":ZalithLauncher")
+rootProject.name = "KCLMobile"
+include(":KCLMobile")
 include(":LWJGL")
 include(":LWJGL:patches")
 project(":LWJGL:patches").projectDir = file("LWJGL/patches")

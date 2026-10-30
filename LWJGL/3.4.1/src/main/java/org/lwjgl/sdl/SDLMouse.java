@@ -10,7 +10,7 @@ import org.jspecify.annotations.*;
 import java.nio.*;
 
 import org.lwjgl.glfw.CallbackBridge;
-import com.zalith.pcl.SdlCursorRegistry;
+import com.kcl.pcl.SdlCursorRegistry;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.APIUtil.*;

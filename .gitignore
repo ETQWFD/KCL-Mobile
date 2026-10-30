@@ -15,7 +15,7 @@ local.properties
 .curseforge_api.txt
 LWJGL/build/
 LWJGL/*/build/
-# 各模块的构建产物（ZalithLauncher/build、CardGrid/build、Terracotta/build …）
+# 各模块的构建产物（KCLMobile/build、CardGrid/build、Terracotta/build …）
 build/
 # 本地构建日志（开发期排查用，不进仓库）
 *.log

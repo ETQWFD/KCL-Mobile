@@ -1,12 +1,12 @@
-# Zalith-Plain Craft Launcher
+# KCL Mobile
 
-**Zalith-Plain Craft Launcher** 是一个面向 **Android 设备** 的 [Minecraft: Java Edition](https://www.minecraft.net/) 启动器，在 [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2) 的基础上二次开发，界面与交互按 [Plain Craft Launcher 2](https://github.com/Hex-Dragon/PCL2) 的风格重做。
+**KCL Mobile** 是一个面向 **Android 设备** 的 [Minecraft: Java Edition](https://www.minecraft.net/) 启动器，在 [KCL Mobile](https://github.com/ZalithLauncher/ZalithLauncher2) 的基础上二次开发，界面与交互按 [Plain Craft Launcher 2](https://github.com/Hex-Dragon/PCL2) 的风格重做。
 
-启动核心沿用 Zalith Launcher 2 / [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher/tree/v3_openjdk/app_pojavlauncher/src/main/jni)，界面使用 **Jetpack Compose** 与 **Material Design 3** 构建。
+启动核心沿用 KCL Mobile / [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher/tree/v3_openjdk/app_pojavlauncher/src/main/jni)，界面使用 **Jetpack Compose** 与 **Material Design 3** 构建。
 
 ## ✨ 特性与新增功能
 
-* **界面改为 PCL2 版式**：主界面、版本管理、下载、设置、联机等全部按 PCL2 的布局与文案重做，可在设置里随时切回 Zalith 原生界面。
+* **界面改为 PCL2 版式**：主界面、版本管理、下载、设置、联机等全部按 PCL2 的布局与文案重做，可在设置里随时切回 KCL 原生界面。
 * **模组加载器一键安装**：下载版本时可同时安装 Fabric / Forge / NeoForge / Quilt / OptiFine 等加载器，加载器版本可与原版共存（默认版本名自动带加载器后缀，不再互相冲突）。
 * **整合包导入**：支持本地导入与系统分享接入，安装前可自定义版本名（默认填整合包自己的名字，重名自动加序号）；安装失败会自动清理不完整版本。
 * **资源下载直连版本**：Mod / 资源包 / 光影包 / 存档下载时先选目标版本，存档下载完自动解压安装。
@@ -42,7 +42,7 @@ git clone <本仓库地址>
 # 使用 Android Studio 打开项目并进行构建
 # 或者命令行构建 arm64 单架构调试包：
 export JAVA_HOME=/path/to/jdk17
-./gradlew :ZalithLauncher:assembleDebug -Darch=arm64
+./gradlew :KCLMobile:assembleDebug -Darch=arm64
 ```
 
 
@@ -55,9 +55,9 @@ export JAVA_HOME=/path/to/jdk17
 ### 附加条款 (依据 GPLv3 开源协议第七条)  
 
 1. 当你分发该程序的修改版本时，你必须以合理方式修改该程序的名称或版本号，以示其与原始版本不同。(依据 [GPLv3, 7(c)](https://github.com/ZalithLauncher/ZalithLauncher2/blob/969827b/LICENSE#L372-L374))
-   - 修改版本 **不得在名称中包含原程序名称 “ZalithLauncher” 或其缩写 “ZL”，也不得使用与官方名称相近、可能导致混淆的名称**。
+   - 修改版本 **不得在名称中包含原程序名称 “KCLMobile” 或其缩写 “ZL”，也不得使用与官方名称相近、可能导致混淆的名称**。
    - 所有修改版本 **必须在程序启动页面或主界面中以明显方式标注其为“非官方修改版”**。
-   - 该程序的应用名称可在 [gradle.properties](./ZalithLauncher/gradle.properties) 中修改。
+   - 该程序的应用名称可在 [gradle.properties](./KCLMobile/gradle.properties) 中修改。
 
 2. 你不得移除该程序所显示的版权声明。(依据 [GPLv3, 7(b)](https://github.com/ZalithLauncher/ZalithLauncher2/blob/969827b/LICENSE#L368-L370))
 

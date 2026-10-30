@@ -4,7 +4,7 @@
  */
 package org.lwjgl.glfw;
 
-import com.zalith.pcl.CursorRegistry;
+import com.kcl.pcl.CursorRegistry;
 
 import android.util.*;
 
