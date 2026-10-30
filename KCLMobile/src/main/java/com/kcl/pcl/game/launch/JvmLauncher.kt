@@ -36,6 +36,9 @@ import com.kcl.pcl.ui.theme.showThemed
 import com.kcl.pcl.utils.logging.Logger
 import com.kcl.pcl.utils.string.getMessageOrToString
 import com.kcl.pcl.utils.string.splitPreservingQuotes
+import com.kcl.pcl.components.jre.RuntimeProvisioner
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -64,6 +67,12 @@ open class JvmLauncher(
     override suspend fun launch(screenSize: IntSize): Int {
         generateLauncherProfiles(jvmLaunchInfo.userHome)
         initLwjglComponent(context, 0)
+        // 直接跑安装器 / 工具 JAR 之前也确认一次 Java：没有就自动装内置的。
+        // 这条路径走不到 GameInstaller 的任务流（例如从文件管理器导入整合包），
+        // 原来缺 Java 时会一路走到原生层回一个 -1，什么原因都看不到。
+        withContext(Dispatchers.IO) {
+            RuntimeProvisioner.ensureFor(context, 0, "run jar")
+        }
         val (runtime, argList) = getStartupNeeded(screenSize)
 
         this.runtime = runtime

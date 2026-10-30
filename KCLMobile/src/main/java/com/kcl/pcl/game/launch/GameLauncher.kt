@@ -61,6 +61,7 @@ import com.kcl.pcl.utils.file.ensureDirectorySilently
 import com.kcl.pcl.utils.logging.Logger
 import com.kcl.pcl.utils.string.isBiggerTo
 import com.kcl.pcl.utils.string.isEqualTo
+import com.kcl.pcl.components.jre.RuntimeProvisioner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
@@ -393,7 +394,7 @@ class GameLauncher(
      * 手动选择唯一的例外是**这个运行库在本机根本执行不了**（已被卸载，或架构与本机不一致）——
      * 那种情况下「尊重选择」等于让游戏必然 `Exec format error`，只能临时换一个并说明原因。
      */
-    private fun getRuntime(): String {
+    private suspend fun getRuntime(): String {
         val loaderInfo = version.getVersionInfo()?.primaryLoader
         val requiredJavaVersion = when (loaderInfo?.loader) {
             ModLoader.BABRIC -> 17 //Babric 推荐使用 17
@@ -405,6 +406,18 @@ class GameLauncher(
                 }
             }
             else -> gameManifest.javaVersion?.majorVersion ?: 8
+        }
+
+        // 每次启动都确认一次 Java：一个能用的都没有就自动解压内置运行库；
+        // 有运行库但版本不够（例如只剩 Java 8 却要跑要求 Java 21 的版本）也会补装。
+        // 达标时只是几十次 stat，不影响启动速度。
+        val readiness = withContext(Dispatchers.IO) {
+            RuntimeProvisioner.ensureFor(activity, requiredJavaVersion, "launch game")
+        }
+        if (!readiness.ok) {
+            // 不在这里中断：下面原有的兜底逻辑会挑现有最高的运行库、并 Toast 说明缺什么。
+            // 先把准确原因写进日志，省得事后只能从「游戏闪退」倒推。
+            Logger.warning(TAG, readiness.problem)
         }
 
         // 版本独立设置优先；没设置才跟随全局（两者都为空 = 设置里的「自动选择」）
