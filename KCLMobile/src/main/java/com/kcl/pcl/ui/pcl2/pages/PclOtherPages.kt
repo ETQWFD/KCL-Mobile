@@ -288,7 +288,7 @@ fun PclOtherAboutPage() {
                     title = "KCL Mobile",
                     info = "KCL Mobile 的运行内核 · 版本 ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) · ${BuildConfig.BUILD_TYPE}",
                     buttonText = "开源代码",
-                ) { openLink(context, "https://github.com/ZalithLauncher/ZalithLauncher2") }
+                ) { openLink(context, URL_PROJECT) }
 
                 PclAboutRow(
                     icon = painterResource(R.drawable.ic_launcher_logo),

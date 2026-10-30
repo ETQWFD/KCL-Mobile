@@ -203,7 +203,7 @@ class GameLauncher(
         if (Renderers.isCurrentRendererValid()) {
             setRendererEnv(envMap)
         }
-        envMap["ZALITH_VERSION_CODE"] = BuildConfig.VERSION_CODE.toString()
+        envMap["KCL_VERSION_CODE"] = BuildConfig.VERSION_CODE.toString()
 
         //lwjgl3ify 实例：注入 XDG 数据目录兜底，避免其向不存在的 ~/.local/share
         //写桌面快捷方式时抛出异常杀死 RFB 主线程，导致游戏静默退出

@@ -78,7 +78,7 @@ JNIEXPORT jint JNICALL Java_android_os_OpenJDKNativeRegister_nativeRegisterNativ
 	return (jint) result;
 }
 
-JNIEXPORT void JNICALL Java_com_zalith_pcl_bridge_ZLBridge_setLdLibraryPath(JNIEnv *env, jclass clazz, jstring ldLibraryPath) {
+JNIEXPORT void JNICALL Java_com_kcl_pcl_bridge_ZLBridge_setLdLibraryPath(JNIEnv *env, jclass clazz, jstring ldLibraryPath) {
 	// jclass exception_cls = (*env)->FindClass(env, "java/lang/UnsatisfiedLinkError");
 	
 	android_update_LD_LIBRARY_PATH_t android_update_LD_LIBRARY_PATH;
@@ -100,7 +100,7 @@ JNIEXPORT void JNICALL Java_com_zalith_pcl_bridge_ZLBridge_setLdLibraryPath(JNIE
 	(*env)->ReleaseStringUTFChars(env, ldLibraryPath, ldLibPathUtf);
 }
 
-JNIEXPORT jboolean JNICALL Java_com_zalith_pcl_bridge_ZLBridge_dlopen(JNIEnv *env, jclass clazz, jstring name) {
+JNIEXPORT jboolean JNICALL Java_com_kcl_pcl_bridge_ZLBridge_dlopen(JNIEnv *env, jclass clazz, jstring name) {
 	const char *nameUtf = (*env)->GetStringUTFChars(env, name, 0);
 	void* handle = dlopen(nameUtf, RTLD_GLOBAL | RTLD_LAZY);
 	if (!handle) {
@@ -112,12 +112,12 @@ JNIEXPORT jboolean JNICALL Java_com_zalith_pcl_bridge_ZLBridge_dlopen(JNIEnv *en
 	return handle != NULL;
 }
 
-JNIEXPORT jlong JNICALL Java_com_zalith_pcl_bridge_ZLBridge_getJavaVMPointer(JNIEnv *env, jclass clazz) {
+JNIEXPORT jlong JNICALL Java_com_kcl_pcl_bridge_ZLBridge_getJavaVMPointer(JNIEnv *env, jclass clazz) {
 	if (pojav_environ->dalvikJavaVMPtr == NULL) return 0;
 	return (jlong) (intptr_t) pojav_environ->dalvikJavaVMPtr;
 }
 
-JNIEXPORT jstring JNICALL Java_com_zalith_pcl_bridge_ZLBridge_jObjectToString(JNIEnv *env, jclass clazz, jobject object) {
+JNIEXPORT jstring JNICALL Java_com_kcl_pcl_bridge_ZLBridge_jObjectToString(JNIEnv *env, jclass clazz, jobject object) {
 	if (object == NULL) return NULL;
 	jobject global_ref = (*env)->NewGlobalRef(env, object);
 	if (global_ref == NULL) return NULL;
@@ -127,7 +127,7 @@ JNIEXPORT jstring JNICALL Java_com_zalith_pcl_bridge_ZLBridge_jObjectToString(JN
 	return (*env)->NewStringUTF(env, buf);
 }
 
-JNIEXPORT jint JNICALL Java_com_zalith_pcl_bridge_ZLBridge_chdir(JNIEnv *env, jclass clazz, jstring nameStr) {
+JNIEXPORT jint JNICALL Java_com_kcl_pcl_bridge_ZLBridge_chdir(JNIEnv *env, jclass clazz, jstring nameStr) {
 	const char *name = (*env)->GetStringUTFChars(env, nameStr, NULL);
 	int retval = chdir(name);
 	(*env)->ReleaseStringUTFChars(env, nameStr, name);

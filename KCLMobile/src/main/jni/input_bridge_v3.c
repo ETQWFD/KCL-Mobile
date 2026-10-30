@@ -431,7 +431,7 @@ Java_org_lwjgl_glfw_CallbackBridge_nativeEnableGamepadDirectInput(__attribute__(
 }
 
 JNIEXPORT void JNICALL
-Java_com_zalith_pcl_game_sdl_SdlBridge_initializeControllerSubsystems(__attribute__((unused)) JNIEnv* env, __attribute__((unused)) jclass clazz) {
+Java_com_kcl_pcl_game_sdl_SdlBridge_initializeControllerSubsystems(__attribute__((unused)) JNIEnv* env, __attribute__((unused)) jclass clazz) {
     typedef int (*SDL_Init_Func)(unsigned int flags);
     void* handle = dlopen("libSDL3.so", RTLD_NOW);
     if (handle == NULL) {
@@ -482,13 +482,13 @@ static void sdlTextInputMainThreadCallback(void *userdata) {
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_zalith_pcl_game_sdl_SdlBridge_isSdlRenderActive(__attribute__((unused)) JNIEnv* env, __attribute__((unused)) jclass clazz) {
+Java_com_kcl_pcl_game_sdl_SdlBridge_isSdlRenderActive(__attribute__((unused)) JNIEnv* env, __attribute__((unused)) jclass clazz) {
     // SDL 渲染路径以首个 SDL 窗口创建为标志；仅手柄子系统初始化 SDL（MC 26.2 挂 Controlify）时无窗口
     return sSdlPrimaryWindow != NULL ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_zalith_pcl_game_sdl_SdlBridge_setNativeTextInputActive(__attribute__((unused)) JNIEnv* env, __attribute__((unused)) jclass clazz, jboolean active) {
+Java_com_kcl_pcl_game_sdl_SdlBridge_setNativeTextInputActive(__attribute__((unused)) JNIEnv* env, __attribute__((unused)) jclass clazz, jboolean active) {
     if (sSdlPrimaryWindow == NULL) {
         LOG_TO_W("<%s> %s", "SDL", "setNativeTextInputActive: no SDL window (SDL render path inactive)");
         return JNI_FALSE;
@@ -770,7 +770,7 @@ static bool tryCriticalNative(JNIEnv *env) {
     static const JNINativeMethod testJNIMethod[] = {
             { "testCriticalNative", "(II)V", dvm_testCriticalNative}
     };
-    jclass criticalNativeTest = (*env)->FindClass(env, "com/zalith/pcl/game/input/CriticalNativeTest");
+    jclass criticalNativeTest = (*env)->FindClass(env, "com/kcl/pcl/game/input/CriticalNativeTest");
     if(criticalNativeTest == NULL) {
         LOG_TO_D("No CriticalNativeTest class found !");
         (*env)->ExceptionClear(env);

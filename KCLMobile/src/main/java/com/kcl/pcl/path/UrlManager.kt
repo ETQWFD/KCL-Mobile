@@ -51,7 +51,7 @@ const val URL_MINECRAFT_ASSETS_INDEX: String = "https://launchermeta.mojang.com/
 const val URL_MINECRAFT_PURCHASE = "https://www.xbox.com/games/store/minecraft-java-bedrock-edition-for-pc/9nxp44l49shj"
 const val URL_PROJECT: String = "https://github.com/ETQWFD/KCL-Mobile"
 const val URL_PROJECT_INFO: String = "https://api.github.com/repos/ETQWFD/KCL-Mobile/contents"
-const val URL_COMMUNITY: String = "https://github.com/ZalithLauncher/ZalithLauncher2/graphs/contributors"
+const val URL_COMMUNITY: String = "https://github.com/MovTery"
 const val URL_WEBLATE: String = "https://hosted.weblate.org/projects/kcllauncher2"
 const val URL_SUPPORT: String = "https://b23.tv/o42pOXH"
 const val URL_EASYTIER: String = "https://easytier.cn/"
@@ -73,7 +73,7 @@ const val URL_POJAV: String = "https://github.com/PojavLauncherTeam/PojavLaunche
 
 const val URL_GITHUB_RENDERER_PLUGINS = "https://github.com/ShirosakiMio/FCLRendererPlugin/releases/tag/Renderer"
 const val URL_GITHUB_DRIVER_PLUGINS = "https://github.com/FCL-Team/FCLDriverPlugin/releases/tag/Turnip"
-const val URL_GITHUB_NATIVE_LIB_PLUGINS = "https://github.com/ZalithLauncher/NativeLibPlugin/releases"
+const val URL_GITHUB_NATIVE_LIB_PLUGINS = "https://github.com/ETQWFD/KCL-Mobile/releases"
 
 const val URL_CLOUD_RENDERER_PLUGINS = "https://www.123865.com/s/YLIUVv-hae0v"
 const val URL_CLOUD_DRIVE_DRIVER_PLUGINS = "https://www.123865.com/s/YLIUVv-3ae0v"

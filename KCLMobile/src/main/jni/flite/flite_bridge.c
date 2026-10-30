@@ -13,7 +13,7 @@
 #define LOG_TAG "ZL-flite"
 #define LOGW(...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
 
-static const char *BRIDGE_CLASS = "com.zalith.pcl.bridge.FliteTts";
+static const char *BRIDGE_CLASS = "com.kcl.pcl.bridge.FliteTts";
 
 static pthread_mutex_t bridge_lock = PTHREAD_MUTEX_INITIALIZER;
 static JavaVM *dalvik_vm;

@@ -13,6 +13,10 @@ local.properties
 .store_password.txt
 .key_password.txt
 .curseforge_api.txt
+# 上游旧 Zalith 签名库与备份，KCL 版本不再使用
+KCLMobile/zalith_launcher.jks
+KCLMobile/zalith_launcher_debug.jks
+KCLMobile/*.zalithbak
 LWJGL/build/
 LWJGL/*/build/
 # 各模块的构建产物（KCLMobile/build、CardGrid/build、Terracotta/build …）

@@ -43,7 +43,7 @@ static void vulkan_log(JNIEnv *env, const char *level, const char *fmt, ...) {
 #define ZL_MAX_PATCH_VERSION 4095
 
 JNIEXPORT void JNICALL
-Java_com_zalith_pcl_utils_device_VulkanChecker_nativeSetLogCallback(
+Java_com_kcl_pcl_utils_device_VulkanChecker_nativeSetLogCallback(
         JNIEnv *env,
         jclass clazz,
         jobject callback
@@ -69,7 +69,7 @@ Java_com_zalith_pcl_utils_device_VulkanChecker_nativeSetLogCallback(
 void *loadTurnipVulkan(const char *driver_path, const char *native_dir, const char *cache_dir);
 
 JNIEXPORT jobject JNICALL
-Java_com_zalith_pcl_utils_device_VulkanChecker_nativeCheckVulkan(
+Java_com_kcl_pcl_utils_device_VulkanChecker_nativeCheckVulkan(
         JNIEnv *env,
         jclass clazz,
         jstring jDriverPath,
@@ -416,7 +416,7 @@ Java_com_zalith_pcl_utils_device_VulkanChecker_nativeCheckVulkan(
     PUT_FEAT("vertexAttributeInstanceRateDivisor", vertexAttributeInstanceRateDivisor);
 #undef PUT_FEAT
 
-    jclass capClass = (*env)->FindClass(env, "com/zalith/pcl/utils/device/VulkanCapabilities");
+    jclass capClass = (*env)->FindClass(env, "com/kcl/pcl/utils/device/VulkanCapabilities");
     jmethodID capInit = (*env)->GetMethodID(env, capClass, "<init>", "(IIILjava/util/List;Ljava/util/Map;)V");
 
     jint major = (jint) VK_API_VERSION_MAJOR(deviceApiVersion);

@@ -77,7 +77,7 @@ EXTERNAL_API void pojavTerminate() {
     }
 }
 
-JNIEXPORT void JNICALL Java_com_zalith_pcl_bridge_ZLBridge_setupBridgeWindow(JNIEnv* env, ABI_COMPAT jclass clazz, jobject surface) {
+JNIEXPORT void JNICALL Java_com_kcl_pcl_bridge_ZLBridge_setupBridgeWindow(JNIEnv* env, ABI_COMPAT jclass clazz, jobject surface) {
     // 首个窗口由 pojavInit 应用交换间隔；此处处理窗口重建（旋转、分屏等）：
     // 生产者状态会随新窗口重置，若不重新应用，MC 不会再次发起交换间隔调用，帧率会退回锁定在屏幕刷新率
     bool windowRecreated = pojav_environ->pojavWindow != NULL;
@@ -90,7 +90,7 @@ JNIEXPORT void JNICALL Java_com_zalith_pcl_bridge_ZLBridge_setupBridgeWindow(JNI
 }
 
 JNIEXPORT void JNICALL
-Java_com_zalith_pcl_bridge_ZLBridge_releaseBridgeWindow(ABI_COMPAT JNIEnv *env, ABI_COMPAT jclass clazz) {
+Java_com_kcl_pcl_bridge_ZLBridge_releaseBridgeWindow(ABI_COMPAT JNIEnv *env, ABI_COMPAT jclass clazz) {
     ANativeWindow_release(pojav_environ->pojavWindow);
 }
 
