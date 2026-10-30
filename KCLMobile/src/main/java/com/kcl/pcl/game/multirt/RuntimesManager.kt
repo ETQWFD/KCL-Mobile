@@ -297,6 +297,62 @@ object RuntimesManager {
     }.getOrDefault(false)
 
     /**
+     * 运行库目录里缺了哪些**起来就活不了**的文件。
+     *
+     * 只看 `release` 是不够的：解压被中途打断（存储满、进程被杀、包本身损坏）时，
+     * `release` 往往已经落盘，`bin/java`、`libjli.so`、`libjvm.so` 却没写进去。
+     * 这种目录会被判成「已安装、且版本架构都对」，一直用到真正拉起 JVM 才炸 ——
+     * 原生层 `dlopen("libjli.so")` 失败，回传的退出码是 **-1**，
+     * 界面上只会显示「JVM 以异常代码 -1 退出」，谁也看不出是运行库残缺。
+     *
+     * 这里按名字递归找一遍：不同版本布局不一样（JRE 8 是 `lib/<arch>/jli/libjli.so`，
+     * JRE 9+ 是 `lib/libjli.so`），按目录结构猜容易再次猜错，直接按文件名找最稳。
+     */
+    private fun findMissingRuntimeFiles(dest: File): List<String> {
+        if (!dest.exists()) return listOf("运行库目录")
+
+        val missing = mutableListOf<String>()
+        if (!File(dest, "bin/java").exists() && !File(dest, "jre/bin/java").exists()) missing += "bin/java"
+
+        if (!hasRuntimeSo(dest, "libjli.so")) missing += "libjli.so"
+        if (!hasRuntimeSo(dest, "libjvm.so")) missing += "libjvm.so"
+        return missing
+    }
+
+    /**
+     * 运行库里有没有这个 `.so`。
+     *
+     * **先按已知布局逐个 stat，命中就返回** —— 这个方法每次打开启动器都会对每个运行库跑一遍
+     * （解压页 checkState + 主界面兜底检测），而运行库解压后有上万个文件，
+     * `FileUtils.listFiles(..., true)` 全树遍历一次就要几百毫秒，几个库叠起来就是好几秒的
+     * 「启动白屏」。已知布局最多几十次 stat 就够。
+     *
+     * 布局没命中时才退回全树扫描：导入的第三方运行库可能被重新打包成别的结构，
+     * 这里宁可慢一点，也不能把「其实是好的」判成残缺（误判的后果是反复重装几百 MB）。
+     */
+    private fun hasRuntimeSo(dest: File, soName: String): Boolean {
+        val candidates = buildList {
+            for (base in listOf(File(dest, "lib"), File(dest, "jre/lib"))) {
+                if (!base.exists()) continue
+                add(File(base, soName))
+                add(File(base, "jli/$soName"))
+                add(File(base, "server/$soName"))
+                base.listFiles()?.forEach { arch ->
+                    if (!arch.isDirectory) return@forEach
+                    add(File(arch, soName))
+                    add(File(arch, "jli/$soName"))
+                    add(File(arch, "server/$soName"))
+                }
+            }
+        }
+        if (candidates.any { it.isFile }) return true
+
+        return runCatching {
+            FileUtils.listFiles(dest, arrayOf("so"), true).any { it.name == soName }
+        }.getOrDefault(false)
+    }
+
+    /**
      * 尝试低成本修好一个「标记对得上、但实际不可用」的运行库。
      *
      * 目前能处理的只有「缺 release 文件」这一种：内部运行库的 java 版本与架构都是已知的，
