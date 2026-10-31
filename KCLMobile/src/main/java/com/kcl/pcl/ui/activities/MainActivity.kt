@@ -110,7 +110,7 @@ import com.kcl.pcl.viewmodel.ModpackVersionNameOperation
 import com.kcl.pcl.viewmodel.ScreenBackStackViewModel
 import com.kcl.pcl.viewmodel.VulkanCheckerViewModel
 import com.kcl.pcl.components.jre.RuntimeProvisioner
-import com.kcl.pcl.ui.theme.ZalithLauncherTheme
+import com.kcl.pcl.ui.theme.KCLMobileTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

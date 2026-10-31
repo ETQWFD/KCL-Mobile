@@ -28,13 +28,13 @@ import com.kcl.pcl.game.plugin.PluginLoader
 import com.kcl.pcl.game.renderer.Renderers
 import com.kcl.pcl.ui.base.BaseAppCompatActivity
 import com.kcl.pcl.ui.pcl2.PclMainScreen
-import com.kcl.pcl.ui.pcl2.data.PclImportBridgeandroidx.lifecycle.lifecycleScopecom.kcl.pcl.components.jre.RuntimeProvisionercom.kcl.pcl.game.control.ControlManagercom.kcl.pcl.ui.pcl2.PclHintHostcom.kcl.pcl.ui.pcl2.components.PclHintThemekotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import com.kcl.pcl.components.jre.RuntimeProvisioner
+import com.kcl.pcl.game.control.ControlManager
 import com.kcl.pcl.ui.pcl2.PclHintHost
 import com.kcl.pcl.ui.pcl2.components.PclHintTheme
-import com.kcl.pcl.ui.pcl2.data.PclImportBridge
 import kotlinx.coroutines.launch
+import com.kcl.pcl.ui.pcl2.data.PclImportBridge
 
 /**
  * PCL2 界面入口。

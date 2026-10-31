@@ -120,7 +120,8 @@ import com.kcl.pcl.utils.logging.Logger
 import com.kcl.pcl.viewmodel.EditorViewModel
 import com.kcl.pcl.viewmodel.EventViewModel
 import com.kcl.pcl.viewmodel.GamepadViewModel
-import com.kcl.pcl.viewmodel.sendToastimport com.kcl.pcl.game.control.ControlManager
+import com.kcl.pcl.viewmodel.sendToast
+import com.kcl.pcl.game.control.ControlManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

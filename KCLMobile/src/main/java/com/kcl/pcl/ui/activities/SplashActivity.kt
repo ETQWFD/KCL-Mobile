@@ -50,7 +50,7 @@ import com.kcl.pcl.ui.theme.onBackgroundColor
 import com.kcl.pcl.utils.logging.Logger
 import com.kcl.pcl.viewmodel.SplashBackStackViewModel
 import com.kcl.pcl.components.jre.RuntimeProvisioner
-import com.kcl.pcl.ui.theme.ZalithLauncherTheme
+import com.kcl.pcl.ui.theme.KCLMobileTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll

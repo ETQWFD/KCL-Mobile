@@ -1,7 +1,7 @@
 {
-  "code": 200052,
-  "version": "1.3.1-kcl.3",
-  "created_at": "2026-10-31T09:30:00Z",
+  "code": 200053,
+  "version": "1.3.1-kcl.4",
+  "created_at": "2026-10-31T16:30:00Z",
   "default_cloud_drive": {
     "language": "NULL",
     "link": "https://github.com/ETQWFD/KCL-Mobile/releases",
@@ -17,16 +17,17 @@
   "files": [],
   "default_body": {
     "language": "NULL",
-    "markdown": "这是 **KCL Mobile** 的 1.3.1-kcl.3 版本（构建号 200052），修复老版本游戏在 JRE8 下启动崩溃的问题。"
+    "markdown": "这是 **KCL Mobile** 的 1.3.1-kcl.4 版本（构建号 200053），合并上游 1.3.2~1.3.5 全部修复。\n\n### 关键修复（同步原作者仓库更新）\n\n- **修复点不到物品栏 / 背包（快捷栏命中偏移）**：合并上游控制布局修复，快捷栏按触控层实际像素宽度计算槽位，游戏内物品栏与背包可正常点选。\n- **修复 JAVA 运行库不解压 / 不齐全**：新增 Java 运行库自检（RuntimeProvisioner），每次打开启动器自动检测，缺就补装内置运行库；启动器冷启动也自动补默认控制布局。\n- **修复编辑控制布局空屏**：进入布局编辑器前确保有真实布局文件，解析失败也能打开。\n\n### 上一版本保留内容\n\n- **修复进入游戏崩溃（FloatBuffer.flip NoSuchMethodError）**：LWJGL 3.3.3 用 JDK8 编译，老版本（如 a1.0.17_02）可正常进游戏。\n- **崩溃上报给开发者**：崩溃弹窗「上报给开发者」按钮调用手机邮件应用发往 2416444244@qq.com，自动带上版本、机型与完整日志。\n- **关于页补回「龙腾猫跃」**：特别鸣谢区恢复 PCL2 作者龙腾猫跃（LTCatt）一行。\n\n### 其他\n\n- 保留陶瓦（Terracotta）联机，内置 KCL 社区联机大厅。\n- 更新按钮：关于页「检查更新」当场弹窗给出结果。\n- 包名 `com.kcl.pcl` 不变，可直接覆盖安装 1.3.1-kcl.3。\n"
   },
   "bodies": [
     {
       "language": "zh",
-      "markdown": "这是 **KCL Mobile** 的 1.3.1-kcl.3 版本（构建号 200052）。\n\n### 紧急修复\n\n- **修复进入游戏后崩溃（FloatBuffer.flip NoSuchMethodError）**：LWJGL 3.3.3 合并模块改用 `--release 8` 编译，不再把 Java 9+ 才有的协变返回类型写进字节码，游戏内置 JRE8 运行时下 `GLFW.<clinit>` 不再抛 `java.nio.FloatBuffer.flip()Ljava/nio/FloatBuffer;`，老版本（如 a1.0.17_02）可正常进游戏。\n- **修复图标读取报错（IIOException）**：老版本没有窗口图标文件时不再刷错误日志，启动更干净。\n\n### 新增\n\n- **崩溃上报给开发者**：崩溃弹窗新增「上报给开发者」按钮，点击后调用手机邮件应用，收件人 2416444244@qq.com，正文自动带上版本号、机型与完整崩溃日志，直接发送即可。\n- **关于页补回「龙腾猫跃」**：特别鸣谢区恢复 PCL2 作者龙腾猫跃（LTCatt）一行，可一键打开其主页。\n\n### 其他调整\n\n- 保留陶瓦（Terracotta）联机，并内置 KCL 社区联机大厅。\n- 更新按钮：关于页「检查更新」当场弹窗给出结果（已最新 / 失败 / 有新版本直接弹更新框）。\n\n### 升级方式\n\n包名 `com.kcl.pcl` 不变，可直接覆盖安装 1.3.1-kcl.2。\n"
+      "markdown": "这是 **KCL Mobile** 的 1.3.1-kcl.4 版本（构建号 200053），合并上游 1.3.2~1.3.5 全部修复。\n\n### 关键修复（同步原作者仓库更新）\n\n- **修复点不到物品栏 / 背包（快捷栏命中偏移）**：合并上游控制布局修复，快捷栏按触控层实际像素宽度计算槽位，游戏内物品栏与背包可正常点选。\n- **修复 JAVA 运行库不解压 / 不齐全**：新增 Java 运行库自检（RuntimeProvisioner），每次打开启动器自动检测，缺就补装内置运行库；启动器冷启动也自动补默认控制布局。\n- **修复编辑控制布局空屏**：进入布局编辑器前确保有真实布局文件，解析失败也能打开。\n\n### 上一版本保留内容\n\n- **修复进入游戏崩溃（FloatBuffer.flip NoSuchMethodError）**：LWJGL 3.3.3 用 JDK8 编译，老版本（如 a1.0.17_02）可正常进游戏。\n- **崩溃上报给开发者**：崩溃弹窗「上报给开发者」按钮调用手机邮件应用发往 2416444244@qq.com，自动带上版本、机型与完整日志。\n- **关于页补回「龙腾猫跃」**：特别鸣谢区恢复 PCL2 作者龙腾猫跃（LTCatt）一行。\n\n### 其他\n\n- 保留陶瓦（Terracotta）联机，内置 KCL 社区联机大厅。\n- 更新按钮：关于页「检查更新」当场弹窗给出结果。\n- 包名 `com.kcl.pcl` 不变，可直接覆盖安装 1.3.1-kcl.3。\n"
     },
     {
       "language": "en",
-      "markdown": "This is **KCL Mobile** 1.3.1-kcl.3 (build 200052).\n\n### Critical fixes\n\n- **Fixed the crash when entering the game (`FloatBuffer.flip` NoSuchMethodError)**: the LWJGL 3.3.3 merged modules are now compiled with `--release 8`, so the covariant return type introduced in Java 9+ is no longer written into the bytecode. `GLFW.<clinit>` no longer throws `java.nio.FloatBuffer.flip()Ljava/nio/FloatBuffer;` on the built-in JRE 8 runtime, and old versions such as a1.0.17_02 start normally.\n- **Fixed the icon read error (IIOException)**: old versions without window icon files no longer spam the error log.\n\n### New\n\n- **Report crashes to the developer**: the crash dialog now has a \"Report to developer\" button which opens the device's mail app addressed to 2416444244@qq.com, with the version, device model and full stack trace prefilled. Just press send.\n- **Restored \"LTCatt\" in the About page**: the special-thanks section lists LTCatt, the PCL2 author, with a one-tap link to his homepage.\n\n### Other\n\n- Terracotta multiplayer is kept, and the KCL community lobby is built in.\n- Update button: \"Check for updates\" in the About page shows the result in a dialog immediately (up-to-date / failed / new version with an upgrade dialog).\n\n### Upgrading\n\nThe package name `com.kcl.pcl` is unchanged, so this installs over 1.3.1-kcl.2.\n"
+      "markdown": "This is **KCL Mobile** 1.3.1-kcl.4 (build 200053), merging all upstream 1.3.2~1.3.5 fixes.\n\n### Key fixes (from the upstream author's repo)\n\n- **Hotbar hit offset fixed**: the hotbar slots are now computed from the real touch-layer pixel width, so the inventory and the hotbar can be tapped correctly in-game.\n- **Java runtime auto-repair**: a RuntimeProvisioner self-check runs every time the launcher opens; if no usable Java is found it installs the bundled runtime automatically. The default control layout is also auto-provisioned on cold start.\n- **Control layout editor no longer opens blank**: a real layout file is ensured before the editor opens, and parsing failures no longer leave it empty.\n\n### Kept from the previous release\n\n- **Crash fixed (`FloatBuffer.flip` NoSuchMethodError)**: LWJGL 3.3.3 is compiled with JDK 8 so old versions like a1.0.17_02 start normally.\n- **Report crashes to the developer**: the crash dialog opens the mail app addressed to 2416444244@qq.com with version, device and full log prefilled.\n- **LTCatt restored in the About page**: special thanks now lists LTCatt, the PCL2 author.\n\n### Other\n\n- Terracotta multiplayer kept, KCL community lobby built in.\n- \"Check for updates\" in the About page shows the result in a dialog immediately.\n- Package name `com.kcl.pcl` unchanged; installs directly over 1.3.1-kcl.3.\n"
     }
-  ]
+  ],
+  "body": {}
 }
