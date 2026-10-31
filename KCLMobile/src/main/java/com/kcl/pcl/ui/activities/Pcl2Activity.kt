@@ -28,7 +28,7 @@ import com.kcl.pcl.game.plugin.PluginLoader
 import com.kcl.pcl.game.renderer.Renderers
 import com.kcl.pcl.ui.base.BaseAppCompatActivity
 import com.kcl.pcl.ui.pcl2.PclMainScreen
-import com.kcl.pcl.ui.pcl2.data.PclImportBridge
+import com.kcl.pcl.ui.pcl2.data.PclImportBridgeandroidx.lifecycle.lifecycleScopecom.kcl.pcl.components.jre.RuntimeProvisionercom.kcl.pcl.game.control.ControlManagercom.kcl.pcl.ui.pcl2.PclHintHostcom.kcl.pcl.ui.pcl2.components.PclHintThemekotlinx.coroutines.launch
 
 /**
  * PCL2 界面入口。
@@ -62,6 +62,37 @@ class Pcl2Activity : BaseAppCompatActivity() {
         // 表现为「本次运行里新建的账号看得见，退出应用再进来全没了」
         // （新建时 `suspendSaveAccount` 会顺手 reload 一次，重启后就没人 reload 了）。
         refreshData()
+        // 控制布局：PCL2 界面冷启动不会经过 MainActivity.onResume，而那是原来唯一
+        // 自动解压默认布局的地方。缺少默认布局会让游戏内「编辑布局」没有文件可写，
+        // 点下去编辑器直接空屏。
+        ControlManager.checkDefaultAndRefresh(this)
+        // ---- 每次打开启动器都自检 Java 运行库 ----------------------------------
+        // 某些机型首次安装时会出岔子：解压页被打断（存储不足、进程被杀、用户直接退出），
+        // 或者内置包和本机架构对不上（例如 JRE 25 没有 x86 的 bin-x86.tar.xz），
+        // 结果「设置 → Java 运行库」里一个都没有，只能手动导入 .xz。
+        // 这里在后台补一次：已经有可用运行库时立刻返回，一个都没有才自动装一个。
+        lifecycleScope.launch {
+            val report = RuntimeProvisioner.ensure(this@Pcl2Activity, RuntimeProvisioner.Mode.REPAIR)
+            when {
+                report.installed.isNotEmpty() -> PclHintHost.push(
+                    "已自动安装内置 Java 运行库：${report.installed.joinToString("、")}",
+                    PclHintTheme.Blue,
+                )
+
+                !report.hasUsable && report.failed.isNotEmpty() -> PclHintHost.push(
+                    "Java 运行库不可用：${report.failed.first().second}",
+                    PclHintTheme.Red,
+                )
+
+                // 没装、没报错、但确实跳过了包 —— 说明内置包与本机架构对不上
+                // （例如只打包了 arm 的 APK 跑在 x86 设备上）。
+                // 这种情况不会自己好了，必须明确告诉用户去哪里补，否则他只看到空列表。
+                !report.hasUsable && report.skipped.isNotEmpty() -> PclHintHost.push(
+                    "本机架构没有配套的内置 Java。请到「设置 → Java 运行库」导入 .xz 运行库。",
+                    PclHintTheme.Red,
+                )
+            }
+        }
         setContent {
             PclMainScreen(
                 modifier = Modifier
