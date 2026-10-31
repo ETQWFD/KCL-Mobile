@@ -113,9 +113,18 @@ fun TerracottaOperation(
                     scope.launch(Dispatchers.Main) {
                         viewModel.isWaitingInteractive = false
 
-                        val nodes = fetchNodes()
+                        //fetchNodes() 默认分支内部已吞异常返回空列表；但用户在
+                        //「设置→联机」里填了非法自定义节点 URL 时，URI(url) 会抛
+                        // URISyntaxException，不接住就是协程未捕获异常直接闪退。
+                        val nodesResult = runCatching { fetchNodes() }
+                        if (nodesResult.isFailure) {
+                            Logger.warning(TAG, "Error occurred at \"Terracotta.fetchNodes()\"", nodesResult.exceptionOrNull())
+                            onShowToast(androidText(R.string.terracotta_status_exception), Toast.LENGTH_SHORT)
+                            viewModel.isWaitingInteractive = true
+                            return@launch
+                        }
                         val nodeList = withContext(Dispatchers.Default) {
-                            nodes.map { node ->
+                            nodesResult.getOrThrow().map { node ->
                                 node.toString()
                             }
                         }
@@ -136,9 +145,17 @@ fun TerracottaOperation(
                     scope.launch(Dispatchers.Main) {
                         viewModel.isWaitingInteractive = false
 
-                        val nodes = fetchNodes()
+                        //同 onHostRoleClick：自定义节点 URL 非法时 fetchNodes 会抛异常，
+                        //这里接住并给可读提示，避免加入房间时整页闪退。
+                        val nodesResult = runCatching { fetchNodes() }
+                        if (nodesResult.isFailure) {
+                            Logger.warning(TAG, "Error occurred at \"Terracotta.fetchNodes()\"", nodesResult.exceptionOrNull())
+                            onShowToast(androidText(R.string.terracotta_status_exception), Toast.LENGTH_SHORT)
+                            viewModel.isWaitingInteractive = true
+                            return@launch
+                        }
                         val nodeList = withContext(Dispatchers.Default) {
-                            nodes.map { node ->
+                            nodesResult.getOrThrow().map { node ->
                                 node.toString()
                             }
                         }

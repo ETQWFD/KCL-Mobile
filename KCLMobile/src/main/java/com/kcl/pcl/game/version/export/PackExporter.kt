@@ -93,10 +93,26 @@ class PackExporter(
         )
     }
 
+    /**
+     * 给 SAF `CreateDocument` 用的默认文件名：`清洗后的名字.后缀`。
+     *
+     * UI 层在拉起「另存为」对话框前需要把这个名字传给系统，让用户一打开就能看到
+     * 正确的文件名与扩展名（比如选 Modrinth 格式就应该是 `.mrpack`，而不是 `.zip`）。
+     */
+    fun defaultOutputFileName(): String {
+        return "${cacheFileName(exportInfo.name)}.${exporter.fileSuffix}"
+    }
+
     private suspend fun getTaskPhases(
         outputUri: Uri,
         version: Version
     ) = withContext(Dispatchers.IO) {
+        // 兜底：UI 层按钮已经在「零选中」时禁用，但 PCL2 页或未来入口可能绕过这层，
+        // 这里再挡一次，避免静默产出一个只含 manifest 的空 zip（导入方会报损坏包）。
+        if (exportInfo.selectedFiles.isEmpty()) {
+            throw IllegalStateException("没有选中任何要导出的文件，请先在文件选择页至少勾选一个文件。")
+        }
+
         val exportCachePath = PathManager.DIR_CACHE_MODPACK_EXPORTER
         val tempPath = File(exportCachePath, "temp")
         // 缓存里的中间文件名必须清洗：`exportInfo.name` 是用户手填的，
@@ -140,7 +156,7 @@ class PackExporter(
                     context.writeLocalFile(
                         inputFile = pack,
                         outputUri = outputUri,
-                        mimeType = "application/*"
+                        mimeType = "application/zip"
                     )
                 }
 
@@ -184,8 +200,11 @@ class PackExporter(
  *
  * 只清洗**中间产物 / 保存用的名字**；写进 `manifest.json` / `modrinth.index.json`
  * 的 `name` 字段仍然是用户原文，不受影响。
+ *
+ * 改 internal 是为了让 UI 层（VersionExportScreen / PclInstanceExportPage）
+ * 在拉起 SAF `CreateDocument` 之前，能拼出跟最终落盘一致的默认文件名。
  */
-private fun cacheFileName(raw: String): String {
+internal fun cacheFileName(raw: String): String {
     val cleaned = raw
         .replace(Regex("""[\\/:*?"<>|\u0000-\u001f]"""), "_")
         .trim()

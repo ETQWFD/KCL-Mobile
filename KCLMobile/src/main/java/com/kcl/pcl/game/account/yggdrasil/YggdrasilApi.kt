@@ -169,7 +169,7 @@ suspend fun cacheAllCapes(
 
         if (tasks.isNotEmpty()) {
             BatchDownloader(
-                requests = tasks.map { it.toRequest() },
+                requests = tasks.mapNotNull { it.toRequest() },
                 maxConnections = maxThreads,
                 retryRounds = 0
             ).run()

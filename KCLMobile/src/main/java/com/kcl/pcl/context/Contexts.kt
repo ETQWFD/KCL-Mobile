@@ -119,13 +119,11 @@ fun Context.writeLocalFile(
     outputUri: Uri,
     mimeType: String
 ) {
-    // `ActivityResultContracts.CreateDocument` 交回来的是**文档** URI（`.../document/...`），
-    // 不是目录树（`.../tree/...`）。而 `DocumentsContract.getTreeDocumentId` 只认后者，
-    // 遇到文档 URI 直接抛 `IllegalArgumentException: Invalid URI: content://...`
-    // ——「导出整合包失败」就是这么来的（导出页用的是 CreateDocument）。
-    //
-    // 文档 URI 指向的就是要写的那张文件（系统已经把文件建好了），不需要再 createDocument，
-    // 直接覆盖写。先试 "wt"（写 + 截断），个别 provider 不认再退回 "w"。
+    // 主路径：`ActivityResultContracts.CreateDocument` 交回来的是**文档** URI
+    // （`.../document/...`），不是目录树（`.../tree/...`）。
+    // 系统在用户点「保存」那一刻已经把目标文件建好了，我们直接覆盖写即可，
+    // 不要再 `createDocument`（会重复建一个 `xxx (1).zip`）。
+    // 先试 "wt"（写 + 截断），个别 provider 不认再退回 "w"。
     if (!DocumentsContract.isTreeUri(outputUri)) {
         val stream = runCatching { contentResolver.openOutputStream(outputUri, "wt") }.getOrNull()
             ?: runCatching { contentResolver.openOutputStream(outputUri, "w") }.getOrNull()
@@ -134,6 +132,10 @@ fun Context.writeLocalFile(
         return
     }
 
+    // 兜底兼容：老版本 / 第三方入口仍可能传目录树 URI。
+    // 目录树下必须自己 `createDocument` 建文件，再写。
+    // 先尝试对 `<treeDocId>/<fileName>` 这个伪 URI 直接开流（覆盖已存在的同名文件），
+    // 失败（新文件不存在）再 createDocument。
     val baseDocId = DocumentsContract.getTreeDocumentId(outputUri)
     val fileUri =
         DocumentsContract.buildDocumentUriUsingTree(outputUri, "$baseDocId/${inputFile.name}")
@@ -144,9 +146,9 @@ fun Context.writeLocalFile(
             return
         }
     } catch (_: IOException) {
-        // handle below
+        // fallthrough: create new document
     } catch (_: RuntimeException) {
-        // handle below
+        // fallthrough: create new document
     }
 
     val parentDocumentUri = DocumentsContract.buildDocumentUriUsingTree(

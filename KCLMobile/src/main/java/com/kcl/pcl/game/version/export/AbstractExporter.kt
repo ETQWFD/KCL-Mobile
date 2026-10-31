@@ -60,4 +60,21 @@ abstract class AbstractExporter(
             .removePrefix(rootPath)
             .removePrefix("/")
     }
+
+    /**
+     * 把 [this] 复制到 [target]，并在复制前把 [target] 的父目录建出来。
+     *
+     * Kotlin 标准库的 [File.copyTo] 底层就是 `FileOutputStream(target)`，
+     * **不会**自动 `mkdirs`。整合包里 `relativePath` 形如
+     * `mods/foo.jar`、`config/jei/config.json`，目标父目录在 temp 里并不存在，
+     * 直接 `copyTo` 会抛 `FileNotFoundException: ... (No such file or directory)`，
+     * 表现就是「导出整合包失败」。这里统一兜底。
+     */
+    protected fun File.copyToEnsured(
+        target: File,
+        overwrite: Boolean = true
+    ) {
+        target.parentFile?.mkdirs()
+        this.copyTo(target, overwrite = overwrite)
+    }
 }

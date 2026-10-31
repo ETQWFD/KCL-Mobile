@@ -66,7 +66,7 @@ class MCBBSPackExporter: AbstractExporter(
                         rootPath = info.gamePath.absolutePath,
                         targetPath = override.absolutePath
                     )
-                    file.copyTo(targetFile)
+                    file.copyToEnsured(targetFile)
 
                     MCBBSManifest.AddonFile(
                         force = true,

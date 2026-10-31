@@ -19,7 +19,6 @@
 package com.kcl.pcl.ui.screens.content
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,10 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -56,6 +52,7 @@ import com.kcl.pcl.game.version.download.DownloadFailedException
 import com.kcl.pcl.game.version.export.ExportInfo
 import com.kcl.pcl.game.version.export.PackExporter
 import com.kcl.pcl.game.version.export.PackType
+import com.kcl.pcl.game.version.export.cacheFileName
 import com.kcl.pcl.game.version.export.data.FileSelectionData
 import com.kcl.pcl.game.version.export.data.buildExportFileTree
 import com.kcl.pcl.game.version.export.data.Selected
@@ -211,6 +208,24 @@ private class ExportModpackViewModel(
     val packExporter = _packExporter.asStateFlow()
 
     private val startMutex = Mutex()
+
+    /**
+     * SAF `CreateDocument` 对话框的默认文件名：`清洗后的整合包名.格式后缀`。
+     *
+     * 后缀必须跟 [com.kcl.pcl.game.version.export.AbstractExporter.fileSuffix] 对齐：
+     * 选 Modrinth 却给 `.zip`，存出来就是一个披着 zip 皮的 `.mrpack`，
+     * 按扩展名认格式的导入方会直接拒掉。
+     */
+    fun defaultOutputFileName(): String {
+        val suffix = when (_exportInfo.value.packType) {
+            PackType.MCBBS -> "zip"
+            PackType.Modrinth -> "mrpack"
+            PackType.CurseForge -> "zip"
+            PackType.MultiMC -> "zip"
+        }
+        return cacheFileName(_exportInfo.value.name) + "." + suffix
+    }
+
     fun startExport(
         version: Version,
         context: Context,
@@ -474,56 +489,44 @@ private fun NavigationUI(
 
                     val context = LocalContext.current
 
-                    val safLauncher = rememberLauncherForActivityResult(
-                        ActivityResultContracts.StartActivityForResult()
-                    ) { result ->
-                        val uri = result.data?.data?.let { uri ->
-                            //获取永久读写uri
-                            context.contentResolver.takePersistableUriPermission(
-                                uri,
-                                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                            )
-                            uri
+                    // 用 `CreateDocument` 而不是 `OpenDocumentTree`：
+                    //   · 目录树模式下，writeLocalFile 要先 `openOutputStream` 一个**不存在**的伪
+                    //     文档 URI（必然抛异常）再 `createDocument`，脆弱且文件名由我们决定、用户在
+                    //     系统对话框里看不到也改不了；
+                    //   · `CreateDocument` 由系统直接把目标文件建好，回调回来的就是一个 `document`
+                    //     URI，`writeLocalFile` 的非 tree 分支直接 `openOutputStream("wt")` 覆盖写，
+                    //     与 PclInstanceExportPage 走的是同一条已验证路径。
+                    //   · mimeType 用 `application/zip`：mrpack / zip 本质都是 zip 容器，
+                    //     通配 `application/*` 会被部分 provider 拒掉。
+                    val createDocumentLauncher = rememberLauncherForActivityResult(
+                        ActivityResultContracts.CreateDocument("application/zip")
+                    ) { uri ->
+                        // uri == null：用户在系统「另存为」对话框里取消了，什么都不做。
+                        if (uri == null) {
+                            viewModel.updateSelecting(false)
+                            return@rememberLauncherForActivityResult
                         }
-                        if (uri != null) {
-                            viewModel.startExport(
-                                context = context,
-                                outputUri = uri,
-                                version = version,
-                                onStart = {
-                                    eventViewModel.sendKeepScreen(true)
-                                },
-                                onStop = {
-                                    eventViewModel.sendKeepScreen(false)
-                                },
-                                onFinished = {
-                                    backStack.clearKeys(
-                                        NormalNavKey.VersionExports.EditInfo,
-                                        NormalNavKey.VersionExports.SelectFiles
-                                    )
-                                }
-                            )
-                        }
-                        viewModel.updateSelecting(false)
-                    }
-
-                    var showSelectTip by remember { mutableStateOf(false) }
-                    if (showSelectTip) {
-                        SimpleAlertDialog(
-                            title = stringResource(R.string.versions_export_pack_select_folder_title),
-                            text = stringResource(R.string.versions_export_pack_select_folder_message),
-                            onDismiss = {
-                                showSelectTip = false
+                        // CreateDocument 回调回来的 URI 是本次会话内一次性写权限，
+                        // 不需要（也不应该）takePersistableUriPermission —— 对非 tree URI
+                        // 调它会直接抛 SecurityException。
+                        viewModel.startExport(
+                            context = context,
+                            outputUri = uri,
+                            version = version,
+                            onStart = {
+                                eventViewModel.sendKeepScreen(true)
                             },
-                            onConfirm = {
-                                showSelectTip = false
-                                //开始选择目录
-                                viewModel.updateSelecting(true)
-                                safLauncher.launch(
-                                    Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                            onStop = {
+                                eventViewModel.sendKeepScreen(false)
+                            },
+                            onFinished = {
+                                backStack.clearKeys(
+                                    NormalNavKey.VersionExports.EditInfo,
+                                    NormalNavKey.VersionExports.SelectFiles
                                 )
                             }
                         )
+                        viewModel.updateSelecting(false)
                     }
 
                     ExportSelectFilesScreen(
@@ -537,7 +540,8 @@ private fun NavigationUI(
                         version = version,
                         backToMainScreen = backToMainScreen,
                         onFinish = {
-                            showSelectTip = true
+                            viewModel.updateSelecting(true)
+                            createDocumentLauncher.launch(viewModel.defaultOutputFileName())
                         }
                     )
                 }

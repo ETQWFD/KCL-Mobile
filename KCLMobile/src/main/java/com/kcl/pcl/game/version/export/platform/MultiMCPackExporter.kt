@@ -71,7 +71,7 @@ class MultiMCPackExporter: AbstractExporter(
                         rootPath = info.gamePath.absolutePath,
                         targetPath = minecraftDir.absolutePath
                     )
-                    file.copyTo(targetFile)
+                    file.copyToEnsured(targetFile)
                 }
             }
 

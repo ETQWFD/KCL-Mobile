@@ -149,20 +149,8 @@ class ObservableJoystickData(data: JoystickData) : ObservableWidget() {
     override fun onCompositionStart(eventHandler: EventHandler?) {}
 
     override fun onCompositionDispose(eventHandler: EventHandler?) {
-        // 释放时取消所有方向按键
-        if (currentDirection != JoystickDirection.None) {
-            val events = directionEvents[currentDirection] ?: emptyList()
-            eventHandler?.onKeyPressed(events, false)
-            currentDirection = JoystickDirection.None
-        }
-        // 释放锁定事件
-        if (canLockState || isLocked) {
-            eventHandler?.onKeyPressed(lockEvents, false)
-            isLocked = false
-        }
-        canLockState = false
-        knobOffset = Offset.Zero
-        lastDragPosition = Offset.Zero
+        // 释放时全量抬起方向键与锁定键（与取消事件兜底复用同一套全量抬键语义）
+        liftAllJoystickKeys(eventHandler)
     }
 
     override fun onCheckVisibilityType(): VisibilityType = visibilityType
@@ -296,6 +284,34 @@ class ObservableJoystickData(data: JoystickData) : ObservableWidget() {
     }
 
     /**
+     * 全量抬起摇杆按键并复位运行时状态：
+     * - 抬起当前方向对应的按键；
+     * - 若处于可锁定 / 已锁定状态，抬起锁定按键；
+     * - 复位 currentDirection、canLockState、isLocked；
+     * - 摇杆头回中、清空上一次拖动位置。
+     *
+     * 与 [onCompositionDispose] 保持同一套全量抬键语义，
+     * 供正常松手（非锁定分支）与取消事件兜底复用，避免状态发散。
+     * 注意：本函数不负责清空 activePointer，指针占用的释放由事件循环统一配对处理。
+     */
+    private fun liftAllJoystickKeys(eventHandler: EventHandler?) {
+        // 抬起当前方向事件
+        if (currentDirection != JoystickDirection.None) {
+            val events = directionEvents[currentDirection] ?: emptyList()
+            eventHandler?.onKeyPressed(events, false)
+        }
+        // 抬起锁定事件
+        if (canLockState || isLocked) {
+            eventHandler?.onKeyPressed(lockEvents, false)
+        }
+        canLockState = false
+        isLocked = false
+        currentDirection = JoystickDirection.None
+        knobOffset = Offset.Zero
+        lastDragPosition = Offset.Zero
+    }
+
+    /**
      * 背景区域缓存，在 touchModifier 中使用，由 JoystickWidgetRenderer 设置
      */
     internal var backgroundRegion: Region = Region()
@@ -385,47 +401,49 @@ class ObservableJoystickData(data: JoystickData) : ObservableWidget() {
                         }
                 }
 
-                // 释放事件
+                // 释放事件（正常松手）
                 event.changes
                     .filter { it.changedToUpIgnoreConsumed() }
                     .forEach { change ->
                         val pointerId = change.id
                         if (pointerId == activePointer) {
-                            val centerPoint = Offset(
-                                internalRenderSize.width / 2f,
-                                internalRenderSize.height / 2f
-                            )
-                            val bgRadius = minOf(internalRenderSize.width, internalRenderSize.height) / 2f
-                            val deadZoneRadius = bgRadius * deadZoneRatio
-                            val lockThresholdPx = bgRadius * lockThreshold
-
                             if (canLockState) {
+                                // 前进锁定：North 推到底松手后保持前进，方向键与锁定键保持按下
+                                val centerPoint = Offset(
+                                    internalRenderSize.width / 2f,
+                                    internalRenderSize.height / 2f
+                                )
+                                val bgRadius = minOf(internalRenderSize.width, internalRenderSize.height) / 2f
                                 isLocked = true
                                 canLockState = false
-                                val lockPosition = Offset(centerPoint.x, 0f)
                                 updateJoystickState(
-                                    position = lockPosition,
+                                    position = Offset(centerPoint.x, 0f),
                                     centerPoint = centerPoint,
-                                    deadZoneRadius = deadZoneRadius,
-                                    lockThresholdPx = lockThresholdPx,
+                                    deadZoneRadius = bgRadius * deadZoneRatio,
+                                    lockThresholdPx = bgRadius * lockThreshold,
                                     eventHandler = eventHandler
                                 )
                             } else {
-                                canLockState = false
-                                isLocked = false
-                                updateJoystickState(
-                                    position = centerPoint,
-                                    centerPoint = centerPoint,
-                                    deadZoneRadius = deadZoneRadius,
-                                    lockThresholdPx = lockThresholdPx,
-                                    eventHandler = eventHandler
-                                )
+                                // 普通松手：摇杆头回中 + 全量抬起方向键/锁定键
+                                liftAllJoystickKeys(eventHandler)
                             }
 
                             activePointer = null
                             onReleasePointer(pointerId)
                         }
                     }
+
+                // 取消事件兜底：指针被系统手势、上层控件夺走或应用切后台等取消场景下，
+                // 可能以 pressed=false（且不属于正常 changedToUpIgnoreConsumed 释放）的形式到达。
+                // 此处对 activePointer 强制全量释放，避免 activePointer 残留导致方向键一直按住。
+                activePointer?.let { currentPointerId ->
+                    val cancelChange = event.changes.firstOrNull { it.id == currentPointerId && !it.pressed }
+                    if (cancelChange != null && !cancelChange.changedToUpIgnoreConsumed()) {
+                        liftAllJoystickKeys(eventHandler)
+                        activePointer = null
+                        onReleasePointer(currentPointerId)
+                    }
+                }
             }
         }
     }

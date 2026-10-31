@@ -295,10 +295,23 @@ class MinecraftDownloader(
             gameManifest.inheritsFrom != null
         }?.findVersion(gameManifest.inheritsFrom)
 
-        //优先尝试解析原版
-        inheritsFrom?.let {
-            downloader.createVersionJson(it)
-        }?.let { gameManifest1 ->
+        //优先尝试解析原版；父版本清单取不到（网络失败 / 远端清单缺该版本）时
+        //记录可读警告并跳过该层递归，继续处理本版本自身的任务，不中断整次校验补全
+        val parentManifest = inheritsFrom?.let { parent ->
+            try {
+                downloader.createVersionJson(parent)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Logger.warning(
+                    TAG,
+                    "Skipping inherited version '${parent.id}': failed to fetch its version manifest " +
+                            "(${e.message ?: e::class.simpleName}); files inherited from it will not be checked this time."
+                )
+                null
+            }
+        }
+        parentManifest?.let { gameManifest1 ->
             progressDownloadTasks(gameManifest1, gameManifest.inheritsFrom)
         }
 

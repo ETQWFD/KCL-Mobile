@@ -71,11 +71,20 @@ suspend fun Task.runBatchDownloads(
     }
     Logger.info(TAG, "Local file check done: reusable=${reusable.size} pending=${pending.size}, took=${System.currentTimeMillis() - verifyStarted}ms")
 
+    //没有任何下载源、本地又校验不通过的文件（清单缺源 / isDownloadable=false 但本地缺失）：
+    //这类任务永远不可能成功，直接给出带上下文的可读错误并整体中止；
+    //否则它们会在 toRequest() 处触发裸 IllegalArgumentException，或把空源请求送进引擎。
+    val unsatisfiable = pending.filter { it.urls.isEmpty() }
+    if (unsatisfiable.isNotEmpty()) {
+        val detail = unsatisfiable.joinToString("\n") { task -> describeUnsatisfiable(task) }
+        throw DownloadFailedException("以下文件缺少可用下载源，无法验证补全：\n$detail")
+    }
+
     //清单里只要有未声明大小的文件，字节数就不能构成可靠的进度分母
     val sizesFullyKnown = tasks.all { it.size > 0 }
 
     val batch = BatchDownloader(
-        requests = pending.map { it.toRequest() },
+        requests = pending.mapNotNull { it.toRequest() },
         maxConnections = maxConnections,
         retryRounds = retryRounds
     )
@@ -147,6 +156,22 @@ private suspend fun verifyExistingFilesConcurrently(
         }.partition { it.second }
             .let { (reusable, pending) -> reusable.map { it.first } to pending.map { it.first } }
     }
+
+/**
+ * 描述一个「无下载源且本地不可用」任务的失败原因：文件名、目标路径、缺源类型、期望 SHA-1
+ */
+private fun describeUnsatisfiable(task: DownloadTask): String = buildString {
+    append(task.targetFile.absolutePath)
+    append("：")
+    append(
+        if (task.isDownloadable) {
+            "清单未提供下载链接，且本地文件缺失或校验失败，无法补全"
+        } else {
+            "该文件不可下载（仅允许以本地已存在的形式满足），但本地文件缺失或校验失败"
+        }
+    )
+    task.sha1?.takeIf { it.isNotBlank() }?.let { append("（期望 SHA-1: $it）") }
+}
 
 /**
  * 进度条的显示策略：

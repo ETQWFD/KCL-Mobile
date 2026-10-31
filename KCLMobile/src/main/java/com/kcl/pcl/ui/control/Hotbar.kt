@@ -284,10 +284,11 @@ private fun Modifier.mainTouchLogic(
     var lastSlot: DownSlot? = null
 
     coroutineScope {
-        awaitPointerEventScope {
-            while (true) {
-                val event = awaitPointerEvent(PointerEventPass.Initial)
-                event.changes.forEach { change ->
+        try {
+            awaitPointerEventScope {
+                while (true) {
+                    val event = awaitPointerEvent(PointerEventPass.Initial)
+                    event.changes.forEach { change ->
                     if (change.isConsumed) return@forEach
 
                     val pointerId = change.id
@@ -303,8 +304,10 @@ private fun Modifier.mainTouchLogic(
 
                             val x = change.position.x
                             val slotIndex = calculateSlotIndex(x, hitWidth, slotCount)
-                            //碰到就视为点击，避免后续逻辑临时切物品栏导致游戏状态不同步
-                            onClick(slotIndex)
+                            //按下只记录起始槽位，切换键统一改在松开时按最终槽位发一次：
+                            //旧逻辑「按下即 onClick + 松开再 onClick」对同一手势发两次键，
+                            //跨槽滑动时会先切按下槽、再切松开槽，表现为连跳两次/点不准。
+                            //（保留注释：原先的「碰到就视为点击」按下即发键方案已废弃。）
 
                             val state = PointerState(
                                 initialPosition = change.position,
@@ -362,13 +365,17 @@ private fun Modifier.mainTouchLogic(
                                 onReleasePointer(pointerId)
                             }
 
-                            //长按已触发，不再处理点击
+                            //长按已触发，不再处理点击（长按=丢弃当前槽物品，不切槽）
                             if (state.isLongPressedTriggered) {
                                 change.consume()
                                 return@forEach
                             }
 
+                            //一次手势只在松开时按最终所在槽位发一次切换键：
+                            //跨槽滑动时落点在哪就切到哪，不会先切按下槽再补一刀松开槽。
                             val finalSlotIndex = state.currentSlotIndex
+                            onClick(finalSlotIndex)
+
                             if (enableDoubleClick) {
                                 val isDoubleTap = lastSlot?.let { last ->
                                     //检查是当前点击的栏位
@@ -391,15 +398,42 @@ private fun Modifier.mainTouchLogic(
                                         downTime = currentTime,
                                     )
                                 }
-                            } else {
-                                onClick(finalSlotIndex)
                             }
 
                             change.consume()
                         }
+
+                        //异常取消兜底：既非按下、也非滑动、也非正常抬起的变化。
+                        //例如系统手势/父层抢夺指针后传来的取消事件。这里必须成对清理：
+                        //否则该指针会一直留在 states/occupiedPointers 里，父层会一直
+                        //把同 id 的后续触摸判成「已占用」而挡死。
+                        !change.pressed && !change.previousPressed -> {
+                            val state = states.remove(pointerId)
+                            if (state != null) {
+                                state.isPressed = false
+                                state.longPressJob?.cancel()
+                                state.longPressJob = null
+                            }
+                            if (pointerId in occupiedPointers) {
+                                occupiedPointers.remove(pointerId)
+                                onReleasePointer(pointerId)
+                            }
+                        }
                     }
                 }
             }
+            }
+        } finally {
+            //pointerInput 因参数变化（槽位数/热栏尺寸/长按双击设置等）被取消时，
+            //还在手势中的指针可能永远等不到 up。在这里成对兜底释放，
+            //避免父层 occupiedPointers 残留、把之后所有触摸都判成已占用。
+            states.values.forEach {
+                it.isPressed = false
+                it.longPressJob?.cancel()
+            }
+            states.clear()
+            occupiedPointers.forEach { onReleasePointer(it) }
+            occupiedPointers.clear()
         }
     }
 }

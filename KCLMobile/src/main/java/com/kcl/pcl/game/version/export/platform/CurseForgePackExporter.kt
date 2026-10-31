@@ -95,7 +95,7 @@ class CurseForgePackExporter: AbstractExporter(
                         rootPath = info.gamePath.absolutePath,
                         targetPath = override.absolutePath
                     )
-                    file.copyTo(targetFile)
+                    file.copyToEnsured(targetFile)
                 }
             }
 

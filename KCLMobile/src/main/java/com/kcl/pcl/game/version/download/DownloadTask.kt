@@ -32,6 +32,11 @@ import java.io.File
  * 一个待下载文件的完整描述
  * 候选源、目标位置与校验方式
  * 批量执行交给 [BatchDownloader]，单个文件也可以通过 [com.kcl.pcl.game.download.engine.DownloadEngine] 直接驱动
+ *
+ * [urls] 允许为空：这类文件要么本地已存在且校验通过（由 [existingFileValid] 判定后整体跳过），
+ * 要么是清单缺源 / [isDownloadable=false]（如 Forge client）——
+ * 调度层（TaskBatch.runBatchDownloads）会在本地缺失时报出带上下文的可读错误，
+ * 绝不允许空源任务流到下载引擎
  */
 class DownloadTask(
     val urls: List<String>,
@@ -46,19 +51,23 @@ class DownloadTask(
      */
     val isDownloadable: Boolean = true
 ) {
-    init {
-        require(urls.isNotEmpty()) { "DownloadTask requires at least one url" }
-    }
 
     var fileDownloadedTask: (suspend () -> Unit)? = null
 
-    internal fun toRequest(): DownloadRequest = DownloadRequest(
-        urls = urls,
-        targetFile = targetFile,
-        sha1 = sha1,
-        expectedSize = size,
-        tag = this
-    )
+    /**
+     * 转为引擎请求；[urls] 为空时返回 null——调用方必须跳过该任务，
+     * 绝不能把空源请求提交给下载引擎（[DownloadRequest] 仍要求至少一个源）
+     */
+    internal fun toRequest(): DownloadRequest? {
+        if (urls.isEmpty()) return null
+        return DownloadRequest(
+            urls = urls,
+            targetFile = targetFile,
+            sha1 = sha1,
+            expectedSize = size,
+            tag = this
+        )
+    }
 
     internal suspend fun runFileDownloadedTask() {
         withContext(Dispatchers.IO) {
