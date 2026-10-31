@@ -126,3 +126,13 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
+
+tasks.withType<JavaCompile>().configureEach {
+    // 本模块必须产出真正兼容 JRE8 的字节码：用本地 Temurin JDK8 的 javac 编译（fork 模式），
+    // 直接按 JDK8 平台 API 解析。不能拿 JDK21 的 javac 编 --release 8（缺 sun.misc.Unsafe），
+    // 也不能拿 JDK21 直接编（会把 Java9+ 才有的协变返回类型
+    // FloatBuffer.flip()Ljava/nio/FloatBuffer; 写进字节码，游戏跑在 JRE8 上时
+    // GLFW.<clinit> 抛 NoSuchMethodError —— 1.3.1-kcl.2 真机崩溃根因）。
+    options.isFork = true
+    options.forkOptions.javaHome = file("/home/user/.gradle/jdks/jdk8u504-b01")
+}

@@ -346,6 +346,13 @@ fun PclOtherAboutPage() {
         PclCard(modifier = Modifier.fillMaxWidth(), title = PclStrings.LangPageOtherAboutThanks) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 PclAboutRow(
+                    icon = painterResource(R.drawable.img_avatar_ltcat),
+                    title = "龙腾猫跃",
+                    info = "PCL2（Plain Craft Launcher 2）作者，本启动器界面原型与作者之一",
+                    buttonText = "打开主页",
+                ) { openLink(context, URL_LTCATT) }
+
+                PclAboutRow(
                     icon = painterResource(R.drawable.img_avatar_bangbang93),
                     title = "bangbang93",
                     info = "提供 BMCLAPI 镜像源和 Forge 安装工具",

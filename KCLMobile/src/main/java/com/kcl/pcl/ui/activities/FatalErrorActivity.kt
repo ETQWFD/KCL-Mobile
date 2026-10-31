@@ -20,9 +20,11 @@ package com.kcl.pcl.ui.activities
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.kcl.pcl.BuildConfig
 import com.kcl.pcl.R
 import com.kcl.pcl.context.COPY_LABEL_THROWABLE_STACK
 import com.kcl.pcl.ui.base.AbstractAppCompatActivity
@@ -32,6 +34,9 @@ import com.kcl.pcl.utils.getSerializableSafely
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val BUNDLE_THROWABLE = "BUNDLE_THROWABLE"
+
+/** 崩溃上报收件邮箱：调用系统邮件应用把崩溃信息发给开发者 */
+private const val CRASH_REPORT_EMAIL = "2416444244@qq.com"
 
 /**
  * 用于显示致命崩溃信息的 Activity
@@ -55,11 +60,36 @@ class FatalErrorActivity : AbstractAppCompatActivity() {
         MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.crash_launch_crash_title))
             .setMessage(message + "\n\n" + throwableStack)
-            .setPositiveButton(android.R.string.ok) { _, _ -> finish() }
+            // 上报给开发者：调用手机上的邮件应用，收件人 2416444244@qq.com，
+            // 正文预填版本信息与崩溃堆栈，用户确认发送即可（无需复制粘贴）。
+            .setPositiveButton("上报给开发者") { _, _ ->
+                val subject = "KCL Mobile ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) 崩溃报告"
+                val body = buildString {
+                    append("设备信息与崩溃日志如下，请开发者查收：\n\n")
+                    append("版本：KCL Mobile ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) · ${BuildConfig.BUILD_TYPE}\n")
+                    append("机型：${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}\n")
+                    append("Android：${android.os.Build.VERSION.RELEASE} (API ${android.os.Build.VERSION.SDK_INT})\n\n")
+                    append(throwableStack)
+                }
+                runCatching {
+                    startActivity(
+                        Intent(Intent.ACTION_SENDTO).apply {
+                            data = Uri.parse("mailto:$CRASH_REPORT_EMAIL")
+                            putExtra(Intent.EXTRA_SUBJECT, subject)
+                            putExtra(Intent.EXTRA_TEXT, body)
+                        }.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    )
+                }.onFailure {
+                    // 设备没有邮件应用时退回复制，保证日志不丢
+                    copyText(COPY_LABEL_THROWABLE_STACK, body, this)
+                }
+                finish()
+            }
             .setNeutralButton(android.R.string.copy) { _, _ ->
                 copyText(COPY_LABEL_THROWABLE_STACK, throwableStack, this)
                 finish()
             }
+            .setNegativeButton(android.R.string.ok) { _, _ -> finish() }
             .setCancelable(false)
             .showThemed()
     }

@@ -120,7 +120,8 @@ tasks.jar {
     exclude("net/java/openjdk/cacio/ctc/**")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+tasks.withType<JavaCompile>().configureEach {
+    // 用 --release 17 编译：直接按 JDK17 平台 API 解析，避免 JDK21 特有的字节码引用，
+    // 保证该合并包在游戏内置的 JRE17 运行时上兼容。
+    options.release.set(17)
 }
