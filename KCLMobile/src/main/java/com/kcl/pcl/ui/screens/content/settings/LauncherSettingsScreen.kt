@@ -409,6 +409,37 @@ fun LauncherSettingsScreen(
 
                     SettingsCard(
                         modifier = Modifier.fillMaxWidth(),
+                        position = CardPosition.Middle,
+                        title = stringResource(R.string.settings_launcher_log_clear_title),
+                        summary = stringResource(R.string.settings_launcher_log_clear_summary),
+                        onClick = {
+                            TaskSystem.submitTask(
+                                Task.runTask(
+                                    id = "CLEAR_LOGS",
+                                    task = { task ->
+                                        task.updateProgress(-1f)
+                                        Logger.clearLog()
+                                        task.updateProgress(1f)
+                                    },
+                                    onError = { e ->
+                                        Logger.error(TAG, "Failed to clear log file.", e)
+                                    },
+                                    onFinally = {
+                                        android.os.Handler(android.os.Looper.getMainLooper()).post {
+                                            android.widget.Toast.makeText(
+                                                context,
+                                                R.string.settings_launcher_log_clear_done,
+                                                android.widget.Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                )
+                            )
+                        }
+                    )
+
+                    SettingsCard(
+                        modifier = Modifier.fillMaxWidth(),
                         position = CardPosition.Bottom,
                         title = stringResource(R.string.settings_launcher_log_share_title),
                         summary = stringResource(R.string.settings_launcher_log_share_summary),

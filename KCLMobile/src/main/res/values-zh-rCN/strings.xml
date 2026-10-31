@@ -755,6 +755,12 @@
     <string name="versions_config_failed_to_save">保存版本配置时出现异常</string>
     <string name="versions_config_microphone_check_title">检查麦克风</string>
     <string name="versions_config_microphone_check_summary">检查系统麦克风是否可用，或确认启动器是否已获得麦克风权限。这项检查将确保您可以使用像“简单的语音聊天”这样的需要使用麦克风的模组。</string>
+    <string name="quick_launch_create_shortcut">导出启动脚本</string>
+    <string name="quick_launch_shortcut_created">已创建桌面快捷方式，点击图标即可直接启动该版本。</string>
+    <string name="quick_launch_shortcut_exists">桌面上已存在指向该版本的快捷方式。</string>
+    <string name="quick_launch_shortcut_failed">创建桌面快捷方式失败。</string>
+    <string name="quick_launch_version_not_found">未找到该版本，请确认版本仍然存在。</string>
+    <string name="quick_launch_no_account">尚未登录账号，正在打开启动器…</string>
     <string name="versions_export">导出整合包</string>
     <string name="versions_export_type_mcbbs">MCBBS 整合包</string>
     <string name="versions_export_type_mcbbs_summary">可被 %s，HMCL 等启动器导入</string>
@@ -1107,6 +1113,9 @@
     <string name="settings_launcher_log_share_title">分享启动器日志</string>
     <string name="settings_launcher_log_share_summary">点击以分享启动器的日志文件，以供开发者定位并修复启动器的问题</string>
     <string name="settings_launcher_log_share_packing">打包启动器日志文件</string>
+    <string name="settings_launcher_log_clear_title">清除日志</string>
+    <string name="settings_launcher_log_clear_summary">清空当前启动器日志文件的内容，之后的日志仍会继续记录到同一文件</string>
+    <string name="settings_launcher_log_clear_done">日志已清除</string>
     <string name="settings_launcher_mirror_game_source_title">游戏内容下载源</string>
     <string name="settings_launcher_mirror_asset_platform_source_title">资源平台下载源</string>
     <string name="settings_launcher_mirror_auto">自动</string>

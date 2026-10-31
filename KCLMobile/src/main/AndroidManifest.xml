@@ -23,6 +23,9 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"/>
     <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS"/>
+    <!-- 桌面快捷方式（导出启动脚本）：旧设备（API<26）发安装广播需要此权限；Android 8+ 的
+         pinned shortcut 由 ShortcutManager 直接管理，不依赖此权限但保留以兼容旧设备 -->
+    <uses-permission android:name="android.permission.INSTALL_SHORTCUT" />
 
     <application
         android:name=".ZLApplication"
@@ -149,6 +152,19 @@
         <activity
             android:name=".ui.activities.MainActivity"
             android:launchMode="singleTop"
+            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
+            android:screenOrientation="sensorLandscape" />
+
+        <!--
+            桌面快捷方式「导出启动脚本」的落地 Activity。
+            由桌面图标直接拉起：读取 versionName extra → Java 自检 → 复用现有 GameLaunchFlow 启动该版本。
+            必须 exported=true，桌面（其它应用进程）才能从外部拉起。
+        -->
+        <activity
+            android:name=".ui.activities.QuickLaunchActivity"
+            android:launchMode="standard"
+            android:exported="true"
+            android:theme="@style/AppTheme.KCLMobile"
             android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
             android:screenOrientation="sensorLandscape" />
 

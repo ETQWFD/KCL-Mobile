@@ -2640,6 +2640,10 @@ private data class CommunityLobbyRoom(
     @SerialName("code") val code: String = "",
     @SerialName("players") val players: Int = 0,
     @SerialName("online") val online: Boolean = true,
+    // 可选外链：填了之后这一行的【加入】不再走陶瓦 joinRoom，
+    // 而是用 Intent.ACTION_VIEW 打开该链接（如官方 QQ 群）。
+    // 用于「进不去但需要给用户一个去处」的占位房间改造。
+    @SerialName("link") val link: String? = null,
 )
 
 @Serializable
@@ -3199,6 +3203,7 @@ private fun PclLinkContent() {
 @Composable
 private fun CommunityLobbyCard(joinRoom: (String) -> Unit) {
     val p = pclPalette
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var lobbyData by remember { mutableStateOf<CommunityLobbyData?>(null) }
     var loadFailed by remember { mutableStateOf(false) }
@@ -3262,7 +3267,13 @@ private fun CommunityLobbyCard(joinRoom: (String) -> Unit) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     PclText(text = room.name, fontSize = 15)
                                     PclText(
-                                        text = "${room.desc} · 大厅编号 ${room.code}",
+                                        //带 link 的行是「外链入口」（如官方 QQ 群），
+                                        //副标题不再写「大厅编号」，改写群号，避免误导。
+                                        text = if (!room.link.isNullOrBlank()) {
+                                            "${room.desc} · QQ 群 ${room.code}"
+                                        } else {
+                                            "${room.desc} · 大厅编号 ${room.code}"
+                                        },
                                         color = p.gray2,
                                         fontSize = 12,
                                     )
@@ -3271,7 +3282,16 @@ private fun CommunityLobbyCard(joinRoom: (String) -> Unit) {
                                 PclButton(
                                     text = "加入",
                                     colorState = PclColorState.Highlight,
-                                    onClick = { joinRoom(room.code) },
+                                    onClick = {
+                                        //外链房间：用系统浏览器/WebView 打开链接（Intent.ACTION_VIEW），
+                                        //不再走陶瓦 joinRoom——这些占位房间本来就没有房主在开。
+                                        val link = room.link
+                                        if (!link.isNullOrBlank()) {
+                                            openLink(context, link)
+                                        } else {
+                                            joinRoom(room.code)
+                                        }
+                                    },
                                 )
                             }
                             Spacer(Modifier.height(10.dp))

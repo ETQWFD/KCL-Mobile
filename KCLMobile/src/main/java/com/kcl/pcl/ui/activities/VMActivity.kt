@@ -91,7 +91,6 @@ import com.kcl.pcl.game.launch.handler.AbstractHandler
 import com.kcl.pcl.game.launch.handler.GameHandler
 import com.kcl.pcl.game.launch.handler.HandlerType
 import com.kcl.pcl.game.launch.handler.JVMHandler
-import com.kcl.pcl.game.multirt.RuntimesManager
 import com.kcl.pcl.game.plugin.PluginLoader
 import com.kcl.pcl.game.renderer.Renderers
 import com.kcl.pcl.game.sdl.SdlBridge
@@ -811,7 +810,11 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
         withHandler { mIsSurfaceDestroyed = false }
         lifecycleScope.launch(Dispatchers.Default) {
             val screenSize = vmViewModel.screenSizeBridge.awaitData()
-            val currentSize = refreshWindowSize(screenSize = screenSize)
+            // SurfaceHolder/SurfaceTexture 的视图操作（setFixedSize / setDefaultBufferSize）必须在主线程执行，
+            // 否则会抛 CalledFromWrongThreadException（见 requestRefreshWindowSize 的既有模式）
+            val currentSize = withContext(Dispatchers.Main) {
+                refreshWindowSize(screenSize = screenSize)
+            }
             withHandler {
                 execute(
                     surface = Surface(surface),
@@ -863,7 +866,10 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
         withHandler { mIsSurfaceDestroyed = false }
         lifecycleScope.launch(Dispatchers.Default) {
             val screenSize = vmViewModel.screenSizeBridge.awaitData()
-            val currentSize = refreshWindowSize(screenSize = screenSize)
+            // setFixedSize 等 SurfaceHolder 视图操作必须在主线程执行，否则抛 CalledFromWrongThreadException
+            val currentSize = withContext(Dispatchers.Main) {
+                refreshWindowSize(screenSize = screenSize)
+            }
             withHandler {
                 execute(
                     surface = surface,
@@ -1005,10 +1011,9 @@ fun runJar(
     jreName: String? = null,
     customArgs: String? = null
 ) {
-    RuntimesManager.getExactJreName(8) ?: run {
-        Toast.makeText(context, R.string.multirt_no_java_8, Toast.LENGTH_SHORT).show()
-        return
-    }
+    // 不再在这里「没 Java 8 就 Toast 直接返回」：缺 Java 的补装由 JvmLauncher.launch()
+    // 里的 RuntimeProvisioner.ensureFor 自动完成（未点名 jreName 时按 Java 8 补装），
+    // 装好后直接启动；装失败的可读原因会进 JVM 日志与错误页。
 
     val jvmArgsPrefix = customArgs?.let { "$it " } ?: ""
     val jvmArgs = "$jvmArgsPrefix-jar ${jarFile.absolutePath}"

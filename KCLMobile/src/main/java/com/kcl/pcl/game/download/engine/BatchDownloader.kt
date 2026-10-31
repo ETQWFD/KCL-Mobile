@@ -199,7 +199,14 @@ class BatchDownloader(
 
     companion object {
         private const val TAG = "BatchDownloader"
-        const val DEFAULT_MAX_CONNECTIONS = 64
+
+        /**
+         * 默认文件级并发数。
+         * 改前 64：手机侧 64 条并发 TCP/TLS 连接容易撞上 NAT 会话上限与镜像站限流；
+         * 改后 16：与主流 MC 启动器移动端默认并发对齐，小文件批量下载仍可吃满带宽，
+         * 同时降低连接抖动。显式传入 maxConnections 的调用方不受影响。
+         */
+        const val DEFAULT_MAX_CONNECTIONS = 16
         const val PROGRESS_INTERVAL_MS = 100L
 
         /** 异常详情中最多列出的失败条数 */

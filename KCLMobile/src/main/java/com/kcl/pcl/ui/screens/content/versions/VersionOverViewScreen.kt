@@ -45,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import android.widget.Toast
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kcl.pcl.R
 import com.kcl.pcl.context.copyLocalFile
@@ -55,6 +56,7 @@ import com.kcl.pcl.game.version.installed.Version
 import com.kcl.pcl.game.version.installed.VersionFolders
 import com.kcl.pcl.game.version.installed.VersionsManager
 import com.kcl.pcl.ui.androidText
+import com.kcl.pcl.ui.activities.ShortcutInstaller
 import com.kcl.pcl.ui.base.BaseScreen
 import com.kcl.pcl.ui.components.AnimatedColumn
 import com.kcl.pcl.ui.components.IconTextButton
@@ -106,6 +108,7 @@ fun VersionOverViewScreen(
         ),
         Triple(NormalNavKey.Versions.OverView, versionsScreenKey, false)
     ) { isVisible ->
+        val context = LocalContext.current
         var versionSummary by remember { mutableStateOf(version.getVersionSummary()) }
         var refreshVersionIcon by remember { mutableIntStateOf(0) }
 
@@ -167,6 +170,19 @@ fun VersionOverViewScreen(
                     onEditSummary = { versionsOperation = VersionsOperation.EditSummary(version) },
                     onRename = { versionsOperation = VersionsOperation.Rename(version) },
                     onExport = onExport,
+                    onCreateShortcut = {
+                        when (ShortcutInstaller.install(context, version.getVersionName())) {
+                            ShortcutInstaller.Result.CREATED -> Toast.makeText(
+                                context, R.string.quick_launch_shortcut_created, Toast.LENGTH_LONG
+                            ).show()
+                            ShortcutInstaller.Result.ALREADY_EXISTS -> Toast.makeText(
+                                context, R.string.quick_launch_shortcut_exists, Toast.LENGTH_LONG
+                            ).show()
+                            ShortcutInstaller.Result.FAILED -> Toast.makeText(
+                                context, R.string.quick_launch_shortcut_failed, Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    },
                     onDelete = { versionsOperation = VersionsOperation.Delete(version) }
                 )
             }
@@ -321,6 +337,7 @@ private fun VersionManagementLayout(
     onEditSummary: () -> Unit,
     onRename: () -> Unit,
     onExport: () -> Unit,
+    onCreateShortcut: () -> Unit,
     onDelete: () -> Unit,
 ) {
     val logFile = remember(version) {
@@ -370,6 +387,14 @@ private fun VersionManagementLayout(
                 ) {
                     Text(
                         text = stringResource(R.string.versions_export)
+                    )
+                }
+                OutlinedButton(
+                    modifier = Modifier.padding(end = 12.dp),
+                    onClick = onCreateShortcut
+                ) {
+                    Text(
+                        text = stringResource(R.string.quick_launch_create_shortcut)
                     )
                 }
                 OutlinedButton(

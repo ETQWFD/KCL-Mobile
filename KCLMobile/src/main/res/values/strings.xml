@@ -757,6 +757,12 @@
     <string name="versions_config_failed_to_save">Failed to save version configuration</string>
     <string name="versions_config_microphone_check_title">Check Microphone</string>
     <string name="versions_config_microphone_check_summary">Check whether the system microphone is available or confirm that the launcher has been granted microphone permission. This check ensures that you can use mods like Simple Voice Chat that require a microphone.</string>
+    <string name="quick_launch_create_shortcut">Create Shortcut</string>
+    <string name="quick_launch_shortcut_created">Desktop shortcut created. Tap the icon to launch this version directly.</string>
+    <string name="quick_launch_shortcut_exists">A shortcut for this version already exists on the home screen.</string>
+    <string name="quick_launch_shortcut_failed">Failed to create the desktop shortcut.</string>
+    <string name="quick_launch_version_not_found">Version not found. Make sure it still exists.</string>
+    <string name="quick_launch_no_account">No account signed in. Opening the launcher…</string>
     <string name="versions_export">Export Modpack</string>
     <string name="versions_export_type_mcbbs">MCBBS Modpack</string>
     <string name="versions_export_type_mcbbs_summary">Can be imported by %s, HMCL, and other launchers</string>
@@ -1109,6 +1115,9 @@
     <string name="settings_launcher_log_share_title">Share Launcher Logs</string>
     <string name="settings_launcher_log_share_summary">Tap to share the launcher log files, so developers can identify and fix issues with the launcher</string>
     <string name="settings_launcher_log_share_packing">Package launcher log files</string>
+    <string name="settings_launcher_log_clear_title">Clear Launcher Log</string>
+    <string name="settings_launcher_log_clear_summary">Clear the current launcher log file. Future logs will still be recorded in the same file</string>
+    <string name="settings_launcher_log_clear_done">Launcher log cleared</string>
     <string name="settings_launcher_mirror_game_source_title">Game Download Source</string>
     <string name="settings_launcher_mirror_asset_platform_source_title">Mod Download Source</string>
     <string name="settings_launcher_mirror_auto">Auto</string>

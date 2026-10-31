@@ -1100,6 +1100,9 @@
     <string name="settings_launcher_log_share_title">分享啟動器日誌</string>
     <string name="settings_launcher_log_share_summary">點擊以分享啟動器的日誌文件，以供開發者定位並修復啟動器的問題</string>
     <string name="settings_launcher_log_share_packing">打包啟動器日誌文件</string>
+    <string name="settings_launcher_log_clear_title">清除日誌</string>
+    <string name="settings_launcher_log_clear_summary">清空當前啟動器日誌文件的內容，之後的日誌仍會繼續記錄到同一文件</string>
+    <string name="settings_launcher_log_clear_done">日誌已清除</string>
     <string name="settings_launcher_mirror_game_source_title">遊戲內容下載源</string>
     <string name="settings_launcher_mirror_asset_platform_source_title">資源平台下載源</string>
     <string name="settings_launcher_mirror_auto">自動</string>

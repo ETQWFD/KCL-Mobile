@@ -69,7 +69,10 @@ private fun File?.isOptionalAsset(): Boolean {
  */
 class ModDownloader(
     val mods: List<ModFile>,
-    private val maxDownloadThreads: Int = 64
+    // 改前 64：同时用于「批量下载连接数」与「模组信息解析并发信号量」；
+    // 64 路并发解析会打爆 Modrinth/CurseForge 的 API 限流（429），
+    // 64 路下载也容易触发手机侧 NAT 会话上限。改后 16，与下载引擎默认并发对齐。
+    private val maxDownloadThreads: Int = 16
 ) {
     suspend fun startDownload(task: Task) {
         task.updateMessage(null)

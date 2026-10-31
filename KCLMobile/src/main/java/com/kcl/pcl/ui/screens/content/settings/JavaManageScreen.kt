@@ -210,10 +210,8 @@ fun JavaManageScreen(
                                         executeJarWithUri(activity, uri, customRuntime.name)
                                     }
                                 } else {
-                                    RuntimesManager.getExactJreName(8) ?: run {
-                                        eventViewModel.sendToast(androidText(R.string.multirt_no_java_8), Toast.LENGTH_LONG)
-                                        return@ImportSingleFileButton
-                                    }
+                                    // 不再在这里「没 Java 8 就 Toast 返回」：缺 Java 的补装由
+                                    // JvmLauncher.launch() 里的 RuntimeProvisioner.ensureFor 自动完成。
                                     (context as? Activity)?.let { activity ->
                                         val jreName = AllSettings.javaRuntime.takeIf { AllSettings.autoPickJavaRuntime.getValue() }?.getValue()
                                         executeJarWithUri(activity, uri, jreName)

@@ -70,8 +70,11 @@ open class JvmLauncher(
         // 直接跑安装器 / 工具 JAR 之前也确认一次 Java：没有就自动装内置的。
         // 这条路径走不到 GameInstaller 的任务流（例如从文件管理器导入整合包），
         // 原来缺 Java 时会一路走到原生层回一个 -1，什么原因都看不到。
+        // 没点名 jreName 时按 Java 8 要求补装（Forge/NeoForge 安装器等工具基本都要 8）；
+        // 点名了就尊重玩家选择，只保证「至少有一个能用的」。
+        val requiredJava = if (jvmLaunchInfo.jreName.isNullOrBlank()) 8 else 0
         withContext(Dispatchers.IO) {
-            RuntimeProvisioner.ensureFor(context, 0, "run jar")
+            RuntimeProvisioner.ensureFor(context, requiredJava, "run jar")
         }
         val (runtime, argList) = getStartupNeeded(screenSize)
 
