@@ -29,5 +29,41 @@
       "markdown": "This is **KCL Mobile** 1.3.1-kcl.5 (build 200054), fixing five interaction and workflow issues on top of kcl.4.\n\n### Key fixes\n\n- **Virtual joystick no longer makes the player run forward after release**: system-cancel paths are now covered (ACTION_CANCEL / pointer stolen by an upper layer or the system / app sent to background). On cancel, all direction keys and the forward-lock key are released and occupied pointers cleared. The \"push-to-the-edge and hold-to-run\" lock behavior is kept.\n- **Game-file verification / completion (\"校验并补全\") no longer fails on phones**: dependencies with an empty download source no longer crash while building the task; files that already exist locally and pass checksum are skipped automatically; when a source is missing and the file is absent, a readable error with file path and SHA-1 is shown; failing to fetch an inheritsFrom manifest now only warns and skips instead of aborting the whole completion.\n- **Exporting a modpack no longer fails**: parent directories are created automatically before copying (previously missing subdirs like mods/ and config/ threw FileNotFoundException); the system save dialog uses single-document selection (CreateDocument), and the default filename carries the correct extension per format (Modrinth=.mrpack, others=.zip); invalid MIME fixed; a clear prompt shows when no file is chosen; MCBBS / Modrinth / CurseForge / MultiMC filename sanitizing now handles Chinese characters and spaces.\n- **Community lobby and multiplayer are more stable**: an invalid custom multiplayer-node URL no longer crashes the app — a readable toast is shown and the waiting page is restored; the in-game multiplayer menu, server list, Ping, SRV redirect, quick-join and the PCL2 community-lobby entry route are all verified connected; package name unified to com.kcl.pcl with no leftover old-package interception.\n- **In-game hotbar no longer mis-taps / double-switches**: a single gesture now switches once to the final slot on release, instead of sending a key on both press and release; swiping across slots lands on whichever slot you release over; cancel fallback and paired release of occupied pointers on control rebuild are added.\n\n### Kept from kcl.4 and earlier\n\n- Java runtime self-check with auto-install; hotbar hit-offset fix; control layout editor no longer opens blank.\n- Old-game FloatBuffer.flip crash fixed (LWJGL 3.3.3 compiled with JDK 8).\n- Crash report mail to 2416444244@qq.com; Terracotta community lobby.\n\n### Other\n\n- Package name `com.kcl.pcl` unchanged; installs directly over kcl.4.\n"
     }
   ],
-  "body": {}
+  "body": {},
+  "ce": {
+    "code": 200054,
+    "version": "1.3.1-kcl.5",
+    "package": "com.kcl.ce",
+    "created_at": "2026-10-31T13:24:55Z",
+    "url": "https://github.com/ETQWFD/KCL-Mobile/releases/download/v1.3.1-kcl.5/KCLCE-1.3.1-kcl.5-armeabi-v7a.apk",
+    "download": "https://github.com/ETQWFD/KCL-Mobile/releases/download/v1.3.1-kcl.5/KCLCE-1.3.1-kcl.5-armeabi-v7a.apk",
+    "default_cloud_drive": {
+      "language": "NULL",
+      "link": "https://github.com/ETQWFD/KCL-Mobile/releases/download/v1.3.1-kcl.5/KCLCE-1.3.1-kcl.5-armeabi-v7a.apk",
+      "links": []
+    },
+    "cloud_drives": [
+      {
+        "language": "zh",
+        "link": "https://github.com/ETQWFD/KCL-Mobile/releases/download/v1.3.1-kcl.5/KCLCE-1.3.1-kcl.5-armeabi-v7a.apk",
+        "links": []
+      }
+    ],
+    "files": [],
+    "default_body": {
+      "language": "NULL",
+      "markdown": "这是 **KCL CE** 社区版的 1.3.1-kcl.5 版本（构建号 200054，包名 `com.kcl.ce`）。KCL CE 与 KCL Mobile（`com.kcl.pcl`）可共存安装，社区大厅与联机完整保留。\n\n### 与 KCL Mobile 的关系\n\n- 独立包名 `com.kcl.ce`，不覆盖 KCL Mobile，两者可同时安装。\n- 社区大厅、联机、官方 QQ 群入口完整保留；陶瓦社区联机大厅可用。\n\n### 本版本内容（与 KCL Mobile v2 一致）\n\n- 新增桌面快捷方式「导出启动脚本」。\n- 修复微软 / 正版登录皮肤不显示（微软 profile 直链）。\n- 日志持久化追加与一键清除。\n- 社区大厅入口清理为官方 QQ 群。\n- 缺 Java 自动补装；下载并发优化为 16；游戏渲染线程崩溃修复。\n\n### 下载\n\n- APK 见 GitHub Release：`KCLCE-1.3.1-kcl.5-armeabi-v7a.apk`\n- 崩溃上报邮件 2416444244@qq.com。"
+    },
+    "bodies": [
+      {
+        "language": "zh",
+        "markdown": "这是 **KCL CE** 社区版的 1.3.1-kcl.5 版本（构建号 200054，包名 `com.kcl.ce`）。KCL CE 与 KCL Mobile（`com.kcl.pcl`）可共存安装，社区大厅与联机完整保留。\n\n### 与 KCL Mobile 的关系\n\n- 独立包名 `com.kcl.ce`，不覆盖 KCL Mobile，两者可同时安装。\n- 社区大厅、联机、官方 QQ 群入口完整保留；陶瓦社区联机大厅可用。\n\n### 本版本内容（与 KCL Mobile v2 一致）\n\n- 新增桌面快捷方式「导出启动脚本」。\n- 修复微软 / 正版登录皮肤不显示（微软 profile 直链）。\n- 日志持久化追加与一键清除。\n- 社区大厅入口清理为官方 QQ 群。\n- 缺 Java 自动补装；下载并发优化为 16；游戏渲染线程崩溃修复。\n\n### 下载\n\n- APK 见 GitHub Release：`KCLCE-1.3.1-kcl.5-armeabi-v7a.apk`\n- 崩溃上报邮件 2416444244@qq.com。"
+      },
+      {
+        "language": "en",
+        "markdown": "This is the **KCL CE** community build of 1.3.1-kcl.5 (build 200054, package `com.kcl.ce`). KCL CE installs alongside KCL Mobile (`com.kcl.pcl`); the community lobby and multiplayer are fully kept.\n\n### Relationship to KCL Mobile\n\n- Independent package `com.kcl.ce`; it does not overwrite KCL Mobile and both can be installed at once.\n- Community lobby, multiplayer and the official QQ group entry are fully kept; the Terracotta lobby works.\n\n### This build (same as KCL Mobile v2)\n\n- New home-screen shortcut \"export launch script\".\n- Fixed Microsoft / premium-login skin not showing (Microsoft profile direct link).\n- Log persistence (append) and one-tap clear.\n- Community-lobby entry cleaned up to the official QQ group.\n- Auto-install when Java is missing; download concurrency tuned to 16; game render-thread crash fixed.\n\n### Download\n\n- APK on GitHub Release: `KCLCE-1.3.1-kcl.5-armeabi-v7a.apk`\n- Crash report mail to 2416444244@qq.com."
+      }
+    ],
+    "body": {}
+  }
 }
