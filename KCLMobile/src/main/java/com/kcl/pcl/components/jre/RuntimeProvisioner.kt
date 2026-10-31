@@ -240,6 +240,13 @@ object RuntimeProvisioner {
                 if (jre.majorVersion < minJavaVersion) continue
             }
 
+            // APK 里没有该运行库的资产（体积优化后只内置 jre-8，jre-17/21/25 走在线补装）：
+            // 不要把它当成「本机架构不支持」而 skipped，而是联网下载 universal + bin-arm。
+            if (!hasBuiltinAssets(context, jre)) {
+                installOnline(jre, usable, installed, failed, versions)
+                continue
+            }
+
             val task = runCatching { UnpackJreTask(context, jre) }
                 .onFailure { Logger.warning(TAG, "Failed to create unpack task for ${jre.jreName}", it) }
                 .getOrNull()
@@ -292,5 +299,55 @@ object RuntimeProvisioner {
                     "failed=$failed, skipped=$skipped"
         )
         return Report(usable = usable, installed = installed, failed = failed, skipped = skipped)
+    }
+
+    /** 该 JRE 是否真的内置在 assets 里（含 universal.tar.xz）。否则视为需要在线补装。 */
+    private fun hasBuiltinAssets(context: Context, jre: Jre): Boolean = runCatching {
+        context.assets.list(jre.jrePath)?.contains("universal.tar.xz") == true
+    }.getOrDefault(false)
+
+    /**
+     * 在线补装一个未内置的 JRE（jre-17/21/25）。
+     *
+     * 已在线装好且可用 → 不重复下载；否则下载 universal + bin-arm（SHA-256 校验）后走
+     * 与内置包一致的解压链路。失败原因带可读提示，不抛到外层（外层 catch 会取消后续安装）。
+     */
+    private suspend fun installOnline(
+        jre: Jre,
+        usable: MutableList<String>,
+        installed: MutableList<String>,
+        failed: MutableList<Pair<String, String>>,
+        versions: MutableMap<String, Int>
+    ) {
+        // 已经在线装过且版本标记、可用性都对：直接算作可用，别再下几百 MB
+        val alreadyUsable = runCatching {
+            RuntimesManager.loadInternalRuntimeVersion(jre.jreName) == OnlineJreInstaller.ONLINE_BINPACK_VERSION
+                    && RuntimesManager.isRuntimeUsable(jre.jreName)
+        }.getOrDefault(false)
+        if (alreadyUsable) {
+            if (jre.jreName !in usable) usable += jre.jreName
+            versions[jre.jreName] = jre.majorVersion
+            return
+        }
+
+        Logger.info(TAG, "Runtime ${jre.jreName} not built-in, installing online")
+        runCatching { withContext(Dispatchers.IO) { OnlineJreInstaller.downloadAndInstall(jre) } }
+            .onFailure { e ->
+                val reason = (e.message ?: e::class.java.simpleName) + "。" + OnlineJreInstaller.HINT_RETRY_ONLINE
+                Logger.error(TAG, "Online install failed for ${jre.jreName}: $reason", e)
+                failed += jre.jreName to reason
+            }
+            .onSuccess {
+                val after = runCatching { RuntimesManager.isRuntimeUsable(jre.jreName) }.getOrDefault(false)
+                if (after) {
+                    if (jre.jreName !in usable) usable += jre.jreName
+                    versions[jre.jreName] = jre.majorVersion
+                    installed += jre.jreName
+                } else {
+                    failed += jre.jreName to
+                            "在线安装后仍不可用（${RuntimesManager.describeRuntimeProblem(jre.jreName)}）。" +
+                            OnlineJreInstaller.HINT_RETRY_ONLINE
+                }
+            }
     }
 }
