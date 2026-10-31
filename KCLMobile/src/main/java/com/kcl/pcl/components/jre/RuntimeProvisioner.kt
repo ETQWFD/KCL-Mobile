@@ -16,13 +16,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.txt>.
  */
 
-package com.zalith.pcl.components.jre
+package com.kcl.pcl.components.jre
 
 import android.content.Context
-import com.zalith.pcl.components.InstallableItem
-import com.zalith.pcl.game.multirt.RuntimesManager
-import com.zalith.pcl.setting.AllSettings
-import com.zalith.pcl.utils.logging.Logger
+import com.kcl.pcl.components.InstallableItem
+import com.kcl.pcl.game.multirt.RuntimesManager
+import com.kcl.pcl.setting.AllSettings
+import com.kcl.pcl.utils.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -77,7 +77,7 @@ object RuntimeProvisioner {
     /**
      * 安装互斥。
      *
-     * 解压页（[com.zalith.pcl.ui.activities.SplashActivity]）与主界面的兜底检测可能同时被触发，
+     * 解压页（[com.kcl.pcl.ui.activities.SplashActivity]）与主界面的兜底检测可能同时被触发，
      * 两边都往同一个目录解压几百 MB 会把对方写出来的文件删掉（[RuntimesManager.installRuntimeBinPack]
      * 一开始就 `deleteDirectory(dest)`）。用一把锁串起来，后到的那边直接读现状返回。
      */
