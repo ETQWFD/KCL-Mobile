@@ -50,6 +50,7 @@ const val URL_MINECRAFT_VERSION_REPOS: String = "https://piston-meta.mojang.com/
 const val URL_MINECRAFT_ASSETS_INDEX: String = "https://launchermeta.mojang.com/v1/packages"
 const val URL_MINECRAFT_PURCHASE = "https://www.xbox.com/games/store/minecraft-java-bedrock-edition-for-pc/9nxp44l49shj"
 const val URL_PROJECT: String = "https://github.com/ETQWFD/KCL-Mobile"
+const val URL_ZALITH: String = "https://github.com/zuanxu53-hub"
 const val URL_PROJECT_INFO: String = "https://api.github.com/repos/ETQWFD/KCL-Mobile/contents"
 const val URL_COMMUNITY: String = "https://github.com/MovTery"
 const val URL_WEBLATE: String = "https://hosted.weblate.org/projects/kcllauncher2"

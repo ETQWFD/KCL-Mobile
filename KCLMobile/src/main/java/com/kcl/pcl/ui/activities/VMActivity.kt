@@ -87,6 +87,7 @@ import com.kcl.pcl.game.launch.JvmLaunchInfo
 import com.kcl.pcl.game.launch.JvmLauncher
 import com.kcl.pcl.game.launch.LaunchConfig
 import com.kcl.pcl.game.launch.Launcher
+import com.kcl.pcl.game.launch.RendererCrashRecovery
 import com.kcl.pcl.game.launch.handler.AbstractHandler
 import com.kcl.pcl.game.launch.handler.GameHandler
 import com.kcl.pcl.game.launch.handler.HandlerType
@@ -422,6 +423,7 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
                 LoggerBridge.append(
                     "▷ 游戏进程结束：退出码 $exitCode，信号 $isSignal，本次运行 ${ranSeconds} 秒"
                 )
+                logPath?.let { RendererCrashRecovery.maybeFallbackRenderer(File(it), exitCode, isSignal) }
 
                 /**
                  * 判断「是不是玩家主动退的」：退出码 0 的情况下，看日志尾部有没有

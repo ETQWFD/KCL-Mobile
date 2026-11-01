@@ -236,6 +236,7 @@ class GameLauncher(
 
     override fun progressFinalUserArgs(args: MutableList<String>, ramAllocation: Int) {
         super.progressFinalUserArgs(args, version.getRamAllocation(activity))
+        args.add("-XX:MaxGCPauseMillis=100") // v5：低内存设备限制 GC 停顿目标，减少卡顿
         if (Renderers.isCurrentRendererValid()) {
             args.add("-Dorg.lwjgl.opengl.libname=${getRendererLibrary()}")
         }

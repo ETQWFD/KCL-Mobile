@@ -19,11 +19,15 @@
 package com.kcl.pcl.game.renderer
 
 import android.app.Activity
+import android.opengl.GLES20
 import com.kcl.pcl.game.renderer.renderers.NGGL4ESRenderer
 import com.kcl.pcl.game.version.installed.Version
 import com.kcl.pcl.utils.logging.Logger
 import java.io.File
 import java.util.zip.ZipFile
+import javax.microedition.khronos.egl.EGL10
+import javax.microedition.khronos.egl.EGLConfig
+import javax.microedition.khronos.egl.EGLContext
 
 private const val TAG = "RendererCompat"
 
@@ -180,5 +184,56 @@ object RendererCompat {
                         "属于 GL4ES 翻译层、无法支撑，游戏很可能卡在加载界面。请在「设置 → 启动 → 渲染器」中改用 Krypton Wrapper。"
             )
         }
+    }
+
+    private var cachedGpuVendor: String? = null
+    private var gpuVendorChecked = false
+
+    // EGL10 接口未声明这两个 EGL 1.1/1.3 才引入的常量，这里用其标准 EGL 数值。
+    private const val EGL_OPENGL_ES2_BIT = 0x0004
+    private const val EGL_CONTEXT_CLIENT_VERSION = 0x3098
+
+    /** 检测本机 GPU 厂商（GL_VENDOR）：用 EGL 建最小 GLES2 上下文查询；建不出上下文返回 null（不影响任何决策）。 */
+    fun detectGpuVendor(): String? {
+        if (gpuVendorChecked) return cachedGpuVendor
+        gpuVendorChecked = true
+        cachedGpuVendor = runCatching {
+            val egl = EGLContext.getEGL() as EGL10
+            val display = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY)
+            if (display == EGL10.EGL_NO_DISPLAY || !egl.eglInitialize(display, null)) return null
+            try {
+                val configSpec = intArrayOf(
+                    EGL10.EGL_SURFACE_TYPE, EGL10.EGL_PBUFFER_BIT,
+                    EGL10.EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+                    EGL10.EGL_NONE
+                )
+                val configs = arrayOfNulls<EGLConfig>(1)
+                val numConfig = IntArray(1)
+                if (!egl.eglChooseConfig(display, configSpec, configs, 1, numConfig) || numConfig[0] == 0) return null
+                val ctxAttribs = intArrayOf(EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE)
+                val context = egl.eglCreateContext(display, configs[0], EGL10.EGL_NO_CONTEXT, ctxAttribs)
+                if (context == null || context == EGL10.EGL_NO_CONTEXT) return null
+                try {
+                    val surfAttribs = intArrayOf(EGL10.EGL_WIDTH, 1, EGL10.EGL_HEIGHT, 1, EGL10.EGL_NONE)
+                    val surface = egl.eglCreatePbufferSurface(display, configs[0], surfAttribs)
+                    if (surface == null || surface == EGL10.EGL_NO_SURFACE) return null
+                    if (!egl.eglMakeCurrent(display, surface, surface, context)) return null
+                    GLES20.glGetString(GLES20.GL_VENDOR)?.trim()?.takeIf { it.isNotEmpty() }
+                } finally {
+                    runCatching { egl.eglMakeCurrent(display, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT) }
+                    runCatching { egl.eglDestroyContext(display, context) }
+                    runCatching { egl.eglTerminate(display) }
+                }
+            } finally {
+                runCatching { egl.eglTerminate(display) }
+            }
+        }.getOrNull()
+        return cachedGpuVendor
+    }
+
+    /** Krypton Wrapper 在此类 GPU 上是否不安全：PowerVR/Imagination 驱动下其 GLSL 翻译会让 vanilla 着色器（rendertype_text_background 等）编译失败直接崩溃。 */
+    fun isKryptonUnsafeDevice(): Boolean {
+        val vendor = detectGpuVendor()?.lowercase() ?: return false
+        return vendor.contains("imagination") || vendor.contains("powervr")
     }
 }

@@ -225,6 +225,7 @@ abstract class Launcher(
             put("java.home", getJavaHome())
             put("java.io.tmpdir", PathManager.DIR_CACHE.absolutePath)
             put("jna.boot.library.path", PathManager.DIR_NATIVE_LIB)
+            put("jna.nounpack", "true") // v5：Android 上禁止 JNA 解包桌面版 libjnidispatch（dlopen 报 libc.so.6 not found），只从 jna.boot.library.path / java.library.path 加载内置 Android 版
             put("user.home", userHome)
             if (useLocalLanguage) {
                 put("user.language", System.getProperty("user.language") ?: "en")

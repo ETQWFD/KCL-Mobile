@@ -90,6 +90,7 @@ import com.kcl.pcl.game.download.engine.DownloadEngine
 import com.kcl.pcl.game.download.engine.DownloadRequest
 import com.kcl.pcl.game.path.GamePathManager
 import com.kcl.pcl.path.URL_WEBLATE
+import com.kcl.pcl.path.URL_ZALITH
 import com.kcl.pcl.upgrade.TooFrequentOperationException
 import com.kcl.pcl.viewmodel.LauncherUpgradeViewModel
 import com.kcl.pcl.path.PathManager
@@ -282,6 +283,13 @@ fun PclOtherAboutPage() {
                     info = "KCL Mobile · PCL2 · Pojav 等开源社区的开发者",
                     buttonText = "开源社区",
                 ) { openLink(context, URL_COMMUNITY) }
+
+                PclAboutRow(
+                    icon = painterResource(R.drawable.img_avatar_zuanxu),
+                    title = "zuanxu53-hub",
+                    info = "Zalith-PlainCraftLauncher 原仓库作者 · KCL Mobile 的源码上游",
+                    buttonText = "打开主页",
+                ) { openLink(context, URL_ZALITH) }
 
                 PclAboutRow(
                     icon = painterResource(R.drawable.img_launcher),

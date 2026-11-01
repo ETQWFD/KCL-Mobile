@@ -95,7 +95,7 @@ object Renderers {
         if (!isInitialized) throw IllegalStateException("Uninitialized renderer!")
         currentRenderer = renderers.find { it.getUniqueIdentifier() == uniqueIdentifier } ?: run {
             if (retryToFirstOnFailure) {
-                val renderer = renderers[0]
+                val renderer = renderers.find { it.getUniqueIdentifier() == getDefaultRendererId() } ?: renderers[0]
                 //空串就是设置里的「自动选择」，不是「写了但找不到」，别用 warning 吓人
                 if (uniqueIdentifier.isEmpty()) {
                     Logger.info(TAG, "渲染器为「自动选择」，本次使用 ${renderer.getRendererName()}")
@@ -132,6 +132,14 @@ object Renderers {
     fun getDefaultRendererId(): String {
         if (!isInitialized) init()
         if (renderers.isEmpty()) init(reset = true)
-        return renderers.firstOrNull()?.getUniqueIdentifier().orEmpty()
+        val first = renderers.firstOrNull() ?: return ""
+        if (first === NGGL4ESRenderer && RendererCompat.isKryptonUnsafeDevice()) {
+            val gl4es = renderers.find { it === GL4ESRenderer }
+            if (gl4es != null) {
+                Logger.info(TAG, "检测到 PowerVR/Imagination GPU，默认渲染器改用 Pure GL4ES")
+                return gl4es.getUniqueIdentifier()
+            }
+        }
+        return first.getUniqueIdentifier()
     }
 }
