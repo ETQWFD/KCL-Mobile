@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.kcl.pcl.R
 import com.kcl.pcl.context.COPY_LABEL_LINK
+import com.kcl.pcl.context.COPY_LABEL_CRASH_LOG
 import com.kcl.pcl.path.PathManager
 import com.kcl.pcl.game.launch.GameExitDiagnostics
 import com.kcl.pcl.setting.AllSettings
@@ -220,6 +221,14 @@ class ErrorActivity : BaseAppCompatActivity() {
                             onShareLogsClick = {
                                 if (logExists) {
                                     shareFile(this@ErrorActivity, logFile)
+                                }
+                            },
+                            onCopyLogsClick = {
+                                // v5：复制「疑似原因 + 日志尾部(≤200KB)」到剪贴板，copyText 默认弹成功提示
+                                if (logExists) {
+                                    val tail = runCatching { logFile.readText().takeLast(200_000) }.getOrDefault("")
+                                    val cause = suspectedCause?.let { "【疑似原因】\n$it\n\n" } ?: ""
+                                    copyText(COPY_LABEL_CRASH_LOG, "$cause$tail", this@ErrorActivity)
                                 }
                             },
                             onUploadClick = {

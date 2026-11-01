@@ -102,6 +102,7 @@ fun ErrorScreen(
     canUpload: Boolean = false,
     canRestart: Boolean = true,
     onShareLogsClick: () -> Unit = {},
+    onCopyLogsClick: () -> Unit = {},
     onUploadClick: () -> Unit = {},
     onRestartClick: () -> Unit = {},
     onExitClick: () -> Unit = {},
@@ -121,6 +122,7 @@ fun ErrorScreen(
             canRestart = canRestart,
             isLandscape = isLandscape,
             onShareLogsClick = onShareLogsClick,
+            onCopyLogsClick = onCopyLogsClick,
             onUploadClick = onUploadClick,
             onRestartClick = onRestartClick,
             onExitClick = onExitClick,
@@ -142,6 +144,7 @@ fun ErrorScreen(
             canUpload = canUpload,
             canRestart = canRestart,
             onShareLogsClick = onShareLogsClick,
+            onCopyLogsClick = onCopyLogsClick,
             onUploadClick = onUploadClick,
             onRestartClick = onRestartClick,
             onExitClick = onExitClick,
@@ -157,6 +160,7 @@ fun ErrorScreen(
             canUpload = canUpload,
             canRestart = canRestart,
             onShareLogsClick = onShareLogsClick,
+            onCopyLogsClick = onCopyLogsClick,
             onUploadClick = onUploadClick,
             onRestartClick = onRestartClick,
             onExitClick = onExitClick,
@@ -178,6 +182,7 @@ private fun ErrorScreenLandscape(
     canUpload: Boolean,
     canRestart: Boolean,
     onShareLogsClick: () -> Unit,
+    onCopyLogsClick: () -> Unit,
     onUploadClick: () -> Unit,
     onRestartClick: () -> Unit,
     onExitClick: () -> Unit,
@@ -241,6 +246,7 @@ private fun ErrorScreenLandscape(
                 canUpload = canUpload,
                 canRestart = canRestart,
                 onShareLogsClick = onShareLogsClick,
+                onCopyLogsClick = onCopyLogsClick,
                 onUploadClick = onUploadClick,
                 onRestartClick = onRestartClick,
                 onExitClick = onExitClick
@@ -260,6 +266,7 @@ private fun ErrorScreenPortrait(
     canUpload: Boolean,
     canRestart: Boolean,
     onShareLogsClick: () -> Unit,
+    onCopyLogsClick: () -> Unit,
     onUploadClick: () -> Unit,
     onRestartClick: () -> Unit,
     onExitClick: () -> Unit,
@@ -324,6 +331,16 @@ private fun ErrorScreenPortrait(
                                 onClick = {
                                     showMenu = false
                                     onShareLogsClick()
+                                },
+                                enabled = shareLogs
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    MarqueeText(text = stringResource(R.string.crash_copy_logs))
+                                },
+                                onClick = {
+                                    showMenu = false
+                                    onCopyLogsClick()
                                 },
                                 enabled = shareLogs
                             )
@@ -419,6 +436,7 @@ private fun ActionLayout(
     canUpload: Boolean,
     canRestart: Boolean,
     onShareLogsClick: () -> Unit = {},
+    onCopyLogsClick: () -> Unit = {},
     onUploadClick: () -> Unit = {},
     onRestartClick: () -> Unit = {},
     onExitClick: () -> Unit = {}
@@ -454,6 +472,12 @@ private fun ActionLayout(
                     onClick = onShareLogsClick
                 ) {
                     MarqueeText(text = stringResource(R.string.crash_share_logs))
+                }
+                ScalingActionButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onCopyLogsClick
+                ) {
+                    MarqueeText(text = stringResource(R.string.crash_copy_logs))
                 }
             }
             if (canRestart) {
@@ -497,6 +521,7 @@ private fun PclErrorScreen(
     canRestart: Boolean,
     isLandscape: Boolean,
     onShareLogsClick: () -> Unit,
+    onCopyLogsClick: () -> Unit,
     onUploadClick: () -> Unit,
     onRestartClick: () -> Unit,
     onExitClick: () -> Unit,
@@ -559,6 +584,7 @@ private fun PclErrorScreen(
                         canUpload = canUpload,
                         canRestart = canRestart,
                         onShareLogsClick = onShareLogsClick,
+                        onCopyLogsClick = onCopyLogsClick,
                         onUploadClick = onUploadClick,
                         onRestartClick = onRestartClick,
                         onExitClick = onExitClick,
@@ -593,6 +619,7 @@ private fun PclErrorScreen(
                         canUpload = canUpload,
                         canRestart = canRestart,
                         onShareLogsClick = onShareLogsClick,
+                        onCopyLogsClick = onCopyLogsClick,
                         onUploadClick = onUploadClick,
                         onRestartClick = onRestartClick,
                         onExitClick = onExitClick,
@@ -711,6 +738,7 @@ private fun PclErrorActions(
     canUpload: Boolean,
     canRestart: Boolean,
     onShareLogsClick: () -> Unit,
+    onCopyLogsClick: () -> Unit,
     onUploadClick: () -> Unit,
     onRestartClick: () -> Unit,
     onExitClick: () -> Unit,
@@ -737,6 +765,11 @@ private fun PclErrorActions(
                     text = stringResource(R.string.crash_share_logs),
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onShareLogsClick
+                )
+                PclButton(
+                    text = stringResource(R.string.crash_copy_logs),
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onCopyLogsClick
                 )
             }
             if (canRestart) {

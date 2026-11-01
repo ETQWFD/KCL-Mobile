@@ -122,6 +122,7 @@
     <string name="crash_type_launcher">Launcher Crash</string>
     <string name="crash_type_game">Game Crash</string>
     <string name="crash_share_logs">Share Logs</string>
+    <string name="crash_copy_logs">Copy Logs</string>
     <string name="crash_restart">Restart</string>
     <string name="crash_exit">Exit</string>
     <string name="crash_link_share_button">Share Link</string>

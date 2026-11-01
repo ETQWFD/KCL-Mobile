@@ -95,7 +95,15 @@ private const val CLIENT_TOKEN_SEED = "KCL Mobile"
  * [CredentialsExpiredException]，最终弹「登录凭据已被服务器拒绝」，而账号其实好好的。
  * 2026-10-24 的 v1.1 就是这样把用户挡在门外的（文件 37 字节 vs 原版 36 字节）。
  */
-private val OAUTH_CLIENT_ID: String = BuildKeys.OAUTH_CLIENT_ID.trim()
+private val OAUTH_CLIENT_ID: String = BuildKeys.OAUTH_CLIENT_ID.trim().ifBlank {
+    // v5：构建期未注入 client id（.oauth_client_id.txt / OAUTH_CLIENT_ID 环境变量均为空）时，
+    // 回退到设备码流程公开可用的公共客户端 ID，让正版登录开箱可用；构建期注入仍优先。
+    Logger.warning(
+        TAG,
+        "未检测到构建期 OAUTH_CLIENT_ID，回退内置公共 client id（设备码流程公开可用）；如需专属客户端请配置 .oauth_client_id.txt。"
+    )
+    "00000000402B5328"
+}
 
 private val SCOPES = listOf("XboxLive.signin", "offline_access", "openid", "profile", "email")
 private const val TENANT = "/consumers"
@@ -116,15 +124,13 @@ const val MINECRAFT_SERVICES_URL = "https://api.minecraftservices.com"
  * 从 Microsoft 身份验证终端节点获取设备代码响应
  * 设备代码用于在单独的设备或浏览器上授权用户
  *
- * 注意：`client_id` 来自构建期注入的 `BuildKeys.OAUTH_CLIENT_ID`（微软应用注册的
- * 客户端 ID）。这个仓库**不再内置任何 client id**，使用者需要自己注册一个 Azure 应用，
- * 把 ID 写进工程根目录的 `.oauth_client_id.txt`（已在 `.gitignore` 里）或设成环境变量
- * `OAUTH_CLIENT_ID` 再构建。没有配置时直接给出明确错误，而不是拿空串去请求、得到一个
- * 莫名其妙的 HTTP 400。
+ * 注意：`client_id` 优先取构建期注入的 `BuildKeys.OAUTH_CLIENT_ID`（写入工程根目录
+ * 的 `.oauth_client_id.txt` 或环境变量 `OAUTH_CLIENT_ID`）；构建期未配置时，[OAUTH_CLIENT_ID]
+ * 已回退为设备码流程公开可用的公共客户端 ID，保证正版登录开箱可用。下面的 check 仅作兜底。
  */
 suspend fun fetchDeviceCodeResponse(context: CoroutineContext): DeviceCodeResponse = coroutineScope {
     check(OAUTH_CLIENT_ID.isNotBlank()) {
-        "未配置正版登录 Client ID：请把微软应用注册的客户端 ID 写入工程根目录的 " +
+        "正版登录 Client ID 为空：请把微软应用注册的客户端 ID 写入工程根目录的 " +
             ".oauth_client_id.txt，或用环境变量 OAUTH_CLIENT_ID 构建。"
     }
     withRetry {
