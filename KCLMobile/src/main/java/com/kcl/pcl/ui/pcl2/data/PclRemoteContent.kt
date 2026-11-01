@@ -7,8 +7,10 @@
  * 这里优先联网抓取，抓不到（未配置 / 断网 / 超时 / 404）就回退到本地内置文案，
  * 保证任何情况下主页都有内容可显示。
  *
- * 站点根地址优先取 [DEFAULT_BASE_URL]（编译期，站点定下来后填这一行即可），
- * 也可以在运行期用 MMKV key `pcl_home_remote_url` 覆盖（后续加设置项用）。
+ * 站点根地址**默认留空**（旧默认 `https://z-pcl.cc.cd:28722` 已于 2025-10 下线，
+ * curl 实测 Connection refused；继续当默认只会每次启动白等 8s × 3 次重试并刷 WARNING）。
+ * 运行期可用 MMKV key `pcl_home_remote_url` 覆盖（后续加设置项用）；MMKV 为空时
+ * 才回落到 [DEFAULT_BASE_URL]，两者都空则完全不联网、只用本地兜底。
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,10 +47,11 @@ object PclRemoteContent {
     private const val KEY_BASE_URL = "pcl_home_remote_url"
 
     /**
-     * 站点根地址（编译期默认值）。站点域名确定后填这里，例如 `https://xxx.example.com`。
-     * 留空表示还没配置 —— 这时只看 MMKV，两者都空则完全不联网、只用本地文案。
+     * 站点根地址（编译期默认值）。旧值 `https://z-pcl.cc.cd:28722` 已下线（Connection refused），
+     * 置空表示「无默认站点」—— 请求直接静默跳过，运行期用 MMKV `pcl_home_remote_url` 配置真实站点。
+     * 后续若有新的稳定官网，把 URL 填回这一行即可；MMKV 仍优先于此默认值。
      */
-    private const val DEFAULT_BASE_URL = "https://z-pcl.cc.cd:28722"
+    private const val DEFAULT_BASE_URL = ""
 
     private const val TIMEOUT_MS = 8000
 
@@ -67,10 +70,15 @@ object PclRemoteContent {
         cache[type] = text
     }
 
-    /** 站点根地址（去尾斜杠）。空 = 不联网。 */
+    /**
+     * 站点根地址（去尾斜杠）。空 = 不联网。
+     *
+     * 解析顺序：MMKV 运行期配置 > 编译期 [DEFAULT_BASE_URL]。
+     * MMKV 优先才符合「运行期覆盖」语义；两者都空时返回空串，调用方应直接静默跳过。
+     */
     fun baseUrl(): String {
         val mmkv = runCatching { launcherMMKV().getString(KEY_BASE_URL, "").orEmpty() }.getOrDefault("")
-        return DEFAULT_BASE_URL.ifBlank { mmkv }.trimEnd('/')
+        return mmkv.ifBlank { DEFAULT_BASE_URL }.trimEnd('/')
     }
 
     /**
@@ -80,7 +88,8 @@ object PclRemoteContent {
     fun randomBlocking(type: String): String? {
         val base = baseUrl()
         if (base.isEmpty()) {
-            lastError = "未配置站点地址"
+            // 未配置站点是「正常跳过」而非「失败」，不写 lastError、不打 WARNING；
+            // 调用方（rememberRemoteText / PclHomeLoader）直接走本地兜底即可。
             return null
         }
         var conn: HttpURLConnection? = null
@@ -135,6 +144,11 @@ fun rememberRemoteText(type: String, reloadToken: Int = 0): String {
     var exhausted by remember(reloadToken, type) { mutableStateOf(false) }
     LaunchedEffect(type, reloadToken) {
         exhausted = false
+        // 未配置站点时不联网、不重试、不刷 WARNING，直接走本地兜底/空卡片。
+        if (PclRemoteContent.baseUrl().isEmpty()) {
+            exhausted = true
+            return@LaunchedEffect
+        }
         repeat(FETCH_ATTEMPTS) { attempt ->
             val fetched = PclRemoteContent.random(type)
             if (!fetched.isNullOrBlank()) {

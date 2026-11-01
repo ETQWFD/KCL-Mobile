@@ -21,6 +21,7 @@ package com.kcl.pcl.terracotta;
 import static com.kcl.pcl.notification._NotificationIDKt.NOTIFICATION_ID_VPN_REQUEST_CODE;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -30,8 +31,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.net.VpnService;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.kcl.pcl.R;
 import com.kcl.pcl.notification.NotificationChannelData;
@@ -49,6 +53,15 @@ public class TerracottaVPNService extends VpnService {
     private static final String TAG                  = "TerracottaVPNService";
 
     private static final int VPN_NOTIFICATION_ID     = 1;
+
+    /**
+     * 「服务先于 JNI 回调起来」的瞬时竞态留几拍重试（间隔很短，避免死循环）。
+     * 重试完仍然拿不到 pending 请求，说明 EasyTier 根本不在本进程，不能再静默 stopSelf。
+     */
+    private static final int PENDING_REQUEST_RETRIES = 3;
+    private static final long PENDING_REQUEST_RETRY_INTERVAL_MS = 300L;
+
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public static final String ACTION_START          = "net.burningtnt.terracotta.action.START";
     public static final String ACTION_STOP           = "net.burningtnt.terracotta.action.STOP";
@@ -128,11 +141,19 @@ public class TerracottaVPNService extends VpnService {
         } catch (PackageManager.NameNotFoundException ignored) {
         }
 
-        TerracottaAndroidAPI.VpnServiceRequest request;
-        try {
-            request = TerracottaAndroidAPI.getPendingVpnServiceRequest();
-        } catch (IllegalStateException e) {
-            //原生侧已无挂起的联机请求（如等待授权超时），无需建立隧道
+        TerracottaAndroidAPI.VpnServiceRequest request = obtainPendingVpnServiceRequest();
+        if (request == null) {
+            // 本进程里没有挂起的 VPN 请求。正常路径上只可能是「服务先于 JNI 回调起来」的
+            // 瞬时竞态（已在 obtainPendingVpnServiceRequest 里重试）；重试完仍没有 =
+            // EasyTier 跑在另一个进程（例如服务被 Manifest 钉在 :game、而 EasyTier 跑在
+            // 启动器主进程）。之前这里直接静默 stopSelf()，原生层还会再干等 30 秒超时
+            // 返回 tun_fd=-1，用户全程毫无反馈、联机进不去 —— 实测日志的实锤根因。
+            Log.e(TAG, "No pending VpnService request in process " + getProcessNameSafe()
+                    + " after " + PENDING_REQUEST_RETRIES + " retries; aborting the VPN setup.");
+            showVpnFailureToast();
+            Terracotta.INSTANCE.setWaiting(false);
+            cleanup();
+            stopForeground(true);
             stopSelf();
             return Service.START_NOT_STICKY;
         }
@@ -143,6 +164,19 @@ public class TerracottaVPNService extends VpnService {
             //establish() 失败（VPN 授权被撤销、另一个 VPN 抢了、被系统限流）会抛 RuntimeException。
             //这条路径上抛出去就是未捕获异常 → 启动器闪退，所以这里必须自己收住。
             Log.e(TAG, "Cannot establish the VPN tunnel.", t);
+            showVpnFailureToast();
+            Terracotta.INSTANCE.setWaiting(false);
+            cleanup();
+            stopForeground(true);
+            stopSelf();
+            return Service.START_NOT_STICKY;
+        }
+
+        if (vpnInterface == null) {
+            // startVpnService 内部 establish() 多次重试仍失败时返回 null（请求已被 reject）。
+            // 之前这里不判空直接 START_STICKY：通知显示「已连接」，实际 tun 根本不存在。
+            Log.e(TAG, "startVpnService returned null; no tunnel was established.");
+            showVpnFailureToast();
             Terracotta.INSTANCE.setWaiting(false);
             cleanup();
             stopForeground(true);
@@ -151,6 +185,52 @@ public class TerracottaVPNService extends VpnService {
         }
 
         return Service.START_STICKY;
+    }
+
+    /**
+     * 取原生层挂起的 VPN 请求。正常路径上它在服务被拉起之前就由 JNI 回调设好了；
+     * 这里只给「服务先于回调起来」的瞬时竞态留几拍短间隔重试，重试完仍没有返回 null。
+     */
+    private TerracottaAndroidAPI.VpnServiceRequest obtainPendingVpnServiceRequest() {
+        for (int attempt = 0; attempt <= PENDING_REQUEST_RETRIES; attempt++) {
+            try {
+                return TerracottaAndroidAPI.getPendingVpnServiceRequest();
+            } catch (IllegalStateException e) {
+                if (attempt == PENDING_REQUEST_RETRIES) {
+                    return null;
+                }
+                try {
+                    Thread.sleep(PENDING_REQUEST_RETRY_INTERVAL_MS);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
+    private String getProcessNameSafe() {
+        try {
+            return Application.getProcessName();
+        } catch (Throwable t) {
+            return "(unknown)";
+        }
+    }
+
+    /**
+     * VPN 建立失败时给用户一个明确提示，不再静默吞掉让用户干等。
+     * Toast 必须切回主线程发；服务回调本身可能不在主线程。
+     */
+    private void showVpnFailureToast() {
+        mainHandler.post(() -> {
+            try {
+                Toast.makeText(getApplicationContext(),
+                        R.string.terracotta_vpn_establish_failed,
+                        Toast.LENGTH_LONG).show();
+            } catch (Throwable ignored) {
+            }
+        });
     }
 
     @Override

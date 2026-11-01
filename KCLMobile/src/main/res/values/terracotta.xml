@@ -65,6 +65,8 @@
     <string name="terracotta_status_exception_desc_ping_server_rst">Room closed: You exited the game world, room closed automatically</string>
     <string name="terracotta_status_exception_desc_scaffolding_invalid_response">Invalid Protocol: Host has sent invalid response, please report this issue to developers</string>
     <string name="terracotta_permission_vpn">Please grant the application VPN permission first.</string>
+    <string name="terracotta_vpn_establish_failed">Multiplayer VPN failed to start. Please check the system VPN permission and try again.</string>
+    <string name="terracotta_vpn_establish_retrying">Multiplayer VPN failed, retrying…</string>
     <string name="terracotta_player_list">Player List</string>
     <string name="terracotta_player_anonymous">Anonymous Player</string>
     <string name="terracotta_player_kind_host">Host</string>

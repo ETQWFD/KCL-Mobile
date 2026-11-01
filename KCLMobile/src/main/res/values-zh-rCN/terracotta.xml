@@ -65,6 +65,8 @@
     <string name="terracotta_status_exception_desc_ping_server_rst">房间已关闭：您已退出游戏存档，房间已自动关闭</string>
     <string name="terracotta_status_exception_desc_scaffolding_invalid_response">协议错误：房主端发送了错误的响应数据，请向开发者反馈该问题</string>
     <string name="terracotta_permission_vpn">请先授予应用 VPN 权限</string>
+    <string name="terracotta_vpn_establish_failed">联机 VPN 建立失败，请检查系统 VPN 权限后重试</string>
+    <string name="terracotta_vpn_establish_retrying">联机 VPN 建立失败，正在重试…</string>
     <string name="terracotta_player_list">玩家列表</string>
     <string name="terracotta_player_anonymous">匿名玩家</string>
     <string name="terracotta_player_kind_host">房主</string>

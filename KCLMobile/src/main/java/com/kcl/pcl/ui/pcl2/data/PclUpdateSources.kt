@@ -99,7 +99,9 @@ object PclUpdateSources {
     private fun fetchBlocking(): Source? {
         val base = PclRemoteContent.baseUrl()
         if (base.isEmpty()) {
-            Logger.warning(LOG_TAG, "未配置官网地址，跳过网盘入口")
+            // 默认未配置站点（旧 z-pcl.cc.cd:28722 已下线，DEFAULT_BASE_URL 置空）；
+            // 这是正常跳过而非异常，降级为 debug，不刷 WARNING。
+            Logger.debug(LOG_TAG, "未配置官网地址，跳过网盘入口")
             return null
         }
         var conn: HttpURLConnection? = null

@@ -395,6 +395,13 @@ public final class TerracottaAndroidAPI {
     private static final long FD_PENDING = ((long) Integer.MAX_VALUE) + 1;
     private static final long FD_REJECT = FD_PENDING + 1;
 
+    /**
+     * {@link VpnService.Builder#establish()} 返回 null / 抛异常时的最大重试次数与间隔。
+     * 给系统级 VPN 切换的瞬时抖动留几拍，避免一次空返回就 reject 成 tun_fd=-1。
+     */
+    private static final int VPN_ESTABLISH_MAX_ATTEMPTS = 3;
+    private static final long VPN_ESTABLISH_RETRY_INTERVAL_MS = 400L;
+
     @Keep
     @SuppressWarnings("unused") // Native callback
     private static int onVpnServiceStateChanged(byte ip1, byte ip2, byte ip3, byte ip4, short network_length, String cidr) throws UnknownHostException {
@@ -429,15 +436,42 @@ public final class TerracottaAndroidAPI {
                         }
                     }
 
-                    ParcelFileDescriptor connection = builder.establish();
+                    // establish() 返回 null 通常意味着「VPN 授权被撤销 / 另一个 VPN 抢占」，
+                    // 但系统在 VPN 切换瞬间也会偶发瞬时失败。实测日志里 tun_fd=-1 就是
+                    // 一次空返回直接 reject 的结果：原生层干等 30 秒超时、用户毫无反馈。
+                    // 这里有限次、短间隔重试，仍失败才走 reject 失败路径（启动器不崩）。
+                    ParcelFileDescriptor connection = null;
+                    RuntimeException lastError = null;
+                    for (int attempt = 1; attempt <= VPN_ESTABLISH_MAX_ATTEMPTS; attempt++) {
+                        try {
+                            connection = builder.establish();
+                        } catch (RuntimeException e) {
+                            lastError = e;
+                        }
+                        if (connection != null || attempt == VPN_ESTABLISH_MAX_ATTEMPTS) {
+                            break;
+                        }
+                        Log.w("TerracottaAndroidAPI", "establish() returned null (attempt " + attempt + "/"
+                                + VPN_ESTABLISH_MAX_ATTEMPTS + "), retrying in " + VPN_ESTABLISH_RETRY_INTERVAL_MS + "ms.");
+                        try {
+                            Thread.sleep(VPN_ESTABLISH_RETRY_INTERVAL_MS);
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
+                            break;
+                        }
+                    }
+
                     if (connection == null) {
-                        throw new RuntimeException("Cannot establish a VPN connection.");
+                        throw lastError != null
+                                ? lastError
+                                : new RuntimeException("Cannot establish a VPN connection after "
+                                        + VPN_ESTABLISH_MAX_ATTEMPTS + " attempts.");
                     }
 
                     fd.set(connection.getFd());
                     return connection;
                 } catch (Throwable t) {
-                    Log.e("TerracottaAndroidAPI", "Failed to establish VPN tunnel, rejecting request.", t);
+                    Log.e("TerracottaAndroidAPI", "Failed to establish VPN tunnel after retries, rejecting request.", t);
                     fd.set(FD_REJECT);
                     return null;
                 }
