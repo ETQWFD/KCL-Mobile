@@ -22,11 +22,18 @@ import com.kcl.pcl.path.URL_USER_AGENT
 import com.kcl.pcl.utils.logging.Logger
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.runInterruptible
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.InterruptedIOException
@@ -200,6 +207,51 @@ object Fetcher {
     private const val BUFFER_SIZE = 64 * 1024
 
     /**
+     * 单文件多连接分片并行下载（对齐电脑版 NetTask 思路）：
+     * 支持 `accept-ranges: bytes` 的源（mojang / bmclapi 镜像均支持）上，把大文件按
+     * [CHUNK_TARGET_BYTES] 切成至多 [maxChunksForHeap] 段，每段一条独立 Range 连接并行落盘，
+     * 再按序合并并复用 [FileSink] 做整文件 SHA-1 校验与原子替换。
+     *
+     * 只对 ≥ [CHUNK_MIN_BYTES] 的文件启用：批量里的海量小文件（assets / 小 jar）仍走原单连接路径，
+     * 避免为它们付出分片探针开销与 socket 放大。单文件占 BatchDownloader 一个文件名额，
+     * 内部并发数随进程 Java 堆自适应（见 [maxChunksForHeap]）：低端机（≤192MB heap）只开 2 路，
+     * 中端机 3-4 路，宽裕机最多 6 路；真正会被分片的大文件每批只有个位数（client.jar 等），
+     * 全局在途连接数仍贴近文件级并发 16 的设计上限，不会回到原先 64 路的 NAT / 限流风险区。
+     *
+     * OOM 防护：分片下载过程中一旦抛 OOM（或别的内存类 Error），立刻清理临时段并回落到单连接路径，
+     * 不让并行 socket 缓冲把本就紧张的低端机堆压爆。
+     */
+    private const val CHUNK_MIN_BYTES = 4L * 1024 * 1024
+    private const val CHUNK_TARGET_BYTES = 2L * 1024 * 1024
+
+    /** 各档堆上限对应的最大分片数；低端机少开几路，避免并行 socket 缓冲 OOM */
+    private const val CHUNKS_HEAP_TINY = 2      // heap ≤ 192MB
+    private const val CHUNKS_HEAP_SMALL = 3     // heap ≤ 384MB
+    private const val CHUNKS_HEAP_MID = 4       // heap ≤ 640MB
+    private const val CHUNKS_HEAP_LARGE = 6     // heap > 640MB
+
+    /**
+     * 按进程 Java 堆上限返回允许的最大分片数。Android 上 `Runtime.maxMemory()` 是 zygote 给本进程
+     * 划的硬上限，低端机（mt6765 / 1-2GB 真机）常见 192-256MB；此时每路 64KB 缓冲看似不多，
+     * 但加上 HttpURLConnection 内部缓冲与 native socket buffer，6 路并行足以把堆顶到 OOM。
+     */
+    private fun maxChunksForHeap(): Int {
+        val maxHeap = Runtime.getRuntime().maxMemory()
+        return when {
+            maxHeap <= 192L * 1024 * 1024 -> CHUNKS_HEAP_TINY
+            maxHeap <= 384L * 1024 * 1024 -> CHUNKS_HEAP_SMALL
+            maxHeap <= 640L * 1024 * 1024 -> CHUNKS_HEAP_MID
+            else -> CHUNKS_HEAP_LARGE
+        }
+    }
+
+    /** Content-Range 形如 `bytes start-end/total`，分片探测只取 total */
+    private val CONTENT_RANGE_TOTAL = Regex("""bytes \d+-\d+/(\d+)""")
+
+    /** 一个闭区间字节分片 [start, end] */
+    private class ChunkRange(val start: Long, val end: Long)
+
+    /**
      * 按候选源顺序下载文件；全部候选耗尽后抛 [AllSourcesFailedException]，
      * message 内含每个源，因果链保留最后一次失败。
      *
@@ -235,7 +287,11 @@ object Fetcher {
                 minOf(retry, FALLBACK_RETRY)
             }
             try {
-                downloadCandidate(url, targetFile, sha1, attemptRetry, onBytes)
+                // 优先尝试多连接分片并行下载（仅对支持 Range 的大文件生效）；
+                // 返回 false 表示该源不适合分片，回落到原单连接路径（含断点续传/重试/校验）。
+                if (!downloadCandidateChunked(url, targetFile, sha1, attemptRetry, onBytes)) {
+                    downloadCandidate(url, targetFile, sha1, attemptRetry, onBytes)
+                }
                 return
             } catch (e: CancellationException) {
                 throw e
@@ -267,6 +323,225 @@ object Fetcher {
     }
 
     private enum class AttemptResult { DONE, RESTART_FREE }
+
+    /**
+     * 单候选源的多连接分片下载。返回 true 表示已成功落盘；
+     * 返回 false 表示该源不适合分片（不支持 Range / 文件太小 / 只切出 1 段），
+     * 调用方应回落到原单连接路径。分片过程中任一段重试耗尽则抛 [DownloadException]，
+     * 由上层按候选源顺序换源。
+     */
+    private suspend fun downloadCandidateChunked(
+        url: URL,
+        targetFile: File,
+        sha1: String?,
+        retry: Int,
+        onBytes: (Long) -> Unit
+    ): Boolean {
+        val totalLength = try {
+            runInterruptible(Dispatchers.IO) { probeRangeTotalLength(url) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            throw DownloadException(url.toString(), e)
+        }
+        if (totalLength < 0) return false
+        if (totalLength < CHUNK_MIN_BYTES) return false
+
+        val chunks = splitChunks(totalLength, maxChunksForHeap())
+        if (chunks.size <= 1) return false
+
+        val parent = targetFile.parentFile ?: targetFile.canonicalFile.parentFile!!
+        val parts = chunks.mapIndexed { i, _ ->
+            File(parent, ".${targetFile.name}.part$i.tmp")
+        }
+
+        Logger.info(TAG, "Chunked download: $url (${chunks.size} x ${totalLength / chunks.size} bytes)")
+
+        var sink: FileSink? = null
+        try {
+            // 各段并行下载；段内独立重试。任一段失败会取消其余段并抛异常。
+            coroutineScope {
+                val workers = Semaphore(chunks.size)
+                val jobs = chunks.mapIndexed { i, chunk ->
+                    async(Dispatchers.IO) {
+                        workers.withPermit {
+                            runInterruptible(Dispatchers.IO) {
+                                downloadChunkToPart(url, chunk, parts[i], retry, onBytes)
+                            }
+                        }
+                    }
+                }
+                jobs.joinAll()
+            }
+
+            // 按序合并各段到 FileSink：一边拼接一边计算整文件 SHA-1，
+            // finish() 校验通过后原子替换目标文件，与单连接路径语义一致。
+            // 段字节在 downloadChunkToPart 里已全部计入 onBytes，这里合并不再重复计数。
+            sink = FileSink(targetFile, sha1)
+            val activeSink = sink!!
+            val mergeBuffer = ByteArray(BUFFER_SIZE)
+            parts.forEach { part ->
+                FileInputStream(part).use { input ->
+                    while (true) {
+                        if (Thread.currentThread().isInterrupted) throw InterruptedIOException("Cancelled")
+                        val len = input.read(mergeBuffer)
+                        if (len == -1) break
+                        activeSink.write(mergeBuffer, 0, len)
+                    }
+                }
+            }
+            activeSink.finish()
+            sink = null
+            return true
+        } catch (e: OutOfMemoryError) {
+            // 低端机堆被并行 socket 缓冲顶爆：不向上报链路抛 OOM，
+            // 清理临时段后回落到单连接路径（调用方再走 downloadCandidate）。
+            Logger.warning(TAG, "Chunked download OOM, fallback to single connection: $url", e)
+            return false
+        } finally {
+            sink?.let { runCatching { it.close() } }
+            parts.forEach { runCatching { it.delete() } }
+        }
+    }
+
+    /**
+     * 用 `Range: bytes=0-0` 探测源是否支持分片并取整文件长度。
+     * 返回 -1 表示不支持（服务器返回 200 忽略 Range）或无法判定；
+     * 网络类异常直接抛出，由上层判定为该候选源失败。
+     */
+    private fun probeRangeTotalLength(originalUrl: URL): Long {
+        var current = originalUrl
+        var redirects = 0
+        while (true) {
+            val conn = openConnection(current)
+            var keep = false
+            try {
+                conn.setRequestProperty("Range", "bytes=0-0")
+                val code = conn.responseCode
+                val response = ResponseInfo.of(code, conn.url, conn)
+                if (code in 300..308 && code != HttpURLConnection.HTTP_NOT_MODIFIED && code != 306) {
+                    if (++redirects >= MAX_REDIRECTS) throw IOException("Too much redirects")
+                    val location = conn.getHeaderField("Location")
+                        ?: throw IOException("Redirected to an empty location")
+                    current = current.toURI().resolve(location).toURL()
+                    if (!isHttpUri(current)) throw IOException("Redirected to non-HTTP URL: $current")
+                    continue
+                }
+                keep = true
+                if (code == HttpURLConnection.HTTP_PARTIAL) {
+                    val match = CONTENT_RANGE_TOTAL.find(response.header("content-range").orEmpty())
+                    return match?.groupValues?.get(1)?.toLongOrNull() ?: -1L
+                }
+                // 200 = 服务器忽略 Range，不支持分片；其它状态码按该源失败处理
+                return -1L
+            } finally {
+                if (!keep) disconnectQuietly(conn)
+            }
+        }
+    }
+
+    /** 按目标段长把整文件切成至多 [maxChunks] 个闭区间分片 */
+    private fun splitChunks(totalLength: Long, maxChunks: Int): List<ChunkRange> {
+        val want = (totalLength + CHUNK_TARGET_BYTES - 1) / CHUNK_TARGET_BYTES
+        val n = want.toInt().coerceAtLeast(1).coerceAtMost(maxChunks.coerceAtLeast(1))
+        val chunkSize = (totalLength + n - 1) / n
+        val out = ArrayList<ChunkRange>(n)
+        var pos = 0L
+        while (pos < totalLength) {
+            val end = minOf(pos + chunkSize - 1, totalLength - 1)
+            out.add(ChunkRange(pos, end))
+            pos = end + 1
+        }
+        return out
+    }
+
+    /** 单段下载到临时文件，段内独立重试 [retry] 次；耗尽抛 [DownloadException] */
+    private fun downloadChunkToPart(
+        originalUrl: URL,
+        chunk: ChunkRange,
+        partFile: File,
+        retry: Int,
+        onBytes: (Long) -> Unit
+    ) {
+        var attempt = 0
+        var lastError: Exception? = null
+        while (attempt < retry) {
+            try {
+                streamRangeToFile(originalUrl, chunk, partFile, onBytes)
+                return
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                lastError = e
+                attempt++
+                if (attempt < retry) Thread.sleep(RETRY_BACKOFF_MILLIS)
+            }
+        }
+        throw DownloadException(originalUrl.toString(), lastError ?: IOException("Chunk download failed"))
+    }
+
+    /** 实际把 [chunk] 区间流式落盘到 [partFile]；校验状态码与段长度 */
+    private fun streamRangeToFile(
+        originalUrl: URL,
+        chunk: ChunkRange,
+        partFile: File,
+        onBytes: (Long) -> Unit
+    ) {
+        var current = originalUrl
+        var redirects = 0
+        var conn: HttpURLConnection? = null
+        var response: ResponseInfo? = null
+        while (true) {
+            val c = openConnection(current)
+            var keep = false
+            try {
+                c.setRequestProperty("Range", "bytes=${chunk.start}-${chunk.end}")
+                val code = c.responseCode
+                if (code in 300..308 && code != HttpURLConnection.HTTP_NOT_MODIFIED && code != 306) {
+                    if (++redirects >= MAX_REDIRECTS) throw IOException("Too much redirects")
+                    val location = c.getHeaderField("Location")
+                        ?: throw IOException("Redirected to an empty location")
+                    current = current.toURI().resolve(location).toURL()
+                    if (!isHttpUri(current)) throw IOException("Redirected to non-HTTP URL: $current")
+                    continue
+                }
+                conn = c
+                response = ResponseInfo.of(code, c.url, c)
+                keep = true
+                break
+            } finally {
+                if (!keep) disconnectQuietly(c)
+            }
+        }
+
+        val code = response!!.code
+        if (code == HttpURLConnection.HTTP_OK) {
+            // 探测时支持、实际却忽略 Range：按段失败处理（会触发段内重试/换源）
+            throw IOException("Server ignored Range request for chunk $originalUrl")
+        }
+        if (code != HttpURLConnection.HTTP_PARTIAL) {
+            throw HttpResultException(code, "HTTP $code: $originalUrl")
+        }
+
+        val expectedLen = chunk.end - chunk.start + 1
+        FileOutputStream(partFile).use { out ->
+            val input = conn!!.inputStream
+            val buffer = ByteArray(BUFFER_SIZE)
+            var total = 0L
+            while (true) {
+                if (Thread.currentThread().isInterrupted) throw InterruptedIOException("Cancelled")
+                val len = input.read(buffer)
+                if (len == -1) break
+                out.write(buffer, 0, len)
+                total += len
+                onBytes(len.toLong())
+            }
+            if (Thread.currentThread().isInterrupted) throw InterruptedIOException("Cancelled")
+            if (total != expectedLen) {
+                throw IOException("Chunk size mismatch: expected $expectedLen bytes, got $total ($originalUrl)")
+            }
+        }
+    }
 
     private suspend fun downloadCandidate(
         url: URL,
