@@ -84,23 +84,31 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
         }
 
         Thread.setDefaultUncaughtExceptionHandler { _, th ->
-            //停止所有任务
-            TaskSystem.stopAll()
+            //停止所有任务（失败也不能阻断后续兜底）
+            runCatching { TaskSystem.stopAll() }
 
             val throwable = if (th is SplashException) th.cause!!
             else th
 
-            Logger.error("Startup", "An exception occurred", throwable)
+            //兜底：落盘 / 弹窗任何一步若自己再抛异常，绝不能让它把「未捕获异常处理器」本身带崩——
+            //那样会退化成系统默认行为，进程静默死亡、用户连崩溃页都看不到。
+            //因此整段用 try/finally 包住，无论如何都走到 killProcess。
+            try {
+                runCatching { Logger.error("Startup", "An exception occurred", throwable) }
 
-            writeCrashFile(
-                file = PathManager.FILE_CRASH_REPORT,
-                throwable = throwable
-            ) { t ->
-                Logger.error("AppCrash", "An exception occurred while saving the crash report", t)
+                writeCrashFile(
+                    file = PathManager.FILE_CRASH_REPORT,
+                    throwable = throwable
+                ) { t ->
+                    runCatching {
+                        Logger.error("AppCrash", "An exception occurred while saving the crash report", t)
+                    }
+                }
+
+                runCatching { showLauncherCrash(this@ZLApplication, throwable, th !is SplashException) }
+            } finally {
+                Process.killProcess(Process.myPid())
             }
-
-            showLauncherCrash(this@ZLApplication, throwable, th !is SplashException)
-            Process.killProcess(Process.myPid())
         }
 
         super.onCreate()

@@ -189,7 +189,15 @@ object Fetcher {
     private const val TIMEOUT_MILLIS = 10_000
     private const val MAX_REDIRECTS = 20
     private const val RETRY_BACKOFF_MILLIS = 200L
-    private const val BUFFER_SIZE = 32 * 1024
+
+    /**
+     * 读盘缓冲。32KB 时单条连接在较快的镜像上每秒要配对做几十次
+     * `InputStream.read` + `FileChannel.write` 系统调用；翻倍到 64KB 可减半配对次数，
+     * 对大文件（客户端 jar、LWJGL natives）吞吐更友好，与电脑版本轮「加大读取缓冲」对齐。
+     * 文件级并发上限为 16（见 BatchDownloader.DEFAULT_MAX_CONNECTIONS），
+     * 全部在途连接合计缓冲也仅约 1MB，移动端内存无压力。
+     */
+    private const val BUFFER_SIZE = 64 * 1024
 
     /**
      * 按候选源顺序下载文件；全部候选耗尽后抛 [AllSourcesFailedException]，
