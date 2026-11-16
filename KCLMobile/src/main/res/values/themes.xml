@@ -4,6 +4,21 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+    <!--
+        游戏运行界面（VMActivity）专用深色主题。
+        基础主题是浅色（window 背景白），游戏 SurfaceView/TextureView 未覆盖到的
+        状态栏区、letterbox 黑边之外、切屏瞬间、输入法弹起时会露出白边；
+        这里把窗口/背景/状态栏/导航栏全部兜底为黑色。
+    -->
+    <style name="AppTheme.KCLMobile.Game" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:colorBackground">@android:color/black</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
     <style name="AppTheme.SplashScreen" parent="@style/Theme.SplashScreen">
         <item name="postSplashScreenTheme">@style/AppTheme.KCLMobile</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_launcher</item>

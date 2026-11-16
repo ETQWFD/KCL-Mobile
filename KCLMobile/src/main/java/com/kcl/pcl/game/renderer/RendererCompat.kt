@@ -236,4 +236,35 @@ object RendererCompat {
         val vendor = detectGpuVendor()?.lowercase() ?: return false
         return vendor.contains("imagination") || vendor.contains("powervr")
     }
+
+    private var lowEndChecked = false
+    private var cachedLowEnd = false
+
+    /**
+     * 是否属于「低配设备」：低内存机 / 老 GPU。
+     *
+     * 判据（任一命中即算）：
+     * - 系统自报低内存设备（`ActivityManager.isLowRamDevice`，Android 官方口径）
+     * - 单进程可用堆 ≤ 512MB
+     * - GPU 厂商是 PowerVR/Imagination、Mali-4xx 这类老架构
+     *
+     * 用于把默认渲染器切到「低配性能版」，以及首次启动写入低配画面预设。
+     * 只做保守判断，判不出就当不是低配，宁可不优化也不误伤好设备。
+     */
+    fun isLowEndDevice(): Boolean {
+        if (lowEndChecked) return cachedLowEnd
+        lowEndChecked = true
+
+        cachedLowEnd = runCatching {
+            val heapMb = Runtime.getRuntime().maxMemory() / (1024L * 1024L)
+            val vendor = detectGpuVendor()?.lowercase() ?: ""
+            val weakGpu = vendor.contains("powervr") ||
+                vendor.contains("imagination") ||
+                vendor.contains("mali-4") ||
+                vendor.contains("mali-t")
+            heapMb <= 512L || weakGpu
+        }.getOrDefault(false)
+
+        return cachedLowEnd
+    }
 }

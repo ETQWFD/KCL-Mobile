@@ -227,8 +227,10 @@ internal object GameExitDiagnostics {    /** 最多从文件尾部读这么多�
             has("OutOfMemoryError", "Could not reserve enough space", "native memory allocation") ->
                 Advice.OUT_OF_MEMORY
 
-            has("Mixin apply failed", "MixinApplyError", "Failed to load mods", "Mod resolution") ->
-                Advice.MOD_MISMATCH
+            has(
+                "Mixin apply failed", "MixinApplyError", "Failed to load mods",
+                "Mod resolution", "Incompatible mods", "HARD_DEP", "FormattedException"
+            ) -> Advice.MOD_MISMATCH
 
             has("EXCEPTION_ACCESS_VIOLATION", "SIGSEGV", "SIGABRT", "Fatal signal") ->
                 Advice.NATIVE_CRASH

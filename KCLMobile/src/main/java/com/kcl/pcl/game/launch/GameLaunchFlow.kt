@@ -47,6 +47,7 @@ import com.kcl.pcl.game.versioninfo.models.GameManifest
 import com.kcl.pcl.ui.activities.runGame
 import com.kcl.pcl.ui.androidText
 import com.kcl.pcl.utils.GSON
+import com.kcl.pcl.utils.logging.Logger
 import com.kcl.pcl.utils.network.isNetworkAvailable
 import com.kcl.pcl.viewmodel.ErrorViewModel
 import kotlinx.coroutines.CancellationException
@@ -54,6 +55,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.withContext
 
 private const val TAG = "GameLaunchFlow"
 
@@ -179,7 +181,7 @@ class GameLaunchFlow(scope: CoroutineScope) {
                 title = androidText(R.string.launch_check_mods),
                 dispatcher = Dispatchers.IO
             ) { task ->
-                val patchedManifest = checkMods(version)
+                val patchedManifest = checkMods(version, context)
                 val manifest = patchedManifest ?: VersionInfoParser(version).setInheriting().build()
                 val manifestString = GSON.toJson(manifest)
 
@@ -272,8 +274,38 @@ class GameLaunchFlow(scope: CoroutineScope) {
      * 扫描模组列表并开启对应功能
      * @return 经过补丁的游戏清单，为 null 则表示没什么补丁
      */
-    private suspend fun checkMods(version: Version): GameManifest? {
+    private suspend fun checkMods(version: Version, context: Context): GameManifest? {
         val modsDir = VersionFolders.MOD.getDir(version.getGameDir())
+        val minecraftVersion = version.getVersionInfo()?.minecraftVersion ?: version.getVersionName()
+
+        // v7：启动前先做模组版本兼容检测。
+        // Fabric 遇到 depends.minecraft 不匹配的模组会直接抛 FormattedException 退出（退出码 1），
+        // 玩家看到的就是「点启动闪一下回桌面」。这里提前把不兼容模组自动禁用，并给出中文提示，
+        // 让游戏继续正常启动，而不是把异常丢给 Fabric。
+        runCatching {
+            val incompatible = ModCompatGuard.checkAndDisable(modsDir, minecraftVersion)
+            ModCompatGuard.buildReport(incompatible)?.let { report ->
+                Logger.warning(TAG, report)
+                withContext(Dispatchers.Main) {
+                    android.widget.Toast.makeText(
+                        context,
+                        report,
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }.onFailure {
+            // 检测本身失败不该影响启动
+            Logger.warning(TAG, "模组兼容检测失败，已跳过", it)
+        }
+
+        // v7：低配设备首次启动写入「只降不升」的画面预设，目标老手机稳定 60 帧
+        runCatching {
+            LowEndTuning.applyPerformanceProfile(context, version.getGameDir())
+        }.onFailure {
+            Logger.warning(TAG, "低配画面预设应用失败，已跳过", it)
+        }
+
         val mods = AllModReader(modsDir).readAllLocals()
 
         if (mods.any { it.id == "touchcontroller" && it.file.isEnabled() }) {

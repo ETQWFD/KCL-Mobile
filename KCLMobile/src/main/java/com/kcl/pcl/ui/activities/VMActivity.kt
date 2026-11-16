@@ -926,6 +926,8 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
 
             AndroidView(
                 modifier = Modifier
+                    // 外层容器兜底黑色：自定义分辨率 letterbox 黑边、输入法弹起与切屏瞬间不露白
+                    .background(Color.Black)
                     .then(
                         if (displaySize == screenSize) Modifier.fillMaxSize()
                         else Modifier
@@ -947,6 +949,9 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
                         //使用 SurfaceView 渲染
                         SurfaceView(context).apply {
                             holder.addCallback(this@VMActivity)
+                            // 未被游戏画面覆盖到的区域（状态栏区/letterbox 边/切屏瞬间/输入法弹起）兜底黑色，避免露白
+                            setBackgroundColor(android.graphics.Color.BLACK)
+                            holder.setFormat(android.graphics.PixelFormat.RGBA_8888)
                             // SDL 模式需要父 ViewGroup（输入法 EditText 附加用）
                             gameSurfaceView = this
                         }.also { surface ->
@@ -958,6 +963,8 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
                         TextureView(context).apply {
                             isOpaque = true
                             alpha = 1.0f
+                            // 未被游戏画面覆盖到的区域兜底黑色，避免露白
+                            setBackgroundColor(NativeColor.BLACK)
 
                             surfaceTextureListener = this@VMActivity
                         }.also { texture ->

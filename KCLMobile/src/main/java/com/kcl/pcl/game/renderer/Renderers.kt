@@ -19,8 +19,10 @@
 package com.kcl.pcl.game.renderer
 
 import com.kcl.pcl.game.renderer.renderers.FreedrenoRenderer
+import com.kcl.pcl.game.renderer.renderers.GL4ESPerfRenderer
 import com.kcl.pcl.game.renderer.renderers.GL4ESRenderer
 import com.kcl.pcl.game.renderer.renderers.KopperZinkRenderer
+import com.kcl.pcl.game.renderer.renderers.NGGL4ESPerfRenderer
 import com.kcl.pcl.game.renderer.renderers.NGGL4ESRenderer
 import com.kcl.pcl.game.renderer.renderers.PanfrostRenderer
 import com.kcl.pcl.game.renderer.renderers.VirGLRenderer
@@ -49,7 +51,9 @@ object Renderers {
 
         addRenderers(
             NGGL4ESRenderer,
+            NGGL4ESPerfRenderer,
             GL4ESRenderer,
+            GL4ESPerfRenderer,
             KopperZinkRenderer,
             VirGLRenderer,
             FreedrenoRenderer,
@@ -133,13 +137,29 @@ object Renderers {
         if (!isInitialized) init()
         if (renderers.isEmpty()) init(reset = true)
         val first = renderers.firstOrNull() ?: return ""
+
+        // 低配设备（低内存/弱 GPU）默认走「低配性能版」，优先保帧率
+        val lowEnd = RendererCompat.isLowEndDevice()
+
         if (first === NGGL4ESRenderer && RendererCompat.isKryptonUnsafeDevice()) {
-            val gl4es = renderers.find { it === GL4ESRenderer }
+            // PowerVR/Imagination 上 Krypton 有着色器编译崩溃风险，换 GL4ES 家族
+            val gl4es = renderers.find {
+                if (lowEnd) it === GL4ESPerfRenderer else it === GL4ESRenderer
+            } ?: renderers.find { it === GL4ESRenderer }
             if (gl4es != null) {
-                Logger.info(TAG, "检测到 PowerVR/Imagination GPU，默认渲染器改用 Pure GL4ES")
+                Logger.info(TAG, "检测到 PowerVR/Imagination GPU，默认渲染器改用 ${gl4es.getRendererName()}")
                 return gl4es.getUniqueIdentifier()
             }
         }
+
+        if (first === NGGL4ESRenderer && lowEnd) {
+            val perf = renderers.find { it === NGGL4ESPerfRenderer }
+            if (perf != null) {
+                Logger.info(TAG, "检测到低配设备，默认渲染器改用 ${perf.getRendererName()}")
+                return perf.getUniqueIdentifier()
+            }
+        }
+
         return first.getUniqueIdentifier()
     }
 }
