@@ -22,8 +22,8 @@
     {
       "name": "KCLMobile-1.3.1-kcl.8-armeabi-v7a.apk",
       "url": "https://github.com/ETQWFD/KCL-Mobile/releases/download/v1.3.1-kcl.8/KCLMobile-1.3.1-kcl.8-armeabi-v7a.apk",
-      "sha256": "89159497837bc455a5796c45cf92ae5dac83c66a5d8d0ed496affc4e48a7fb9e",
-      "size": 88244087
+      "sha256": "d5eb4f6238818e4ab29bdd2b48ef0ed4e50a5f11767e66c217ab9a38839b474b",
+      "size": 88244084
     }
   ],
   "default_body": {
@@ -92,6 +92,6 @@
   },
   "url": "https://github.com/ETQWFD/KCL-Mobile/releases/download/v1.3.1-kcl.8/KCLMobile-1.3.1-kcl.8-armeabi-v7a.apk",
   "download": "https://github.com/ETQWFD/KCL-Mobile/releases/download/v1.3.1-kcl.8/KCLMobile-1.3.1-kcl.8-armeabi-v7a.apk",
-  "sha256": "89159497837bc455a5796c45cf92ae5dac83c66a5d8d0ed496affc4e48a7fb9e",
-  "size": 88244087
+  "sha256": "d5eb4f6238818e4ab29bdd2b48ef0ed4e50a5f11767e66c217ab9a38839b474b",
+  "size": 88244084
 }
