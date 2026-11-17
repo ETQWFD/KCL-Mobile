@@ -43,6 +43,7 @@ import com.kcl.pcl.game.multirt.RuntimesManager
 import com.kcl.pcl.game.plugin.Plugin
 import com.kcl.pcl.game.plugin.driver.DriverPluginManager
 import com.kcl.pcl.game.plugin.renderer.RendererPluginManager
+import com.kcl.pcl.game.renderer.KclEngine
 import com.kcl.pcl.game.renderer.RendererCompat
 import com.kcl.pcl.game.renderer.Renderers
 import com.kcl.pcl.game.renderer.renderers.GL4ESRenderer
@@ -114,6 +115,13 @@ class GameLauncher(
         // GL4ES 翻译层会直接卡在加载界面，这里在用户没手动指定渲染器时自动换用 Kopper Zink。
         withContext(Dispatchers.IO) { RendererCompat.applyAutoCompat(version, activity) }
 
+        // KCL Engine：按设备档位做启动前调度（低配分辨率预设 + 渲染器库缺失自动回退）。
+        KclEngine.prepare(activity)
+        KclEngine.resolveRendererWithFallback(activity)?.let { fallback ->
+            Renderers.setCurrentRenderer(fallback.getUniqueIdentifier())
+            appendInfo("KCL Engine: 原渲染器不可用，已自动切换为 ${fallback.getRendererName()}")
+        }
+
         val manifest = GSON.fromJson(File(version.getVersionPath(), "${version.getVersionName()}.json").readText(), GameManifest::class.java)
         val clientJar = manifest.inheritsFrom?.let { inheritsFrom ->
             //FIXME: 依赖的是一个原版ID的版本，但这个版本可能是用户自行安装的，只是版本名称与ID一致，不保证客户端真的是对应版本
@@ -158,12 +166,16 @@ class GameLauncher(
 
         initLwjglComponent(activity, detectLwjglVersion(gameManifest))
 
-        return launchGame(
+        val startedAt = System.currentTimeMillis()
+        val exitCode = launchGame(
             screenSize = screenSize,
             clientJar = clientJar,
             javaRuntime = javaRuntime,
             customArgs = customArgs,
         )
+        // 短命退出两次就自动关掉这一层的激进优化（见 KclEngine.onLaunchFinished）
+        KclEngine.onLaunchFinished(activity, exitCode, System.currentTimeMillis() - startedAt)
+        return exitCode
     }
 
     override fun MutableMap<String, String>.putJavaArgs() {
@@ -237,6 +249,8 @@ class GameLauncher(
     override fun progressFinalUserArgs(args: MutableList<String>, ramAllocation: Int) {
         super.progressFinalUserArgs(args, version.getRamAllocation(activity))
         args.add("-XX:MaxGCPauseMillis=100") // v5：低内存设备限制 GC 停顿目标，减少卡顿
+        // KCL Engine：2 核及以下/低配走 Serial GC，堆更小、停顿更短
+        args.addAll(KclEngine.jvmArgs(activity))
         if (Renderers.isCurrentRendererValid()) {
             args.add("-Dorg.lwjgl.opengl.libname=${getRendererLibrary()}")
         }
@@ -571,6 +585,9 @@ private fun setRendererEnv(envMap: MutableMap<String, String>) {
     }
 
     envMap += renderer.getRendererEnv().value
+
+    // KCL Engine：把「少进 C 层」的翻译层参数补进来（只补用户/渲染器没写过的键）
+    KclEngine.applyGl4esEnv(envMap)
 
     renderer.getRendererEGL()?.let { eglName ->
         envMap["POJAVEXEC_EGL"] = eglName
